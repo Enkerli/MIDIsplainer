@@ -1,171 +1,218 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import _ from 'lodash';
+
+// Helper function to load JSON file
+const loadJsonData = async () => {
+  try {
+    const response = await window.fs.readFile('chord_dictionary.json');
+    const text = new TextDecoder().decode(response);
+    return JSON.parse(text);
+  } catch (error) {
+    console.error('Error loading chord dictionary:', error);
+    return null;
+  }
+};
 
 const ChordDictionary = () => {
   const [dictionary, setDictionary] = useState(null);
-  const [error, setError] = useState(null);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState(null);
+  const [category, setCategory] = useState('all');
 
-  // Load dictionary on component mount
+  // Load dictionary on mount
   useEffect(() => {
     const loadDictionary = async () => {
-      try {
-        // First attempt to load the file
-        const response = await window.fs.readFile('chord_dictionary.json', { encoding: 'utf8' });
-        console.log('Loaded dictionary:', response.slice(0, 100) + '...'); // Debug log
-        const data = JSON.parse(response);
+      const data = await loadJsonData();
+      if (data) {
         setDictionary(data);
-        setError(null);
-      } catch (err) {
-        console.error('Error loading dictionary:', err);
-        setError('Failed to load chord dictionary. Please import the JSON file manually.');
-        setDictionary(null);
       }
     };
-
     loadDictionary();
   }, []);
 
-
-  const handleSearch = () => {
-    if (!dictionary) {
-      setError('Dictionary not loaded. Please wait or import manually.');
-      return;
-    }
-
-    const input = searchInput.trim();
-    let result = null;
+  // Parse chord input (handles chord symbols, PCS notation, decimal notation)
+  const parseChordInput = (input) => {
+    // Clean input
+    input = input.trim();
 
     // Try decimal notation
     if (/^\d+$/.test(input)) {
       const decimal = parseInt(input, 10);
-      result = findChordByDecimal(decimal);
-    }
-    // Try PCS notation
-    else if (input.match(/\[([\d,\s]+)\]/)) {
-      const pcs = input.match(/\[([\d,\s]+)\]/))[1]
-        .split(',')
-        .map(n => parseInt(n.trim()));
-      result = findChordByPCS(pcs);
-    }
-    // Try chord symbol or name
-    else {
-      result = findChordByName(input);
+      return findChordByDecimal(decimal);
     }
 
+    // Try PCS notation [0,4,7] or [0, 4, 7]
+    const pcsMatch = input.match(/\[([\d,\s]+)\]/);
+    if (pcsMatch) {
+      const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
+      return findChordByPCS(pcs);
+    }
+
+    // Try chord symbol or full name
+    return findChordBySymbol(input);
+  };
+
+  // Find chord by decimal notation
+  const findChordByDecimal = (decimal) => {
+    if (!dictionary) return null;
+
+    for (const [quality, data] of Object.entries(dictionary)) {
+      // Check base decimal and all transpositions
+      if (data.baseDecimal === decimal || 
+          Object.values(data.transpositions).some(t => t.decimal === decimal)) {
+        return {
+          quality,
+          data,
+          matchType: 'decimal'
+        };
+      }
+    }
+    return null;
+  };
+
+  // Find chord by PCS
+  const findChordByPCS = (pcs) => {
+    if (!dictionary) return null;
+
+    for (const [quality, data] of Object.entries(dictionary)) {
+      if (_.isEqual(data.pcs.sort(), pcs.sort())) {
+        return {
+          quality,
+          data,
+          matchType: 'pcs'
+        };
+      }
+    }
+    return null;
+  };
+
+  // Find chord by symbol or full name
+  const findChordBySymbol = (input) => {
+    if (!dictionary) return null;
+
+    for (const [quality, data] of Object.entries(dictionary)) {
+      // Check quality name
+      if (input.toLowerCase().includes(quality.toLowerCase())) {
+        return {
+          quality,
+          data,
+          matchType: 'symbol'
+        };
+      }
+
+      // Check full name
+      if (input.toLowerCase().includes(data.fullName.toLowerCase())) {
+        return {
+          quality,
+          data,
+          matchType: 'fullName'
+        };
+      }
+
+      // Check aliases
+      if (data.aliases?.some(alias => 
+          input.toLowerCase().includes(alias.toLowerCase()))) {
+        return {
+          quality,
+          data,
+          matchType: 'alias'
+        };
+      }
+    }
+    return null;
+  };
+
+  // Handle search
+  const handleSearch = () => {
+    const result = parseChordInput(searchTerm);
     setSearchResults(result);
   };
 
-  // Helper functions for searching
-  const findChordByDecimal = (decimal) => {
-    for (const [quality, data] of Object.entries(dictionary)) {
-      if (data.decimal === decimal) return { quality, ...data };
-      
-      // Check transpositions
-      for (const [root, trans] of Object.entries(data.transpositions)) {
-        if (trans.decimal === decimal) {
-          return { quality, root, ...trans };
-        }
-      }
-    }
-    return null;
-  };
-
-  const findChordByPCS = (pcs) => {
-    for (const [quality, data] of Object.entries(dictionary)) {
-      if (_.isEqual(data.pcs.sort(), pcs.sort())) {
-        return { quality, ...data };
-      }
-    }
-    return null;
-  };
-
-  const findChordByName = (input) => {
-    const normalized = input.toLowerCase();
-    for (const [quality, data] of Object.entries(dictionary)) {
-      if (normalized.includes(quality.toLowerCase()) ||
-          normalized.includes(data.fullName.toLowerCase()) ||
-          data.aliases?.some(alias => normalized.includes(alias.toLowerCase()))) {
-        return { quality, ...data };
-      }
-    }
-    return null;
-  };
+  // Render loading state
+  if (!dictionary) {
+    return (
+      <Card className="w-full max-w-4xl mx-auto mt-4">
+        <CardHeader>
+          <h2 className="text-2xl font-bold">Loading Chord Dictionary...</h2>
+        </CardHeader>
+      </Card>
+    );
+  }
 
   return (
-    <div className="p-4">
-      <Card className="w-full max-w-4xl mx-auto">
-        <div className="p-6">
-          <h1 className="text-2xl font-bold mb-4">Chord Dictionary</h1>
-          
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-
-          <div className="flex gap-2 mb-4">
-            <input
-              type="text"
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-              placeholder="Enter chord symbol, PCS, or decimal notation"
-              className="flex-1 p-2 border rounded"
-            />
-            <button
-              onClick={handleSearch}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Search
-            </button>
-          </div>
-
-          {searchResults && (
-            <div className="mt-4">
-              <h3 className="text-lg font-semibold mb-2">
-                Results for "{searchInput}"
-              </h3>
-              <div className="bg-gray-50 p-4 rounded">
-                <p><strong>Quality:</strong> {searchResults.quality}</p>
-                <p><strong>Full Name:</strong> {searchResults.fullName}</p>
-                <p><strong>Forte Number:</strong> {searchResults.forteNumber}</p>
-                <p><strong>PCS:</strong> [{searchResults.pcs.join(', ')}]</p>
-                <p><strong>Binary:</strong> {searchResults.binary}</p>
-                <p><strong>Decimal:</strong> {searchResults.decimal}</p>
-                {searchResults.namedInversions?.length > 0 && (
-                  <p><strong>Named Inversions:</strong> {searchResults.namedInversions.join(', ')}</p>
-                )}
-                {searchResults.compatibleScales?.length > 0 && (
-                  <p><strong>Compatible Scales:</strong> {searchResults.compatibleScales.join(', ')}</p>
-                )}
-                {searchResults.avoidNotes?.length > 0 && (
-                  <p><strong>Avoid Notes:</strong> {searchResults.avoidNotes.join(', ')}</p>
-                )}
-              </div>
-            </div>
-          )}
-
-          {dictionary && (
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-4">All Chords</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {Object.entries(dictionary).map(([quality, data]) => (
-                  <Card key={quality} className="p-4">
-                    <h4 className="font-bold">{quality}</h4>
-                    <p className="text-sm italic">{data.fullName}</p>
-                    <p className="text-sm">PCS: [{data.pcs.join(', ')}]</p>
-                    <p className="text-xs">Decimal: {data.decimal}</p>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
+    <Card className="w-full max-w-4xl mx-auto mt-4">
+      <CardHeader>
+        <h2 className="text-2xl font-bold">Chord Dictionary</h2>
+      </CardHeader>
+      <CardContent>
+        <div className="flex gap-4 mb-4">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            placeholder="Enter chord symbol, PCS, or decimal notation"
+            className="flex-1 p-2 border rounded"
+          />
+          <button
+            onClick={handleSearch}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Search
+          </button>
         </div>
-      </Card>
-    </div>
+
+        {searchResults && (
+          <div className="mt-4">
+            <h3 className="text-xl font-semibold mb-2">
+              Results for {searchTerm}
+            </h3>
+            <pre className="bg-gray-100 p-4 rounded">
+              {JSON.stringify(searchResults, null, 2)}
+            </pre>
+          </div>
+        )}
+
+        <div className="mt-8">
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-2 mb-4 border rounded"
+          >
+            <option value="all">All Chords</option>
+            <option value="triads">Triads</option>
+            <option value="seventh">Seventh Chords</option>
+            <option value="sixth">Sixth Chords</option>
+            <option value="extended">Extended Chords</option>
+            <option value="suspended">Suspended Chords</option>
+            <option value="altered">Altered Dominants</option>
+          </select>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Object.entries(dictionary)
+              .filter(([quality]) => 
+                category === 'all' || 
+                quality.toLowerCase().includes(category.toLowerCase()))
+              .map(([quality, data]) => (
+                <Card key={quality} className="p-4">
+                  <h4 className="font-bold">{quality}</h4>
+                  <p className="text-sm italic">{data.fullName}</p>
+                  <p className="text-sm">Forte: {data.forteNumber}</p>
+                  <p className="text-sm">PCS: [{data.pcs.join(', ')}]</p>
+                  <p className="text-xs font-mono">Binary: {data.binary}</p>
+                  <p className="text-xs">Decimal: {data.decimal}</p>
+                  {data.namedInversions?.length > 0 && (
+                    <p className="text-sm mt-2">
+                      Inversions: {data.namedInversions.join(', ')}
+                    </p>
+                  )}
+                </Card>
+              ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
