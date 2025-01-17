@@ -385,8 +385,6 @@
             '7b13': [0, 4, 7, 10, 2, 8]
         };
         
-        // Add these after the other constant definitions
-
 		const compatibleScales = {
 			// Major-based chords
 			'maj': ['major', 'lydian', 'major bebop'],
@@ -1352,10 +1350,10 @@
 
 		// Gets the base (C) version of any PCS
 		function getBasePCS(pcs, root) {
-    const rootPC = noteToPC[root] || 0;
-    // Transpose back to C
-    return transposePitchClassSet(pcs, (12 - rootPC) % 12);
-}
+			const rootPC = noteToPC[root] || 0;
+			// Transpose back to C
+			return transposePitchClassSet(pcs, (12 - rootPC) % 12);
+		}
 
 		// Helper function to get intervals from a root note
 		function getIntervalPattern(pcs, root) {
@@ -1655,20 +1653,20 @@
 		
 		// Helper function to determine enharmonic spelling based on chord context
 		function getEnharmonicSpelling(pc, root, quality) {
-    const flatQualities = ['min', 'dim', 'm7b5', 'minMaj7'];
-    const useFlats = flatQualities.some(q => quality.includes(q));
-    
-    // Map of preferred spellings
-    const spellings = {
-        1: useFlats ? 'D♭' : 'C♯',
-        3: useFlats ? 'E♭' : 'D♯',
-        6: useFlats ? 'G♭' : 'F♯',
-        8: useFlats ? 'A♭' : 'G♯',
-        10: useFlats ? 'B♭' : 'A♯'
-    };
-    
-    return spellings[pc] || noteToPCKeys[pc];
-}
+			const flatQualities = ['min', 'dim', 'm7b5', 'minMaj7'];
+			const useFlats = flatQualities.some(q => quality.includes(q));
+	
+			// Map of preferred spellings
+			const spellings = {
+				1: useFlats ? 'D♭' : 'C♯',
+				3: useFlats ? 'E♭' : 'D♯',
+				6: useFlats ? 'G♭' : 'F♯',
+				8: useFlats ? 'A♭' : 'G♯',
+				10: useFlats ? 'B♭' : 'A♯'
+			};
+	
+			return spellings[pc] || noteToPCKeys[pc];
+		}
 
 		// Helper to get the relative intervals from a root note
 		function getRelativeIntervals(pcs, root) {
@@ -1687,7 +1685,7 @@
 			return letterNames[(startIndex + offset + 7) % 7];
 		}
 
-				// Function to find related chords that share the same pitch class set
+		// Function to find related chords that share the same pitch class set
 		function findRelatedChords(pcs, quality = '') {
 			// Get the decimal representation of this PCS
 			const decimal = parseInt(toBinaryPCS(pcs), 2);
@@ -1732,15 +1730,15 @@
 
 		// Function to find and format all related chords for a given chord
 		function getInversionsList(pcs, quality) {
-    const related = findRelatedChords(pcs, quality);
-    if (related.length === 0) return '';
-    
-    return `
-        <div class="chord-inversions">
-            Named Inversions: ${related.map(inv => `${inv.root}${inv.quality}`).join(', ')}
-        </div>
-    `;
-}
+			const related = findRelatedChords(pcs, quality);
+			if (related.length === 0) return '';
+	
+			return `
+				<div class="chord-inversions">
+					Named Inversions: ${related.map(inv => `${inv.root}${inv.quality}`).join(', ')}
+				</div>
+			`;
+		}
 
 		
 		// Function to update the named inversions dictionary
@@ -1771,9 +1769,6 @@
 			html += '</ul>\n</div>';
 			return html;
 		}
-
-		
-
 		
 		
 
