@@ -1313,16 +1313,33 @@
 			// Try full name parsing first (e.g., "C minor triad")
 			if (input.includes(' ')) {
 				const rootMatch = input.match(/^([A-G][b#]?)\s/);
+				console.log('Input:', input);
+				console.log('Root match:', rootMatch);
+				
 				if (rootMatch) {
 					const root = rootMatch[1];
 					const namePart = input.slice(rootMatch[0].length).trim().toLowerCase();
-					console.log('Parsing full name:', { root, namePart });
-					console.log('Available full names:', chordFullNames);
+					console.log('Parsing full name:', { 
+						root, 
+						namePart,
+						inputLength: input.length,
+						namePartLength: namePart.length 
+					});
+					console.log('Available full names:', JSON.stringify(chordFullNames, null, 2));
 			
 					// Search for matching quality
 					for (const [quality, fullName] of Object.entries(chordFullNames)) {
-						console.log('Comparing:', { quality, fullName: fullName.toLowerCase(), namePart });
-						if (fullName.toLowerCase() === namePart) {
+						const lowerFullName = fullName.toLowerCase();
+						console.log('Comparing:', { 
+							quality, 
+							fullName: lowerFullName, 
+							namePart,
+							fullNameLength: lowerFullName.length,
+							namePartLength: namePart.length,
+							areEqual: lowerFullName === namePart,
+							stringComparison: JSON.stringify({lowerFullName, namePart})
+						});
+						if (lowerFullName === namePart) {
 							console.log('Found match:', quality);
 							const basePCS = chordQualities[quality];
 							if (basePCS) {
@@ -2128,7 +2145,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run z2 Tests';
+            button.innerHTML = 'Run z3 Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
