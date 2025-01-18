@@ -1771,7 +1771,7 @@
 		}
 		
 		
-		// Function to automatically load the chord dictionary
+// Function to automatically load the chord dictionary
         async function loadChordDictionary() {
             try {
                 const response = await fetch('chord_dictionary.json');
@@ -1826,214 +1826,133 @@
             }
         }
 
-        
+        // Test Framework
+        const TestSuite = {
+            tests: [],
+            results: {
+                passed: 0,
+                failed: 0,
+                total: 0
+            },
 
+            test: function(name, fn) {
+                this.tests.push({ name, fn });
+            },
 
+            assertEqual: function(actual, expected, message) {
+                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                    throw new Error(`${message}\nExpected: ${JSON.stringify(expected)}\nActual: ${JSON.stringify(actual)}`);
+                }
+            },
 
+            runTests: async function() {
+                const resultDiv = document.createElement('div');
+                resultDiv.id = 'testResults';
+                resultDiv.style.padding = '20px';
+                resultDiv.style.margin = '20px';
+                resultDiv.style.border = '1px solid #ccc';
+                document.body.appendChild(resultDiv);
 
-		// Simple test framework
-		const TestSuite = {
-			tests: [],
-			results: {
-				passed: 0,
-				failed: 0,
-				total: 0
-			},
+                this.results = { passed: 0, failed: 0, total: 0 };
 
-			// Add a test
-			test: function(name, fn) {
-				this.tests.push({ name, fn });
-			},
+                for (const test of this.tests) {
+                    try {
+                        await test.fn();
+                        this.results.passed++;
+                        resultDiv.innerHTML += `<p style="color: green">✓ ${test.name}</p>`;
+                    } catch (error) {
+                        this.results.failed++;
+                        resultDiv.innerHTML += `
+                            <p style="color: red">✗ ${test.name}</p>
+                            <pre style="background: #f8f8f8; padding: 10px; margin: 5px 0;">${error.message}</pre>
+                        `;
+                    }
+                    this.results.total++;
+                }
 
-			// Assert equality
-			assertEqual: function(actual, expected, message) {
-				if (JSON.stringify(actual) !== JSON.stringify(expected)) {
-					throw new Error(`${message}\nExpected: ${JSON.stringify(expected)}\nActual: ${JSON.stringify(actual)}`);
-				}
-			},
+                resultDiv.innerHTML += `
+                    <h3>Test Results</h3>
+                    <p>Total: ${this.results.total}</p>
+                    <p style="color: green">Passed: ${this.results.passed}</p>
+                    <p style="color: red">Failed: ${this.results.failed}</p>
+                `;
+            }
+        };
 
-			// Run all tests
-			runTests: async function() {
-				const resultDiv = document.createElement('div');
-				resultDiv.id = 'testResults';
-				resultDiv.style.padding = '20px';
-				resultDiv.style.margin = '20px';
-				resultDiv.style.border = '1px solid #ccc';
-				document.body.appendChild(resultDiv);
+        // Chord Dictionary Tests
+        const ChordDictionaryTests = {
+            init: async function() {
+                // Basic Chord Parsing Tests
+                TestSuite.test('Parse major triad', () => {
+                    const result = parseChord('Cmaj');
+                    TestSuite.assertEqual(result, { root: 'C', quality: 'maj' }, 'Failed to parse Cmaj');
+                });
 
-				for (const test of this.tests) {
-					try {
-						await test.fn();
-						this.results.passed++;
-						resultDiv.innerHTML += `<p style="color: green">✓ ${test.name}</p>`;
-					} catch (error) {
-						this.results.failed++;
-						resultDiv.innerHTML += `
-							<p style="color: red">✗ ${test.name}</p>
-							<pre style="background: #f8f8f8; padding: 10px; margin: 5px 0;">${error.message}</pre>
-						`;
-					}
-					this.results.total++;
-				}
+                TestSuite.test('Parse minor seventh', () => {
+                    const result = parseChord('Dm7');
+                    TestSuite.assertEqual(result, { root: 'D', quality: 'min7' }, 'Failed to parse Dm7');
+                });
 
-				resultDiv.innerHTML += `
-					<h3>Test Results</h3>
-					<p>Total: ${this.results.total}</p>
-					<p style="color: green">Passed: ${this.results.passed}</p>
-					<p style="color: red">Failed: ${this.results.failed}</p>
-				`;
-			}
-		};
+                // Chord Symbol Aliases Tests
+                TestSuite.test('Parse major seventh alias (Δ)', () => {
+                    const result = parseChord('CΔ');
+                    TestSuite.assertEqual(result, { root: 'C', quality: 'maj7' }, 'Failed to parse CΔ');
+                });
 
-		// Chord Dictionary Tests
-		const ChordDictionaryTests = {
-			init: async function() {
-				// Basic Chord Parsing Tests
-				TestSuite.test('Parse major triad', () => {
-					const result = parseChord('Cmaj');
-					TestSuite.assertEqual(result, { root: 'C', quality: 'maj' }, 'Failed to parse Cmaj');
-				});
+                TestSuite.test('Parse diminished alias (°)', () => {
+                    const result = parseChord('C°');
+                    TestSuite.assertEqual(result, { root: 'C', quality: 'dim' }, 'Failed to parse C°');
+                });
 
-				TestSuite.test('Parse minor seventh', () => {
-					const result = parseChord('Dm7');
-					TestSuite.assertEqual(result, { root: 'D', quality: 'min7' }, 'Failed to parse Dm7');
-				});
+                // PCS Input Tests
+                TestSuite.test('Parse PCS notation', () => {
+                    const result = findChordByPCS([0, 4, 7]);
+                    TestSuite.assertEqual(result.quality, 'maj', 'Failed to identify major triad from PCS');
+                });
 
-				// Chord Symbol Aliases Tests
-				TestSuite.test('Parse major seventh alias (Δ)', () => {
-					const result = parseChord('CΔ');
-					TestSuite.assertEqual(result, { root: 'C', quality: 'maj7' }, 'Failed to parse CΔ');
-				});
+                TestSuite.test('Parse altered PCS notation', () => {
+                    const result = findChordByPCS([0, 4, 6, 10]);
+                    TestSuite.assertEqual(result.quality, '7b5', 'Failed to identify 7b5 from PCS');
+                });
 
-				TestSuite.test('Parse diminished alias (°)', () => {
-					const result = parseChord('C°');
-					TestSuite.assertEqual(result, { root: 'C', quality: 'dim' }, 'Failed to parse C°');
-				});
+                // Decimal Notation Tests
+                TestSuite.test('Parse decimal notation', () => {
+                    const result = findChordByDecimal(2192); // Major triad
+                    TestSuite.assertEqual(result.quality, 'maj', 'Failed to identify major triad from decimal');
+                });
 
-				// PCS Input Tests
-				TestSuite.test('Parse PCS notation', () => {
-					const result = findChordByPCS([0, 4, 7]);
-					TestSuite.assertEqual(result.quality, 'maj', 'Failed to identify major triad from PCS');
-				});
+                // Full Name Tests
+                TestSuite.test('Parse full name', () => {
+                    const result = parseChordInput('C minor seventh');
+                    TestSuite.assertEqual(result.quality, 'min7', 'Failed to parse full name');
+                });
 
-				TestSuite.test('Parse altered PCS notation', () => {
-					const result = findChordByPCS([0, 4, 6, 10]);
-					TestSuite.assertEqual(result.quality, '7b5', 'Failed to identify 7b5 from PCS');
-				});
+                // Transposition Tests
+                TestSuite.test('Test major triad transposition', () => {
+                    const pcs = chordQualities['maj'];
+                    const transposed = transposePitchClassSet(pcs, 2); // Up a whole step
+                    TestSuite.assertEqual(transposed, [2, 6, 9], 'Failed to transpose major triad');
+                });
 
-				// Decimal Notation Tests
-				TestSuite.test('Parse decimal notation', () => {
-					const result = findChordByDecimal(2192); // Major triad
-					TestSuite.assertEqual(result.quality, 'maj', 'Failed to identify major triad from decimal');
-				});
+                // Run all tests
+                await TestSuite.runTests();
+            }
+        };
 
-				// Full Name Tests
-				TestSuite.test('Parse full name', () => {
-					const result = parseChordInput('C minor seventh');
-					TestSuite.assertEqual(result.quality, 'min7', 'Failed to parse full name');
-				});
+        // Add button to run tests
+        function addTestButton() {
+            const button = document.createElement('button');
+            button.innerHTML = 'Run Tests';
+            button.style.margin = '20px';
+            button.onclick = ChordDictionaryTests.init;
+            document.body.insertBefore(button, document.body.firstChild);
+        }
 
-				// Transposition Tests
-				TestSuite.test('Test major triad transposition', () => {
-					const pcs = chordQualities['maj'];
-					const transposed = transposePitchClassSet(pcs, 2); // Up a whole step
-					TestSuite.assertEqual(transposed, [2, 6, 9], 'Failed to transpose major triad');
-				});
-
-				// Pitch Class Set Ordering Tests
-				TestSuite.test('Test PCS ordering', () => {
-					const unordered = [7, 10, 0, 3]; // Unordered min7 chord
-					const ordered = orderByDegreesFromRoot(unordered, 0);
-					TestSuite.assertEqual(ordered, [0, 3, 7, 10], 'Failed to order PCS correctly');
-				});
-
-				// Named Inversions Tests
-				TestSuite.test('Find named inversions', () => {
-					const inversions = findRelatedChords([0, 4, 7, 9]); // C6
-					const hasAmin7 = inversions.some(inv => 
-						inv.quality === 'min7' && inv.root === 'A'
-					);
-					TestSuite.assertEqual(hasAmin7, true, 'Failed to find Am7 as inversion of C6');
-				});
-
-				// Note Spelling Tests
-				TestSuite.test('Test note spelling', () => {
-					const notes = getChordNotes('C', [0, 4, 7], 'maj');
-					TestSuite.assertEqual(notes, ['C', 'E', 'G'], 'Failed to spell major triad correctly');
-				});
-
-				// Binary PCS Tests
-				TestSuite.test('Test binary PCS conversion', () => {
-					const binary = toBinaryPCS([0, 4, 7]);
-					TestSuite.assertEqual(binary, '100010010000', 'Failed to convert to binary PCS');
-				});
-
-				// Forte Number Tests
-				TestSuite.test('Test Forte number lookup', () => {
-					const forteNum = chordForteNumbers['maj'];
-					TestSuite.assertEqual(forteNum, '3-11B', 'Failed to get correct Forte number');
-				});
-
-				// Scale Compatibility Tests
-				TestSuite.test('Test scale compatibility', () => {
-					const scales = compatibleScales['maj7'];
-					TestSuite.assertEqual(
-						scales?.includes('major'), 
-						true, 
-						'Major scale should be compatible with maj7'
-					);
-				});
-
-				// Export/Import Tests
-				TestSuite.test('Test dictionary export format', () => {
-					const majorEntry = {
-						pcs: [0, 4, 7],
-						fullName: 'major triad',
-						forteNumber: '3-11B'
-					};
-			
-					// Create a minimal export
-					const exported = {
-						maj: majorEntry
-					};
-			
-					// Test import
-					const validFormat = typeof exported === 'object' && 
-									  Array.isArray(exported.maj.pcs) &&
-									  typeof exported.maj.fullName === 'string';
-							  
-					TestSuite.assertEqual(validFormat, true, 'Invalid export format');
-				});
-
-				// Run all tests
-				await TestSuite.runTests();
-			}
-		};
-
-		// Add button to run tests
-		function addTestButton() {
-			const button = document.createElement('button');
-			button.innerHTML = 'Run Tests';
-			button.style.margin = '20px';
-			button.onclick = ChordDictionaryTests.init;
-			document.body.insertBefore(button, document.body.firstChild);
-		}
-
-		// Initialize test suite when page loads
-		window.addEventListener('load', addTestButton);
-
-
-		
-		// Initialize bulk import UI when page loads
-		window.addEventListener('load', function() {
-			addBulkImportUI();
-		});
-		
-		
-        // Initialize chord dictionary on load
+        // Initialize chord dictionary and tests on load
         window.onload = async function() {
             await loadChordDictionary();
             filterChordTypes();
+            addTestButton();
         };
     </script>
 </body>
