@@ -185,8 +185,7 @@
         </div>
         <div id="result"></div>
 
-        <!-- 
-<div class="chord-management-section">
+        <div class="chord-management-section">
             <h2>Manage Chord Qualities</h2>
             <div class="tabs">
                 <button onclick="switchTab('add')" class="tab-button active">Add New</button>
@@ -221,10 +220,11 @@
 				</div>
 			</div>
         </div>
- -->
+
         
         <div class="export-section">
-			<h2>Import/Export Chord Dictionary</h2>
+<!-- 			<h2>Import/Export Chord Dictionary</h2> -->
+			<h2>Export Chord Dictionary</h2>
 			<button onclick="exportChordDictionary()">Export to JSON</button>
 			<!-- 
 <button onclick="importChordDictionary()">Import from JSON</button>
@@ -1428,138 +1428,6 @@
 		function generateQualityName(pcs) {
 			return `custom_${pcs.join('_')}`;
 		}
-
-// 		function importBulkChords(tsvData) {
-// 			const lines = tsvData.trim().split('\n');
-// 			const results = {
-// 				success: [],
-// 				merged: [],
-// 				errors: []
-// 			};
-// 
-// 			lines.forEach((line, index) => {
-// 				try {
-// 					const parts = line.split('\t').map(p => p.trim());
-// 					if (parts.length < 2) {
-// 						throw new Error('Each line must have at least PCS and full name');
-// 					}
-// 
-// 					const [pcsString, fullName, ...rest] = parts;
-// 					const aliasString = rest[0] || '{}';
-// 
-// 					// Parse PCS
-// 					const pcs = parsePCS(pcsString);
-// 					if (!pcs) {
-// 						throw new Error('Invalid PCS format');
-// 					}
-// 
-// 					// Parse aliases
-// 					const aliases = parseAliases(aliasString);
-// 
-// 					// Check for existing chord with same PCS
-// 					const existingQuality = findExistingQualityByPCS(pcs);
-// 			
-// 					if (existingQuality) {
-// 						// Merge with existing entry
-// 						const existingFullName = chordFullNames[existingQuality];
-// 						const existingAliases = chordAliases[existingQuality] || [];
-// 				
-// 						// Update full name to show both
-// 						chordFullNames[existingQuality] = 
-// 							`${existingFullName} -- ${fullName}`;
-// 				
-// 						// Merge aliases
-// 						chordAliases[existingQuality] = mergeUnique(existingAliases, aliases);
-// 				
-// 						results.merged.push({
-// 							quality: existingQuality,
-// 							pcs,
-// 							originalFullName: existingFullName,
-// 							newFullName: fullName,
-// 							mergedAliases: chordAliases[existingQuality]
-// 						});
-// 					} else {
-// 						// Create new entry
-// 						const qualityName = aliases[0]?.replace(/[{}]/g, '').trim() || generateQualityName(pcs);
-// 						chordQualities[qualityName] = pcs;
-// 						chordFullNames[qualityName] = fullName;
-// 						if (aliases.length > 0) {
-// 							chordAliases[qualityName] = aliases;
-// 						}
-// 
-// 						results.success.push({
-// 							quality: qualityName,
-// 							pcs,
-// 							fullName,
-// 							aliases
-// 						});
-// 					}
-// 
-// 				} catch (error) {
-// 					results.errors.push({
-// 						line: index + 1,
-// 						content: line,
-// 						error: error.message
-// 					});
-// 				}
-// 			});
-// 
-// 			return results;
-// 		}
-
-		// Add UI elements for bulk import
-// 		function addBulkImportUI() {
-// 			const exportSection = document.querySelector('.export-section');
-// 			const bulkImportSection = document.createElement('div');
-// 			bulkImportSection.className = 'bulk-import-section';
-// 			bulkImportSection.innerHTML = `
-// 				<h3>Bulk Import Chords</h3>
-// 				<p>Enter tab-separated values: PCS, full name, aliases (in braces)</p>
-// 				<textarea id="bulkImportText" rows="10" style="width: 100%; margin-bottom: 1rem;"
-// 					placeholder="[0, 4, 8]&#9;augmented&#9;{aug, +, +5}"></textarea>
-// 				<button onclick="processBulkImport()">Import Chords</button>
-// 				<div id="bulkImportResults"></div>
-// 			`;
-// 			exportSection.insertAdjacentElement('afterend', bulkImportSection);
-// 		}
-
-// 		function processBulkImport() {
-// 			const textarea = document.getElementById('bulkImportText');
-// 			const resultsDiv = document.getElementById('bulkImportResults');
-// 			const results = importBulkChords(textarea.value);
-// 
-// 			let resultHtml = '<h4>Import Results</h4>';
-// 	
-// 			// Show successful new additions
-// 			if (results.success.length > 0) {
-// 				resultHtml += `<p>Successfully imported ${results.success.length} new chord(s):</p>`;
-// 				resultHtml += '<ul>' + results.success.map(s => 
-// 					`<li>${s.quality}: ${s.fullName} ${s.aliases.length ? `(${s.aliases.join(', ')})` : ''}</li>`
-// 				).join('') + '</ul>';
-// 			}
-// 	
-// 			// Show merges
-// 			if (results.merged.length > 0) {
-// 				resultHtml += `<p>Merged ${results.merged.length} chord(s) with existing entries:</p>`;
-// 				resultHtml += '<ul>' + results.merged.map(m => 
-// 					`<li>${m.quality}: "${m.originalFullName}" merged with "${m.newFullName}"<br>` +
-// 					`Combined aliases: (${m.mergedAliases.join(', ')})</li>`
-// 				).join('') + '</ul>';
-// 			}
-// 	
-// 			// Show errors
-// 			if (results.errors.length > 0) {
-// 				resultHtml += `<p>Errors in ${results.errors.length} line(s):</p>`;
-// 				resultHtml += '<ul>' + results.errors.map(e => 
-// 					`<li>Line ${e.line}: ${e.error}<br><code>${e.content}</code></li>`
-// 				).join('') + '</ul>';
-// 			}
-// 
-// 			resultsDiv.innerHTML = resultHtml;
-// 	
-// 			// Update the display
-// 			filterChordTypes();
-// 		}
 		
 		// Helper to find existing chord quality by PCS
 		function findExistingQualityByPCS(pcs) {
