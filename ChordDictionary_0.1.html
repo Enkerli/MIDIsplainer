@@ -1771,6 +1771,7 @@
 		}
         
         // Function to automatically load the chord dictionary
+// Function to automatically load the chord dictionary
         async function loadChordDictionary() {
             try {
                 const response = await fetch('chord_dictionary.json');
@@ -1892,6 +1893,70 @@
             TestSuite.test('Parse minor seventh', () => {
                 const result = parseChord('Dm7');
                 TestSuite.assertEqual(result, { root: 'D', quality: 'min7' }, 'Failed to parse Dm7');
+            });
+
+            // Full Name Parsing Tests
+            TestSuite.test('Parse full name - minor triad', () => {
+                const result = parseChordInput('C minor triad');
+                TestSuite.assertEqual(result.quality, 'min', 'Failed to parse minor triad from full name');
+            });
+
+            TestSuite.test('Parse full name - major seventh', () => {
+                const result = parseChordInput('D major seventh');
+                TestSuite.assertEqual(result.quality, 'maj7', 'Failed to parse major seventh from full name');
+            });
+
+            // PCS Notation Tests
+            TestSuite.test('Parse PCS - major triad', () => {
+                const result = parseChordInput('[0, 4, 7]');
+                TestSuite.assertEqual(result.quality, 'maj', 'Failed to parse major triad from PCS');
+            });
+
+            TestSuite.test('Parse PCS - major sixth', () => {
+                const result = parseChordInput('[0, 4, 7, 9]');
+                TestSuite.assertEqual(result.quality, '6', 'Failed to parse major sixth from PCS');
+            });
+
+            // Decimal Notation Tests
+            TestSuite.test('Parse decimal - C#maj7', () => {
+                const result = parseChordInput('3144');  // Should be C#maj7
+                TestSuite.assertEqual(
+                    { root: result.root, quality: result.quality }, 
+                    { root: 'C#', quality: 'maj7' }, 
+                    'Failed to parse C#maj7 from decimal 3144'
+                );
+            });
+
+            // Degree Ordering Tests
+            TestSuite.test('Degree ordering - min13', () => {
+                const pcs = chordQualities['min13'];
+                const ordered = orderByDegrees(pcs);
+                TestSuite.assertEqual(
+                    ordered, 
+                    [0, 3, 7, 10, 2, 5, 9], 
+                    'Failed to order min13 correctly'
+                );
+            });
+
+            TestSuite.test('Degree ordering - 7b9sus4', () => {
+                const pcs = chordQualities['7b9sus4'] || [0, 5, 7, 10, 1];
+                const ordered = orderByDegrees(pcs);
+                TestSuite.assertEqual(
+                    ordered, 
+                    [0, 5, 7, 10, 1], 
+                    'Failed to order 7b9sus4 correctly'
+                );
+            });
+
+            // Transposition Tests
+            TestSuite.test('Transposition - Bbmaj7', () => {
+                const result = parseChordInput('Bbmaj7');
+                const expectedPCS = [10, 2, 5, 9];  // Properly ordered Bbmaj7
+                TestSuite.assertEqual(
+                    result.pcs, 
+                    expectedPCS, 
+                    'Failed to get correct PCS for Bbmaj7'
+                );
             });
 
             // Run the tests
