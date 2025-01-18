@@ -532,21 +532,19 @@
 		}
 
         function orderByDegrees(pcSet, root = 0) {
-			// For sus chords, we need a different priority order
-			const isSus = pcSet.includes((root + 5) % 12); // Has perfect fourth
+			// Special case for sus4 chords
+			if (pcSet.includes((root + 5) % 12) && pcSet.length === 5) {
+				const susOrder = [0, 5, 7, 10, 1, 2, 3, 4, 6, 8, 9, 11];
+				return [...pcSet].sort((a, b) => 
+					susOrder.indexOf((a - root + 12) % 12) - 
+					susOrder.indexOf((b - root + 12) % 12)
+				);
+			}
 	
+			// Normal ordering for other chords
 			return [...pcSet].sort((a, b) => {
-				// Normalize relative to root first
 				const relA = (a - root + 12) % 12;
 				const relB = (b - root + 12) % 12;
-		
-				// Special ordering for sus chords
-				if (isSus) {
-					const susOrder = [0, 5, 7, 10, 1, 2, 3, 4, 6, 8, 9, 11];
-					return susOrder.indexOf(relA) - susOrder.indexOf(relB);
-				}
-		
-				// Normal ordering
 				const idxA = degreeOrder.indexOf(relA);
 				const idxB = degreeOrder.indexOf(relB);
 				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
@@ -1338,27 +1336,22 @@
 			// Check full name parsing in parseChordInput function: 
 			let result = null;
 
-			// Try full name first (e.g. "C minor seventh")
+			// Try full name (e.g., "C minor seventh")
 			if (input.includes(' ')) {
-				const [rootPart, ...nameParts] = input.split(' ');
-				const nameToFind = nameParts.join(' ').toLowerCase();
+				const rootMatch = input.match(/^([A-G][b#]?)\s/);
+				const root = rootMatch ? rootMatch[1] : 'C';
 	
-				// Find matching quality by full name
-				const qualityEntry = Object.entries(chordFullNames)
-					.find(([_, name]) => name.toLowerCase() === nameToFind);
-		
-				if (qualityEntry) {
-					const [quality] = qualityEntry;
-					const root = rootPart.match(/^[A-G][b#]?/)?.[0] || 'C';
-					const basePCS = chordQualities[quality];
-					const rootPC = noteToPC[root];
-		
-					return {
-						quality,
-						root,
-						baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
-						pcs: transposePitchClassSet(basePCS, rootPC)
-					};
+				for (const [quality, fullName] of Object.entries(chordFullNames)) {
+					if (input.toLowerCase().includes(fullName.toLowerCase())) {
+						const basePCS = chordQualities[quality];
+						const rootPC = noteToPC[root];
+						return {
+							quality,
+							root,
+							baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
+							pcs: transposePitchClassSet(basePCS, rootPC)
+						};
+					}
 				}
 			}
 			return null;
@@ -2117,7 +2110,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run y1 Tests';
+            button.innerHTML = 'Run y2 Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
