@@ -1302,24 +1302,30 @@
 
 
 		function parseChordInput(input) {
-			if (!input) return null;
+			// Validate dependencies first
+			if (!input || !chordFullNames || !chordQualities || !noteToPC) {
+				console.log("Missing dependencies:", { chordFullNames, chordQualities, noteToPC });
+				return null;
+			}
+
 			input = input.trim();
 
-			// Try full name parsing first
+			// Try full name parsing first (e.g., "C minor triad")
 			if (input.includes(' ')) {
 				const rootMatch = input.match(/^([A-G][b#]?)\s/);
 				if (rootMatch) {
 					const root = rootMatch[1];
 					const namePart = input.slice(rootMatch[0].length).trim().toLowerCase();
 			
-					// Important: Find the matching quality first
-					const qualityEntry = Object.entries(chordFullNames)
-						.find(([_, name]) => namePart === name.toLowerCase());
+					// Search for matching quality
+					const match = Object.entries(chordFullNames)
+						.find(([_, name]) => name.toLowerCase() === namePart);
 			
-					if (qualityEntry) {
-						const [quality] = qualityEntry;
+					if (match) {
+						const [quality] = match;
 						const basePCS = chordQualities[quality];
 						const rootPC = noteToPC[root];
+				
 						return {
 							quality,
 							root,
@@ -1330,12 +1336,11 @@
 				}
 			}
 
-			// Rest of parsing methods remain the same...
 			// Try PCS notation
 			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
 			if (pcsMatch) {
 				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
-				if (!pcs.some(isNaN)) {
+				if (!pcs.some(isNaN)) {  // Ensure all numbers parsed correctly
 					return findChordByPCS(pcs);
 				}
 			}
