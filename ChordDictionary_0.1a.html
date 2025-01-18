@@ -1316,10 +1316,14 @@
 				if (rootMatch) {
 					const root = rootMatch[1];
 					const namePart = input.slice(rootMatch[0].length).trim().toLowerCase();
+					console.log('Parsing full name:', { root, namePart });
+					console.log('Available full names:', chordFullNames);
 			
 					// Search for matching quality
 					for (const [quality, fullName] of Object.entries(chordFullNames)) {
+						console.log('Comparing:', { quality, fullName: fullName.toLowerCase(), namePart });
 						if (fullName.toLowerCase() === namePart) {
+							console.log('Found match:', quality);
 							const basePCS = chordQualities[quality];
 							if (basePCS) {
 								const rootPC = noteToPC[root];
@@ -1332,6 +1336,7 @@
 							}
 						}
 					}
+					console.log('No match found');
 				}
 			}
 
@@ -2123,7 +2128,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run z1 Tests';
+            button.innerHTML = 'Run z2 Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
