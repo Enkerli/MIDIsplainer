@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 16</h1>
+        <h1>Chord Dictionary 17</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -705,14 +705,16 @@
 			let quality = '';
 			// Try to detect if it's a sus chord from the intervals
 			const intervals = pcs.map(pc => (pc - root + 12) % 12);
-			if (intervals.includes(2) && !intervals.includes(3) && !intervals.includes(4)) {
-				quality = 'sus2';
-			} else if (intervals.includes(5) && !intervals.includes(3) && !intervals.includes(4)) {
+			if (intervals.includes(5) && !intervals.includes(3) && !intervals.includes(4)) {
 				quality = 'sus4';
+			} else if (intervals.includes(2) && !intervals.includes(3) && !intervals.includes(4)) {
+				quality = 'sus2';
 			}
+	
+			// Use orderPitchClasses to maintain consistent ordering
 			return orderPitchClasses(pcs, root, quality);
 		}
-
+		
 		// Build the named inversions for each chord quality
 		Object.entries(chordQualities).forEach(([quality, pcs]) => {
 			const invs = findNamedInversions(quality, pcs);
@@ -1364,7 +1366,7 @@
 			}
 
 			chordsToShow.forEach(([quality, intervals]) => {
-				const orderedPCS = orderByDegreesFromRoot(intervals, 0);
+				const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
 				const binaryPCS = toBinaryPCS(intervals);
 				const decimalPCS = parseInt(binaryPCS, 2);
 				const notes = getChordNotes('C', orderedPCS);
@@ -1847,7 +1849,7 @@
 		}
 
 
-
+		
 		
 		
 
