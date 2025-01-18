@@ -1302,30 +1302,28 @@
 
 
 		function parseChordInput(input) {
-			// Clean up input
+			if (!input) return null;
 			input = input.trim();
 
-			// Try full name first (e.g., "C minor triad")
+			// Try full name parsing (e.g., "C minor triad")
 			if (input.includes(' ')) {
 				const rootMatch = input.match(/^([A-G][b#]?)\s/);
-				const root = rootMatch ? rootMatch[1] : 'C';
+				if (!rootMatch) return null;
+		
+				const root = rootMatch[1];
 				const namePart = input.slice(root.length).trim().toLowerCase();
 		
-				// Find matching quality by exact full name
-				const qualityMatch = Object.entries(chordFullNames).find(([_, name]) => 
-					namePart === name.toLowerCase()
-				);
-
-				if (qualityMatch) {
-					const [quality] = qualityMatch;
-					const basePCS = chordQualities[quality];
-					const rootPC = noteToPC[root];
-					return {
-						quality,
-						root,
-						baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
-						pcs: transposePitchClassSet(basePCS, rootPC)
-					};
+				for (const [quality, fullName] of Object.entries(chordFullNames)) {
+					if (namePart === fullName.toLowerCase()) {
+						const basePCS = chordQualities[quality];
+						const rootPC = noteToPC[root];
+						return {
+							quality,
+							root,
+							baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
+							pcs: transposePitchClassSet(basePCS, rootPC)
+						};
+					}
 				}
 			}
 
@@ -2113,7 +2111,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run y4 Tests';
+            button.innerHTML = 'Run y5 Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
