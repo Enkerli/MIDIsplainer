@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 12</h1>
+        <h1>Chord Dictionary 13</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -537,20 +537,22 @@
 			]
 		};
 		
-		// Core ordering function
+		// Core ordering function that everything else should use
 		function orderPitchClasses(pcSet, root = 0, quality = '') {
 			const intervals = pcSet.map(pc => (pc - root + 12) % 12);
 			let ordered = [];
 	
-			// Root always comes first
+			// Root always first
 			ordered.push(0);
 	
 			// Special handling for suspended chords
 			if (quality?.includes('sus')) {
-				// Add suspended notes
+				// Add sus2 if present
 				if (quality.includes('sus2') && intervals.includes(2)) {
 					ordered.push(2);  // add second
-				} else if (quality.includes('sus4') && intervals.includes(5)) {
+				}
+				// Add sus4 if present
+				else if (quality.includes('sus4') && intervals.includes(5)) {
 					ordered.push(5);  // add fourth
 				}
 		
@@ -583,6 +585,7 @@
 				});
 			}
 	
+			// Convert intervals back to pitch classes
 			return ordered.map(interval => (interval + root) % 12);
 		}
 
@@ -632,7 +635,7 @@
 			return ordered;
 		}
 
-		// Function to get interval quality names
+		// Updated interval quality function
 		function getIntervalQuality(interval, quality = '') {
 			const degreeMap = {
 				0: 'R',
@@ -651,21 +654,30 @@
 			return degreeMap[interval];
 		}
 
-		// Function to convert intervals to string
+		// Interval string function that uses our ordering
 		function intervalToString(intervals, quality = '') {
 			// First order the intervals
-			const orderedInts = orderIntervals(intervals, quality);
+			const orderedIntervals = orderNotesAndIntervals(intervals, quality);
 			// Then convert to quality names
-			return orderedInts.map(interval => getIntervalQuality(interval, quality)).join(', ');
+			return orderedIntervals.map(interval => getIntervalQuality(interval, quality)).join(', ');
 		}
 
-		// Simple wrappers for compatibility
+		// Simple wrapper for displayed results
 		function orderByDegrees(pcSet, root = 0, quality = '') {
 			return orderPitchClasses(pcSet, root, quality);
 		}
 
+		// Simple wrapper for cards - should give same results
 		function orderByDegreesFromRoot(pcs, root) {
-			return orderPitchClasses(pcs, root);
+			let quality = '';
+			// Try to detect if it's a sus chord from the intervals
+			const intervals = pcs.map(pc => (pc - root + 12) % 12);
+			if (intervals.includes(2) && !intervals.includes(3) && !intervals.includes(4)) {
+				quality = 'sus2';
+			} else if (intervals.includes(5) && !intervals.includes(3) && !intervals.includes(4)) {
+				quality = 'sus4';
+			}
+			return orderPitchClasses(pcs, root, quality);
 		}
 
 		// Build the named inversions for each chord quality
@@ -1584,10 +1596,10 @@
 			return isSus || (isAdd && quality.includes('add' + interval));
 		}
 
-		// Function to get notes in correct order
+		// New function to help with both notes and intervals
 		function getChordNotes(root, intervals, quality = '') {
-			// Use the same ordering function for consistency
-			const orderedIntervals = orderIntervals(intervals, quality);
+			// Order the intervals first
+			const orderedIntervals = orderNotesAndIntervals(intervals, quality);
 	
 			// Root letter and standard letter sequence
 			const rootLetter = root.charAt(0);
@@ -1608,7 +1620,7 @@
 					default: steps = Math.floor(interval * 2/3);
 				}
 
-				// Get target letter and add appropriate accidental
+				// Calculate target letter and accidental
 				const rootIndex = letterNames.indexOf(rootLetter);
 				const targetLetter = letterNames[(rootIndex + steps) % 7];
 				const naturalPC = noteToPC[targetLetter];
@@ -1778,6 +1790,17 @@
 
 
 		
+
+		
+
+
+		// Use same function for both notes and intervals
+		function orderNotesAndIntervals(intervals, quality = '') {
+			// Just use the same core function and return intervals
+			return orderPitchClasses(intervals, 0, quality)
+				.map(pc => pc % 12);
+		}
+
 
 
 
