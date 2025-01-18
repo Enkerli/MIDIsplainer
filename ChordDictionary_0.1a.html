@@ -532,12 +532,21 @@
 		}
 
         function orderByDegrees(pcSet, root = 0) {
-			// Sort by standard degree order
+			// For sus chords, we need a different priority order
+			const isSus = pcSet.includes((root + 5) % 12); // Has perfect fourth
+	
 			return [...pcSet].sort((a, b) => {
 				// Normalize relative to root first
 				const relA = (a - root + 12) % 12;
 				const relB = (b - root + 12) % 12;
-				// Get index in degreeOrder (default to end if not found)
+		
+				// Special ordering for sus chords
+				if (isSus) {
+					const susOrder = [0, 5, 7, 10, 1, 2, 3, 4, 6, 8, 9, 11];
+					return susOrder.indexOf(relA) - susOrder.indexOf(relB);
+				}
+		
+				// Normal ordering
 				const idxA = degreeOrder.indexOf(relA);
 				const idxB = degreeOrder.indexOf(relB);
 				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
@@ -1326,29 +1335,30 @@
 				return findChordByPCS(pcs);
 			}
 
-			// Try full name (e.g., "C minor seventh")
-			if (input.includes(' ')) {  // Only try full name parsing if input contains spaces
-				// Extract root if present
-				const rootMatch = input.match(/^([A-G][b#]?)\s/);
-				const root = rootMatch ? rootMatch[1] : 'C';
+			// Check full name parsing in parseChordInput function: 
+			let result = null;
+
+			// Try full name first (e.g. "C minor seventh")
+			if (input.includes(' ')) {
+				const [rootPart, ...nameParts] = input.split(' ');
+				const nameToFind = nameParts.join(' ').toLowerCase();
 	
 				// Find matching quality by full name
-				const fullNameMatch = Object.entries(chordFullNames).find(([_, name]) => 
-					input.toLowerCase().includes(name.toLowerCase())
-				);
-	
-				if (fullNameMatch) {
-					const [quality] = fullNameMatch;
+				const qualityEntry = Object.entries(chordFullNames)
+					.find(([_, name]) => name.toLowerCase() === nameToFind);
+		
+				if (qualityEntry) {
+					const [quality] = qualityEntry;
+					const root = rootPart.match(/^[A-G][b#]?/)?.[0] || 'C';
 					const basePCS = chordQualities[quality];
-					if (basePCS) {
-						const rootPC = noteToPC[root];
-						return {
-							quality,
-							root,
-							baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
-							pcs: transposePitchClassSet(basePCS, rootPC)
-						};
-					}
+					const rootPC = noteToPC[root];
+		
+					return {
+						quality,
+						root,
+						baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
+						pcs: transposePitchClassSet(basePCS, rootPC)
+					};
 				}
 			}
 			return null;
