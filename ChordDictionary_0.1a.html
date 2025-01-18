@@ -2145,7 +2145,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run z3 Tests';
+            button.innerHTML = 'Run z4 Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
@@ -2159,7 +2159,7 @@
         // Initialize chord dictionary and tests on load
         window.addEventListener('load', async function() {
             console.log('Window loaded');
-            await loadChordDictionary();
+            //await loadChordDictionary();
             filterChordTypes();
             addTestButton();
         });        
