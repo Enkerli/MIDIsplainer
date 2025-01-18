@@ -457,33 +457,38 @@
 		const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 		
 		// Function to find named inversions for a chord quality
-		function findNamedInversions(quality, basePCS) {
+		function findNamedInversions(pcs, quality) {
+			const decimal = parseInt(toBinaryPCS(pcs), 2);
 			const inversions = [];
-			const baseDecimal = parseInt(toBinaryPCS(basePCS), 2);
 	
-			// Try each other chord quality
-			for (const [otherQuality, otherPCS] of Object.entries(chordQualities)) {
-				if (quality === otherQuality) continue; // Skip self
-				if (basePCS.length !== otherPCS.length) continue; // Must have same number of notes
+			Object.entries(chordQualities).forEach(([otherQuality, otherPCS]) => {
+				if (otherPCS.length !== pcs.length) return;  // Must have same number of notes
+				if (quality === otherQuality) return;  // Skip self
 		
-				// Try each possible starting note of the other quality
+				// Try each possible root position
 				for (let i = 0; i < 12; i++) {
-					const transposedPCS = transposePitchClassSet(otherPCS, i);
-					const transposedDecimal = parseInt(toBinaryPCS(transposedPCS), 2);
+					const transposed = transposePitchClassSet(otherPCS, i);
+					const transposedDecimal = parseInt(toBinaryPCS(transposed), 2);
 			
-					if (transposedDecimal === baseDecimal) {
-						// Found a match - get the starting PC relative to the base chord
-						const startingPC = transposedPCS[0];
+					if (transposedDecimal === decimal) {
+						const rootNote = noteToPCKeys[i];
+						const intervals = transposed.map(pc => (pc - i + 12) % 12);
+						const notes = getChordNotes(rootNote, intervals, otherQuality);
+				
 						inversions.push({
 							quality: otherQuality,
-							rootPC: startingPC
+							root: rootNote,
+							rootPC: i,
+							notes: notes,
+							intervals: intervals
 						});
 					}
 				}
-			}
+			});
 	
 			return inversions;
 		}
+
 
 		// Function to convert inversion data to notation
 		function formatNamedInversion(inv) {
@@ -503,6 +508,34 @@
 			5,   // elevenths
 			8,9    // thirteenths (or sixths)
 		];
+		
+		const degreeOrderMap = {
+			// Root is always first
+			0: 0,    // Root
+	
+			// Sus intervals and thirds
+			4: 1,    // Major third
+			3: 1,    // Minor third
+			5: 1,    // Fourth (for sus4)
+			2: 1,    // Second (for sus2)
+	
+			// Fifth
+			7: 2,    // Perfect fifth
+			6: 2,    // Diminished fifth
+			8: 2,    // Augmented fifth
+	
+			// Sevenths
+			10: 3,   // Minor seventh
+			11: 3,   // Major seventh
+	
+			// Extensions
+			1: 4,    // Minor ninth
+			2: 4,    // Major ninth (when not sus)
+			5: 5,    // Perfect fourth/eleventh (when not sus)
+			8: 6,    // Minor thirteenth
+			9: 6     // Major thirteenth/sixth
+		};
+
 
 
 		// Build the named inversions for each chord quality
@@ -538,25 +571,21 @@
 			return null;
 		}
 
-        function orderByDegrees(pcSet, root = 0) {
-			// Special case for sus4 chords
-			if (pcSet.includes((root + 5) % 12) && pcSet.length === 5) {
-				const susOrder = [0, 5, 7, 10, 1, 2, 3, 4, 6, 8, 9, 11];
-				return [...pcSet].sort((a, b) => 
-					susOrder.indexOf((a - root + 12) % 12) - 
-					susOrder.indexOf((b - root + 12) % 12)
-				);
-			}
-	
-			// Normal ordering for other chords
-			return [...pcSet].sort((a, b) => {
+        function orderByDegrees(pcs, root = 0, quality = '') {
+			return [...pcs].sort((a, b) => {
 				const relA = (a - root + 12) % 12;
 				const relB = (b - root + 12) % 12;
-				const idxA = degreeOrder.indexOf(relA);
-				const idxB = degreeOrder.indexOf(relB);
-				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+		
+				const priorityA = getOrderPriority(relA, quality);
+				const priorityB = getOrderPriority(relB, quality);
+		
+				if (priorityA === priorityB) {
+					return relA - relB;  // If same priority, sort by pitch class
+				}
+				return priorityA - priorityB;
 			});
 		}
+
 
         function toBinaryPCS(pcSet) {
             let binary = new Array(12).fill(0);
@@ -1085,6 +1114,36 @@
 			const intervals = orderedPCS.map(pc => (pc - rootPC + 12) % 12);
 			const notes = getChordNotes(root, intervals, quality);
 
+			// Get inversions information - only show actual inversions, not self-reference
+			// const inversions = findRelatedChords(transposedPCS, quality)
+// 				.filter(inv => inv.quality !== quality || inv.root !== root);
+// 	
+// 			const inversionsHtml = inversions.length > 0 ? `
+// 				<div class="inversions-section">
+// 					<h4>Named Inversions:</h4>
+// 					<ul>
+// 						${inversions.map(inv => `
+// 							<li>${inv.root}${inv.quality} [${inv.notes.join(', ')}]</li>
+// 						`).join('')}
+// 					</ul>
+// 				</div>
+// 			` : '';
+			
+			const inversions = findNamedInversions(orderedPCS, quality);
+			const inversionsHtml = inversions.length > 0 ? `
+				<div class="named-inversions">
+					<h4>Named Inversions:</h4>
+					<ul>
+						${inversions.map(inv => `
+							<li>${inv.root}${inv.quality}
+								<br>Notes: [${inv.notes.join(', ')}]
+								<br>Intervals: ${intervalToString(inv.intervals, inv.quality)}
+							</li>
+						`).join('')}
+					</ul>
+				</div>
+			` : '';
+
 			// Generate transpositions with inversions
 			let transpositionOutput = '';
 			Object.entries(noteToPC).forEach(([note, pc]) => {
@@ -1103,23 +1162,7 @@
 					   Decimal: ${decimal}</p>
 				`;
 			});
-			
-			// Get inversions information - only show actual inversions, not self-reference
-			const inversions = findNamedInversions(orderedPCS, quality);
-			const inversionsHtml = inversions.length > 0 ? `
-				<div class="named-inversions">
-					<h4>Named Inversions:</h4>
-					<ul>
-						${inversions.map(inv => `
-							<li>${inv.root}${inv.quality}
-								<br>Notes: [${inv.notes.join(', ')}]
-								<br>Intervals: ${intervalToString(inv.intervals, inv.quality)}
-							</li>
-						`).join('')}
-					</ul>
-				</div>
-			` : '';
-	
+
 			resultDiv.innerHTML = `
 				<div class="result-header">
 					<h3>Result for ${root}${quality}</h3>
@@ -1466,50 +1509,56 @@
 
 		// New function to get note names
 		function getChordNotes(root, intervals, quality = '') {
+			// First order the intervals
+			const orderedIntervals = orderByDegrees(intervals, 0, quality);
+	
 			// Root letter and standard letter sequence
 			const rootLetter = root.charAt(0);
 			const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 	
-			return intervals.map(interval => {
+			return orderedIntervals.map(interval => {
 				if (interval === 0) return root;
 		
-				// Get target letter based on standard intervals
+				// Calculate the target letter based on standard interval relationships
 				let steps;
 				switch (interval) {
-					case 4:  steps = 2; break;  // major third = 2 letters up
-					case 7:  steps = 4; break;  // perfect fifth = 4 letters up
-					case 11: steps = 6; break;  // major seventh = 6 letters up
-					case 2:  steps = 1; break;  // major second = 1 letter up
-					case 9:  steps = 5; break;  // major sixth = 5 letters up
-					default: steps = Math.floor(interval * 2/3);
+					case 2: steps = 1; break;  // Second
+					case 3:
+					case 4: steps = 2; break;  // Third
+					case 5: steps = 3; break;  // Fourth
+					case 6:
+					case 7:
+					case 8: steps = 4; break;  // Fifth
+					case 9: steps = 5; break;  // Sixth
+					case 10:
+					case 11: steps = 6; break; // Seventh
+					default: steps = Math.floor(interval * 7/12); // Approximate for other intervals
 				}
 		
-				// Get target letter
+				// Get target letter and calculate accidental
 				const rootIndex = letterNames.indexOf(rootLetter);
 				const targetLetter = letterNames[(rootIndex + steps) % 7];
-		
-				// Calculate required pitch adjustment
 				const naturalPC = noteToPC[targetLetter];
 				const desiredPC = (noteToPC[root] + interval) % 12;
 				const adjustment = (desiredPC - naturalPC + 12) % 12;
-
-				// Special cases for sharp keys
-				if ((root === 'C#' || root === 'F#') && quality.indexOf('min') === -1) {
+		
+				// Handle special cases and return appropriate spelling
+				if ((root === 'C#' || root === 'F#') && !quality?.includes('min')) {
 					if (interval === 4) return targetLetter + '♯';  // E# instead of F
 					if (interval === 11) return targetLetter + '♯'; // B# instead of C
 				}
 		
-				// Add appropriate accidental
 				switch (adjustment) {
-					case 0:  return targetLetter;
-					case 1:  return root.includes('b') ? targetLetter + '♭' : targetLetter + '♯';
-					case 2:  return targetLetter + '♯';
+					case 0: return targetLetter;
+					case 1: return root.includes('b') ? targetLetter + '♭' : targetLetter + '♯';
+					case 2: return targetLetter + '♯';
 					case 10: return targetLetter + '♭';
 					case 11: return targetLetter + '♭';
 					default: return targetLetter;
 				}
 			});
 		}
+
 
 		// Function to get note names for a transposition
 		function getTranspositionNotes(rootNote, intervals) {
@@ -1681,6 +1730,26 @@
 			`;
 		}
 
+		// Function to determine the correct order based on chord quality
+		function getOrderPriority(interval, quality = '') {
+			let priority = degreeOrderMap[interval] || 7;
+	
+			// Special handling for sus chords
+			if (quality?.includes('sus')) {
+				if (quality.includes('sus4') && interval === 5) {
+					priority = 1;  // Sus4 moves fourth to third position
+				} else if (quality.includes('sus2') && interval === 2) {
+					priority = 1;  // Sus2 moves second to third position
+				}
+		
+				// Deemphasize thirds in sus chords
+				if (interval === 3 || interval === 4) {
+					priority = 8;
+				}
+			}
+	
+			return priority;
+		}
 		
 		// Function to update the named inversions dictionary
 		function updateNamedInversions() {
@@ -2033,174 +2102,17 @@
         }
 
 // Update the degree order map to properly handle sus chords
-const degreeOrderMap = {
-    // Root is always first
-    0: 0,    // Root
-    
-    // Sus intervals and thirds
-    4: 1,    // Major third
-    3: 1,    // Minor third
-    5: 1,    // Fourth (for sus4)
-    2: 1,    // Second (for sus2)
-    
-    // Fifth
-    7: 2,    // Perfect fifth
-    6: 2,    // Diminished fifth
-    8: 2,    // Augmented fifth
-    
-    // Sevenths
-    10: 3,   // Minor seventh
-    11: 3,   // Major seventh
-    
-    // Extensions
-    1: 4,    // Minor ninth
-    2: 4,    // Major ninth (when not sus)
-    5: 5,    // Perfect fourth/eleventh (when not sus)
-    8: 6,    // Minor thirteenth
-    9: 6     // Major thirteenth/sixth
-};
 
-// Function to determine the correct order based on chord quality
-function getOrderPriority(interval, quality = '') {
-    let priority = degreeOrderMap[interval] || 7;
-    
-    // Special handling for sus chords
-    if (quality?.includes('sus')) {
-        if (quality.includes('sus4') && interval === 5) {
-            priority = 1;  // Sus4 moves fourth to third position
-        } else if (quality.includes('sus2') && interval === 2) {
-            priority = 1;  // Sus2 moves second to third position
-        }
-        
-        // Deemphasize thirds in sus chords
-        if (interval === 3 || interval === 4) {
-            priority = 8;
-        }
-    }
-    
-    return priority;
-}
 
-// Updated orderByDegrees function
-function orderByDegrees(pcs, root = 0, quality = '') {
-    return [...pcs].sort((a, b) => {
-        const relA = (a - root + 12) % 12;
-        const relB = (b - root + 12) % 12;
-        
-        const priorityA = getOrderPriority(relA, quality);
-        const priorityB = getOrderPriority(relB, quality);
-        
-        if (priorityA === priorityB) {
-            return relA - relB;  // If same priority, sort by pitch class
-        }
-        return priorityA - priorityB;
-    });
-}
 
-// Update the getChordNotes function to use the new ordering
-function getChordNotes(root, intervals, quality = '') {
-    // First order the intervals
-    const orderedIntervals = orderByDegrees(intervals, 0, quality);
-    
-    // Root letter and standard letter sequence
-    const rootLetter = root.charAt(0);
-    const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-    
-    return orderedIntervals.map(interval => {
-        if (interval === 0) return root;
-        
-        // Calculate the target letter based on standard interval relationships
-        let steps;
-        switch (interval) {
-            case 2: steps = 1; break;  // Second
-            case 3:
-            case 4: steps = 2; break;  // Third
-            case 5: steps = 3; break;  // Fourth
-            case 6:
-            case 7:
-            case 8: steps = 4; break;  // Fifth
-            case 9: steps = 5; break;  // Sixth
-            case 10:
-            case 11: steps = 6; break; // Seventh
-            default: steps = Math.floor(interval * 7/12); // Approximate for other intervals
-        }
-        
-        // Get target letter and calculate accidental
-        const rootIndex = letterNames.indexOf(rootLetter);
-        const targetLetter = letterNames[(rootIndex + steps) % 7];
-        const naturalPC = noteToPC[targetLetter];
-        const desiredPC = (noteToPC[root] + interval) % 12;
-        const adjustment = (desiredPC - naturalPC + 12) % 12;
-        
-        // Handle special cases and return appropriate spelling
-        if ((root === 'C#' || root === 'F#') && !quality?.includes('min')) {
-            if (interval === 4) return targetLetter + '♯';  // E# instead of F
-            if (interval === 11) return targetLetter + '♯'; // B# instead of C
-        }
-        
-        switch (adjustment) {
-            case 0: return targetLetter;
-            case 1: return root.includes('b') ? targetLetter + '♭' : targetLetter + '♯';
-            case 2: return targetLetter + '♯';
-            case 10: return targetLetter + '♭';
-            case 11: return targetLetter + '♭';
-            default: return targetLetter;
-        }
-    });
-}
 
-// Add named inversions functionality
-function findNamedInversions(pcs, quality) {
-    const decimal = parseInt(toBinaryPCS(pcs), 2);
-    const inversions = [];
-    
-    Object.entries(chordQualities).forEach(([otherQuality, otherPCS]) => {
-        if (otherPCS.length !== pcs.length) return;  // Must have same number of notes
-        if (quality === otherQuality) return;  // Skip self
-        
-        // Try each possible root position
-        for (let i = 0; i < 12; i++) {
-            const transposed = transposePitchClassSet(otherPCS, i);
-            const transposedDecimal = parseInt(toBinaryPCS(transposed), 2);
-            
-            if (transposedDecimal === decimal) {
-                const rootNote = noteToPCKeys[i];
-                const intervals = transposed.map(pc => (pc - i + 12) % 12);
-                const notes = getChordNotes(rootNote, intervals, otherQuality);
-                
-                inversions.push({
-                    quality: otherQuality,
-                    root: rootNote,
-                    rootPC: i,
-                    notes: notes,
-                    intervals: intervals
-                });
-            }
-        }
-    });
-    
-    return inversions;
-}
 
 // Update displayDetailedResult to include named inversions
 function displayDetailedResult(pcs, quality = 'Custom PCS', root = 'C', baseDecimal = null) {
     // ... (previous code remains the same)
     
     // Add named inversions section
-    const inversions = findNamedInversions(orderedPCS, quality);
-    const inversionsHtml = inversions.length > 0 ? `
-        <div class="named-inversions">
-            <h4>Named Inversions:</h4>
-            <ul>
-                ${inversions.map(inv => `
-                    <li>${inv.root}${inv.quality}
-                        <br>Notes: [${inv.notes.join(', ')}]
-                        <br>Intervals: ${intervalToString(inv.intervals, inv.quality)}
-                    </li>
-                `).join('')}
-            </ul>
-        </div>
-    ` : '';
+    
     
     resultDiv.innerHTML = `
         ... // Previous content
@@ -2268,10 +2180,10 @@ function displayDetailedResult(pcs, quality = 'Custom PCS', root = 'C', baseDeci
     input.click();
 }
 
-// Add button for TSV import
+// // Add button for TSV import
 // document.querySelector('.export-section').innerHTML += `
-    <button onclick="importTSV()">Import from TSV</button>
-`;
+//     <button onclick="importTSV()">Import from TSV</button>
+// `;
 
 
 
