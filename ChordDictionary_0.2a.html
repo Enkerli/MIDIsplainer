@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 7</h1>
+        <h1>Chord Dictionary 8</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -974,7 +974,7 @@
 			document.body.removeChild(linkElement);
 		}
 	
-//         function orderByDegreesFromRoot(pcs, root) {
+        function orderByDegreesFromRoot(pcs, root) {
             // Normalize all PCs relative to the root
             let normalizedPcs = pcs.map(pc => (pc - root + 12) % 12);
             // Sort in ascending order
