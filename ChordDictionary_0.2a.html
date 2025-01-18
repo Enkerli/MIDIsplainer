@@ -510,15 +510,17 @@
 				8,9    // thirteenths/sixths
 			],
 	
-			// Special ordering for sus chords
+			// Special ordering for sus chords - sus note comes immediately after root
 			sus: [
-				0,   // root
-				2,5, // sus2/4 (replacing third)
-				6,7, // fifths
-				10,11, // sevenths
-				1,   // ninths (flat nine in altered chords)
-				3,4, // thirds (if present, come after sus)
-				8,9  // thirteenths
+				0,    // root
+				2,    // sus2 (if present)
+				5,    // sus4 (if present)
+				7,    // fifth
+				10,   // seventh (if present)
+				1,2,  // ninths
+				3,4,  // thirds (if present, deprioritized)
+				6,    // altered fifth
+				8,9   // thirteenths
 			],
 	
 			// Special ordering for sixth chords
@@ -572,10 +574,40 @@
 			const type = getChordType(quality);
 			const order = degreeOrder[type];
 	
-			// Convert PCs to intervals relative to root
-			const intervals = pcSet.map(pc => (pc - root + 12) % 12);
+			// For sus chords, ensure sus note comes right after root
+			if (type === 'sus') {
+				const hasSus4 = pcSet.includes((root + 5) % 12);
+				const hasSus2 = pcSet.includes((root + 2) % 12);
+		
+				// Handle the specific ordering for sus chords
+				return [...pcSet].sort((a, b) => {
+					const relA = (a - root + 12) % 12;
+					const relB = (b - root + 12) % 12;
+			
+					// Root always comes first
+					if (relA === 0) return -1;
+					if (relB === 0) return 1;
+			
+					// Sus4 comes second if present
+					if (hasSus4) {
+						if (relA === 5) return -1;
+						if (relB === 5) return 1;
+					}
+			
+					// Sus2 comes next if present
+					if (hasSus2) {
+						if (relA === 2) return -1;
+						if (relB === 2) return 1;
+					}
+			
+					// Use standard order for remaining notes
+					const idxA = order.indexOf(relA);
+					const idxB = order.indexOf(relB);
+					return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+				});
+			}
 	
-			// Sort based on degree order for this chord type
+			// For non-sus chords, use standard ordering
 			return [...pcSet].sort((a, b) => {
 				const relA = (a - root + 12) % 12;
 				const relB = (b - root + 12) % 12;
@@ -1713,10 +1745,8 @@
 			if (quality.includes('6') && !quality.includes('13')) return 'sixth';
 			return 'default';
 		}
-		
-		
 
-
+		
 
 
 
