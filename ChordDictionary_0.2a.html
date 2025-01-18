@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 17</h1>
+        <h1>Chord Dictionary 19</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -697,9 +697,11 @@
 
 		// Wrapper for display functions
 		function orderByDegrees(pcSet, root = 0, quality = '') {
-			return orderPitchClasses(pcSet, root, quality);
+			console.log('orderByDegrees input:', { pcSet, root, quality });
+			const result = orderPitchClasses(pcSet, root, quality);
+			console.log('orderByDegrees output:', result);
+			return result;
 		}
-
 		// Wrapper for card display
 		function orderByDegreesFromRoot(pcs, root) {
 			let quality = '';
@@ -1242,15 +1244,21 @@
 		
 		// Function to add named inversions to detailed result display
 		function displayDetailedResult(pcs, quality = 'Custom PCS', root = 'C', baseDecimal = null) {
+		   console.log('displayDetailedResult input:', { pcs, quality, root, baseDecimal });
+		   
 			const resultDiv = document.getElementById('result');
 			const rootPC = noteToPC[root];
+			console.log('rootPC:', rootPC);
 
 			// Get the base chord quality's PCS and transpose it
 			const basePCS = chordQualities[quality];
+			console.log('basePCS:', basePCS);
 			const transposedPCS = basePCS ? transposePitchClassSet(basePCS, rootPC) : pcs;
+			console.log('transposedPCS:', transposedPCS);
 	
 			// Order PCS by degrees from the root
 			const orderedPCS = orderByDegrees(transposedPCS, rootPC);
+		    console.log('orderedPCS:', orderedPCS);
 	
 			// Calculate display values
 			const binaryPCS = toBinaryPCS(orderedPCS);
@@ -1353,6 +1361,7 @@
 
 		
         function filterChordTypes() {
+        	console.log('Starting filterChordTypes');
 			const category = document.getElementById('chordCategory').value;
 			const chordList = document.getElementById('chordList');
 			chordList.innerHTML = '';
@@ -1366,7 +1375,10 @@
 			}
 
 			chordsToShow.forEach(([quality, intervals]) => {
+				console.log('Processing chord:', quality);
+		        console.log('Raw intervals:', intervals);
 				const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
+				console.log('Ordered PCS:', orderedPCS);
 				const binaryPCS = toBinaryPCS(intervals);
 				const decimalPCS = parseInt(binaryPCS, 2);
 				const notes = getChordNotes('C', orderedPCS);
@@ -1631,18 +1643,21 @@
 			return isSus || (isAdd && quality.includes('add' + interval));
 		}
 
+
 		// Get chord notes in the right order
 		function getChordNotes(root, intervals, quality = '') {
+			console.log('getChordNotes input:', { root, intervals, quality });
 			// Order the intervals first
 			const orderedIntervals = getOrderedIntervals(intervals, 0, quality);
-	
+			console.log('getChordNotes orderedIntervals:', orderedIntervals);
+
 			// Root letter and standard letter sequence
 			const rootLetter = root.charAt(0);
 			const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 
-			return orderedIntervals.map(interval => {
+			const result = orderedIntervals.map(interval => {
 				if (interval === 0) return root;
-		
+
 				// Get target letter based on standard intervals
 				let steps;
 				switch (interval) {
@@ -1671,8 +1686,10 @@
 					default: return targetLetter;
 				}
 			});
+	
+			console.log('getChordNotes output:', result);
+			return result;
 		}
-
 
 		// Function to get note names for a transposition
 		function getTranspositionNotes(rootNote, intervals) {
