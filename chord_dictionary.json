@@ -513,7 +513,7 @@
       "add13",
       "M6"
     ],
-    "fullName": "major sixth -- sixth",
+    "fullName": "major sixth",
     "binary": "100010010100",
     "forteNumber": "",
     "decimal": 2196,
@@ -802,7 +802,7 @@
       "7",
       "dom"
     ],
-    "fullName": "dominant seventh -- dominant seventh",
+    "fullName": "dominant seventh",
     "binary": "100010010010",
     "forteNumber": "4-27B",
     "decimal": 2194,
@@ -1095,7 +1095,7 @@
     "aliases": [
       "9"
     ],
-    "fullName": "dominant ninth -- dominant ninth",
+    "fullName": "dominant ninth",
     "binary": "101010010010",
     "forteNumber": "5-27A",
     "decimal": 2706,
@@ -1422,7 +1422,7 @@
     "aliases": [
       "11"
     ],
-    "fullName": "dominant eleventh -- eleventh",
+    "fullName": "dominant eleventh",
     "binary": "101011010010",
     "forteNumber": "",
     "decimal": 2770,
@@ -2137,7 +2137,7 @@
       "",
       "maj"
     ],
-    "fullName": "major triad -- major",
+    "fullName": "major triad",
     "binary": "100010010000",
     "forteNumber": "3-11B",
     "decimal": 2192,
@@ -2390,7 +2390,7 @@
       "-",
       "min"
     ],
-    "fullName": "minor triad -- minor",
+    "fullName": "minor triad",
     "binary": "100100010000",
     "forteNumber": "3-11A",
     "decimal": 2320,
@@ -2644,7 +2644,7 @@
       "o",
       "dim"
     ],
-    "fullName": "diminished triad -- diminished",
+    "fullName": "diminished triad",
     "binary": "100100100000",
     "forteNumber": "3-10",
     "decimal": 2336,
@@ -2894,7 +2894,7 @@
       "+5",
       "^#5"
     ],
-    "fullName": "augmented triad -- augmented",
+    "fullName": "augmented triad",
     "binary": "100010001000",
     "forteNumber": "3-12",
     "decimal": 2184,
@@ -3151,7 +3151,7 @@
       "Maj7",
       "^7"
     ],
-    "fullName": "major seventh -- major seventh",
+    "fullName": "major seventh",
     "binary": "100010010001",
     "forteNumber": "4-20",
     "decimal": 2193,
@@ -3444,7 +3444,7 @@
       "mi7",
       "-7"
     ],
-    "fullName": "minor seventh -- minor seventh",
+    "fullName": "minor seventh",
     "binary": "100100010010",
     "forteNumber": "4-26",
     "decimal": 2322,
@@ -3739,7 +3739,7 @@
       "°7",
       "o7"
     ],
-    "fullName": "diminished seventh -- diminished seventh",
+    "fullName": "diminished seventh",
     "binary": "100100100100",
     "forteNumber": "4-28",
     "decimal": 2340,
@@ -4031,7 +4031,7 @@
       "h7",
       "h"
     ],
-    "fullName": "half-diminished seventh -- half-diminished",
+    "fullName": "half-diminished seventh",
     "binary": "100100100010",
     "forteNumber": "4-27A",
     "decimal": 2338,
@@ -4334,7 +4334,7 @@
       "-^7",
       "-maj7"
     ],
-    "fullName": "minor-major seventh -- minor/major seventh",
+    "fullName": "minor-major seventh",
     "binary": "100100010001",
     "forteNumber": "4-19A",
     "decimal": 2321,
@@ -4622,7 +4622,7 @@
       "aug7",
       "7b13"
     ],
-    "fullName": "augmented seventh -- augmented dominant seventh",
+    "fullName": "augmented dominant seventh",
     "binary": "100010001010",
     "forteNumber": "4-19B",
     "decimal": 2186,
@@ -4914,7 +4914,7 @@
       "∆#5",
       "+M7"
     ],
-    "fullName": "augmented major seventh -- major seventh flat sixth -- augmented seventh",
+    "fullName": "augmented major seventh",
     "binary": "100010001001",
     "forteNumber": "4-24",
     "decimal": 2185,
@@ -5198,7 +5198,7 @@
       "m6",
       "-6"
     ],
-    "fullName": "minor sixth -- minor sixth",
+    "fullName": "minor sixth",
     "binary": "100100010100",
     "forteNumber": "",
     "decimal": 2324,
@@ -5492,7 +5492,7 @@
       "maj9",
       "^9"
     ],
-    "fullName": "major ninth -- major ninth",
+    "fullName": "major ninth",
     "binary": "101010010001",
     "forteNumber": "5-27B",
     "decimal": 2705,
@@ -5817,7 +5817,7 @@
       "m9",
       "-9"
     ],
-    "fullName": "minor ninth -- minor ninth",
+    "fullName": "minor ninth",
     "binary": "101100010010",
     "forteNumber": "5-27A",
     "decimal": 2834,
@@ -6501,7 +6501,7 @@
       "m11",
       "-11"
     ],
-    "fullName": "minor eleventh -- minor eleventh",
+    "fullName": "minor eleventh",
     "binary": "101101010010",
     "forteNumber": "",
     "decimal": 2898,
@@ -6864,7 +6864,7 @@
       "^13",
       "M7add13"
     ],
-    "fullName": "major thirteenth -- major seventh added thirteenth",
+    "fullName": "major thirteenth",
     "binary": "101010010101",
     "forteNumber": "",
     "decimal": 2709,
@@ -7617,7 +7617,7 @@
     "aliases": [
       "sus2"
     ],
-    "fullName": "suspended second -- suspended second",
+    "fullName": "suspended second",
     "binary": "101000010000",
     "forteNumber": "",
     "decimal": 2576,
@@ -7867,7 +7867,7 @@
       "sus4",
       "sus"
     ],
-    "fullName": "suspended fourth -- suspended fourth",
+    "fullName": "suspended fourth",
     "binary": "100001010000",
     "forteNumber": "",
     "decimal": 2128,
@@ -8119,7 +8119,7 @@
       "7sus4",
       "7sus"
     ],
-    "fullName": "dominant seventh suspended fourth -- suspended fourth seventh",
+    "fullName": "dominant seventh suspended fourth",
     "binary": "100001010010",
     "forteNumber": "",
     "decimal": 2130,
@@ -8408,7 +8408,7 @@
       "9sus4",
       "9sus"
     ],
-    "fullName": "dominant ninth suspended fourth -- dominant ninth suspended fourth",
+    "fullName": "dominant ninth suspended fourth",
     "binary": "101001010010",
     "forteNumber": "",
     "decimal": 2642,
@@ -8725,7 +8725,7 @@
     "aliases": [
       "7b5"
     ],
-    "fullName": "dominant seventh flat five -- dominant seventh diminished",
+    "fullName": "dominant seventh diminished",
     "binary": "100010100010",
     "forteNumber": "",
     "decimal": 2210,
@@ -9293,7 +9293,7 @@
     "aliases": [
       "7b9"
     ],
-    "fullName": "dominant seventh flat nine -- dominant flat ninth",
+    "fullName": "dominant seventh flat ninth",
     "binary": "110010010010",
     "forteNumber": "",
     "decimal": 3218,
@@ -9617,7 +9617,7 @@
     "aliases": [
       "7#9"
     ],
-    "fullName": "dominant seventh sharp nine -- dominant sharp ninth",
+    "fullName": "dominant seventh sharp ninth",
     "binary": "100110010010",
     "forteNumber": "",
     "decimal": 2450,
@@ -27195,7 +27195,7 @@
       "aug9",
       "9b13"
     ],
-    "fullName": "dominant ninth augmented -- augmented dominant ninth",
+    "fullName": "dominant ninth augmented",
     "binary": "101010001010",
     "forteNumber": "",
     "decimal": 2698,
