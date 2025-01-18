@@ -1771,7 +1771,6 @@
 		}
         
         // Function to automatically load the chord dictionary
-// Function to automatically load the chord dictionary
         async function loadChordDictionary() {
             try {
                 const response = await fetch('chord_dictionary.json');
@@ -1897,12 +1896,16 @@
 
             // Full Name Parsing Tests
             TestSuite.test('Parse full name - minor triad', () => {
+                console.log('Testing full name parsing for minor triad...');
                 const result = parseChordInput('C minor triad');
+                console.log('Result:', result);
                 TestSuite.assertEqual(result.quality, 'min', 'Failed to parse minor triad from full name');
             });
 
             TestSuite.test('Parse full name - major seventh', () => {
+                console.log('Testing full name parsing for major seventh...');
                 const result = parseChordInput('D major seventh');
+                console.log('Result:', result);
                 TestSuite.assertEqual(result.quality, 'maj7', 'Failed to parse major seventh from full name');
             });
 
