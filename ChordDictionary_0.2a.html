@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 13</h1>
+        <h1>Chord Dictionary 14</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -552,7 +552,7 @@
 					ordered.push(2);  // add second
 				}
 				// Add sus4 if present
-				else if (quality.includes('sus4') && intervals.includes(5)) {
+				else if (intervals.includes(5)) {
 					ordered.push(5);  // add fourth
 				}
 		
@@ -570,6 +570,13 @@
 				if (intervals.includes(2) && !quality.includes('sus2')) {
 					ordered.push(2);
 				}
+		
+				// Add any remaining intervals
+				intervals.forEach(interval => {
+					if (!ordered.includes(interval)) {
+						ordered.push(interval);
+					}
+				});
 			} else {
 				// Standard ordering for non-suspended chords
 				[3, 4,    // thirds
@@ -635,7 +642,7 @@
 			return ordered;
 		}
 
-		// Updated interval quality function
+		// Get interval quality name
 		function getIntervalQuality(interval, quality = '') {
 			const degreeMap = {
 				0: 'R',
@@ -654,20 +661,20 @@
 			return degreeMap[interval];
 		}
 
-		// Interval string function that uses our ordering
+		// Get interval string
 		function intervalToString(intervals, quality = '') {
-			// First order the intervals
-			const orderedIntervals = orderNotesAndIntervals(intervals, quality);
+			// First get ordered intervals
+			const orderedInts = getOrderedIntervals(intervals, 0, quality);
 			// Then convert to quality names
-			return orderedIntervals.map(interval => getIntervalQuality(interval, quality)).join(', ');
+			return orderedInts.map(interval => getIntervalQuality(interval, quality)).join(', ');
 		}
 
-		// Simple wrapper for displayed results
+		// Wrapper for display functions
 		function orderByDegrees(pcSet, root = 0, quality = '') {
 			return orderPitchClasses(pcSet, root, quality);
 		}
 
-		// Simple wrapper for cards - should give same results
+		// Wrapper for card display
 		function orderByDegreesFromRoot(pcs, root) {
 			let quality = '';
 			// Try to detect if it's a sus chord from the intervals
@@ -1596,10 +1603,10 @@
 			return isSus || (isAdd && quality.includes('add' + interval));
 		}
 
-		// New function to help with both notes and intervals
+		// Get chord notes in the right order
 		function getChordNotes(root, intervals, quality = '') {
 			// Order the intervals first
-			const orderedIntervals = orderNotesAndIntervals(intervals, quality);
+			const orderedIntervals = getOrderedIntervals(intervals, 0, quality);
 	
 			// Root letter and standard letter sequence
 			const rootLetter = root.charAt(0);
@@ -1800,6 +1807,20 @@
 			return orderPitchClasses(intervals, 0, quality)
 				.map(pc => pc % 12);
 		}
+
+
+
+
+
+
+		
+		// Get ordered intervals for a given PC set
+		function getOrderedIntervals(pcSet, root = 0, quality = '') {
+			const ordered = orderPitchClasses(pcSet, root, quality);
+			return ordered.map(pc => (pc - root + 12) % 12);
+		}
+
+
 
 
 
