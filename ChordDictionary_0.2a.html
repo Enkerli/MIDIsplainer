@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chord Dictionary January 18, 2025 at 3:03:57 PM EST</title>
+    <title>Chord Dictionary January 18, 2025 at 3:06:52 PM EST</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -510,14 +510,14 @@
 				8,9    // thirteenths/sixths
 			],
 	
-			// Special ordering for sus chords - sus note comes immediately after root
+			// Special ordering for sus chords - sus notes come immediately after root
 			sus: [
 				0,    // root
-				2,    // sus2 (if present)
-				5,    // sus4 (if present)
+				2,    // sus2 (if present, comes first)
+				5,    // sus4 (if present, comes after sus2)
 				7,    // fifth
 				10,   // seventh (if present)
-				1,2,  // ninths
+				1,    // ninth
 				3,4,  // thirds (if present, deprioritized)
 				6,    // altered fifth
 				8,9   // thirteenths
@@ -574,7 +574,7 @@
 			const type = getChordType(quality);
 			const order = degreeOrder[type];
 	
-			// For sus chords, ensure sus note comes right after root
+			// For sus chords, ensure sus notes come right after root in correct order
 			if (type === 'sus') {
 				const hasSus4 = pcSet.includes((root + 5) % 12);
 				const hasSus2 = pcSet.includes((root + 2) % 12);
@@ -588,16 +588,16 @@
 					if (relA === 0) return -1;
 					if (relB === 0) return 1;
 			
-					// Sus4 comes second if present
-					if (hasSus4) {
-						if (relA === 5) return -1;
-						if (relB === 5) return 1;
-					}
-			
-					// Sus2 comes next if present
+					// Sus2 comes second if present
 					if (hasSus2) {
 						if (relA === 2) return -1;
 						if (relB === 2) return 1;
+					}
+			
+					// Sus4 comes next if present
+					if (hasSus4) {
+						if (relA === 5) return -1;
+						if (relB === 5) return 1;
 					}
 			
 					// Use standard order for remaining notes
@@ -1747,6 +1747,7 @@
 		}
 
 		
+
 
 
 
