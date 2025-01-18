@@ -450,26 +450,25 @@
 		const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 		
 		// Function to find named inversions for a chord quality
-		function findNamedInversions(quality, basePCS) {
+		// Add named inversions functionality
+		function findNamedInversions(pcs) {
 			const inversions = [];
-			const baseDecimal = parseInt(toBinaryPCS(basePCS), 2);
+			const decimal = parseInt(toBinaryPCS(pcs), 2);
 	
-			// Try each other chord quality
-			for (const [otherQuality, otherPCS] of Object.entries(chordQualities)) {
-				if (quality === otherQuality) continue; // Skip self
-				if (basePCS.length !== otherPCS.length) continue; // Must have same number of notes
+			// Check each quality
+			for (const [quality, qualityPCS] of Object.entries(chordQualities)) {
+				if (qualityPCS.length !== pcs.length) continue;
 		
-				// Try each possible starting note of the other quality
+				// Try each transposition
 				for (let i = 0; i < 12; i++) {
-					const transposedPCS = transposePitchClassSet(otherPCS, i);
-					const transposedDecimal = parseInt(toBinaryPCS(transposedPCS), 2);
+					const transposed = transposePitchClassSet(qualityPCS, i);
+					const transposedDecimal = parseInt(toBinaryPCS(transposed), 2);
 			
-					if (transposedDecimal === baseDecimal) {
-						// Found a match - get the starting PC relative to the base chord
-						const startingPC = transposedPCS[0];
+					if (transposedDecimal === decimal && !areArraysEqual(transposed, pcs)) {
 						inversions.push({
-							quality: otherQuality,
-							rootPC: startingPC
+							quality,
+							root: noteToPCKeys[i],
+							pcs: transposed
 						});
 					}
 				}
@@ -531,17 +530,33 @@
 			return null;
 		}
 
-        function orderByDegrees(pcSet, root = 0) {
-			// Sort by standard degree order
-			return [...pcSet].sort((a, b) => {
-				// Normalize relative to root first
-				const relA = (a - root + 12) % 12;
-				const relB = (b - root + 12) % 12;
-				// Get index in degreeOrder (default to end if not found)
-				const idxA = degreeOrder.indexOf(relA);
-				const idxB = degreeOrder.indexOf(relB);
-				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
-			});
+        // Fix degree ordering for suspended and altered chords
+		function orderByDegrees(pcSet, root = 0) {
+			// First normalize relative to root
+			const normalized = pcSet.map(pc => (pc - root + 12) % 12);
+	
+			// Define priority map for chord components
+			const priority = {
+				0: 0,    // Root
+				2: 2,    // Second (for sus2)
+				3: 1,    // Minor third
+				4: 1,    // Major third
+				5: 2,    // Fourth (for sus4)
+				6: 3,    // Tritone
+				7: 3,    // Perfect fifth
+				8: 4,    // Augmented fifth/minor sixth
+				9: 4,    // Major sixth
+				10: 5,   // Minor seventh
+				11: 5,   // Major seventh
+				1: 6     // Minor ninth (for b9)
+			};
+
+			// Sort based on priority and then by pitch class
+			return normalized.sort((a, b) => {
+				const priorityA = priority[a] ?? 7;
+				const priorityB = priority[b] ?? 7;
+				return priorityA === priorityB ? a - b : priorityA - priorityB;
+			}).map(pc => (pc + root) % 12);
 		}
 
         function toBinaryPCS(pcSet) {
@@ -989,10 +1004,11 @@
 			}
 		}
 		
+		// Fix findChordByDecimal to handle transposed chords correctly
 		function findChordByDecimal(decimal) {
 			const searchPCS = decimalToPCS(decimal);
 	
-			// Try each quality and transposition
+			// Try each quality
 			for (const [quality, basePCS] of Object.entries(chordQualities)) {
 				const baseDecimal = parseInt(toBinaryPCS(basePCS), 2);
 		
@@ -1002,13 +1018,15 @@
 					const transposedDecimal = parseInt(toBinaryPCS(transposedPCS), 2);
 			
 					if (transposedDecimal === decimal) {
-						// Find root note based on transposition
+						// Get root note based on transposition
 						const rootNote = noteToPCKeys[i];
+						// Order the PCS properly based on the new root
+						const orderedPCS = orderByDegrees(transposedPCS, i);
 						return {
 							quality,
 							root: rootNote,
 							baseDecimal,
-							pcs: orderByDegreesFromRoot(transposedPCS, i)
+							pcs: orderedPCS
 						};
 					}
 				}
@@ -1294,10 +1312,10 @@
 		}
 
 
+		// First, let's fix the parseChordInput function to handle full names correctly
 		function parseChordInput(input) {
-			// Clean up input
 			input = input.trim();
-	
+
 			// Try chord symbol first (e.g., "Cm7")
 			const parsed = parseChord(input);
 			if (parsed) {
@@ -1312,18 +1330,6 @@
 						pcs: transposePitchClassSet(basePCS, rootPC)
 					};
 				}
-			}
-
-			// Try decimal notation
-			if (/^\d+$/.test(input)) {
-				return findChordByDecimal(parseInt(input, 10));
-			}
-
-			// Try PCS notation [0,4,7] or [0, 4, 7]
-			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
-			if (pcsMatch) {
-				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
-				return findChordByPCS(pcs);
 			}
 
 			// Try full name (e.g., "C minor seventh")
@@ -1345,8 +1351,22 @@
 				};
 			}
 
+			// Try decimal notation
+			if (/^\d+$/.test(input)) {
+				return findChordByDecimal(parseInt(input, 10));
+			}
+
+			// Try PCS notation [0,4,7] or [0, 4, 7]
+			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
+			if (pcsMatch) {
+				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
+				if (pcs.some(isNaN)) return null;
+				return findChordByPCS(pcs);
+			}
+
 			return null;
 		}
+
 
 		// Gets the base (C) version of any PCS
 		function getBasePCS(pcs, root) {
@@ -1770,6 +1790,150 @@
 			return html;
 		}
         
+                // Helper function to compare arrays
+		function areArraysEqual(arr1, arr2) {
+			if (arr1.length !== arr2.length) return false;
+			return arr1.every((val, idx) => val === arr2[idx]);
+		}
+
+        
+        
+		// Add bulk import functionality
+		function importBulkData(tsvContent) {
+			const lines = tsvContent.trim().split('\n');
+			const results = {
+				added: [],
+				merged: [],
+				errors: []
+			};
+	
+			lines.forEach((line, index) => {
+				try {
+					const [pcsStr, fullName, aliases = '', forteNum = ''] = line.split('\t').map(s => s.trim());
+			
+					// Parse PCS
+					const pcs = pcsStr.match(/\[([\d,\s]+)\]/)
+						? pcsStr.match(/\[([\d,\s]+)\]/)[1].split(',').map(n => parseInt(n.trim()))
+						: null;
+				
+					if (!pcs) {
+						throw new Error('Invalid PCS format');
+					}
+			
+					// Generate quality name from full name
+					const qualityName = fullName.toLowerCase()
+						.replace(/\s+/g, '')
+						.replace(/[^a-z0-9]/g, '');
+				
+					// Check for existing chord with same PCS
+					const decimal = parseInt(toBinaryPCS(pcs), 2);
+					const existing = findChordByDecimal(decimal);
+			
+					if (existing) {
+						// Merge with existing entry
+						const existingQuality = existing.quality;
+						chordFullNames[existingQuality] = `${chordFullNames[existingQuality]} / ${fullName}`;
+						if (aliases) {
+							chordAliases[existingQuality] = [
+								...(chordAliases[existingQuality] || []),
+								...aliases.split(',').map(a => a.trim())
+							];
+						}
+						if (forteNum) {
+							chordForteNumbers[existingQuality] = forteNum;
+						}
+						results.merged.push({
+							original: existingQuality,
+							newName: fullName,
+							pcs
+						});
+					} else {
+						// Add new entry
+						chordQualities[qualityName] = pcs;
+						chordFullNames[qualityName] = fullName;
+						if (aliases) {
+							chordAliases[qualityName] = aliases.split(',').map(a => a.trim());
+						}
+						if (forteNum) {
+							chordForteNumbers[qualityName] = forteNum;
+						}
+						results.added.push({
+							quality: qualityName,
+							fullName,
+							pcs
+						});
+					}
+				} catch (error) {
+					results.errors.push({
+						line: index + 1,
+						content: line,
+						error: error.message
+					});
+				}
+			});
+	
+			return results;
+		}
+
+
+
+		// Add scale compatibility analysis
+		function analyzeScaleCompatibility(pcs) {
+			const decimal = parseInt(toBinaryPCS(pcs), 2);
+			const compatibleScales = [];
+	
+			// Define common scales
+			const scales = {
+				major: [0, 2, 4, 5, 7, 9, 11],
+				minor: [0, 2, 3, 5, 7, 8, 10],
+				harmonicMinor: [0, 2, 3, 5, 7, 8, 11],
+				melodicMinor: [0, 2, 3, 5, 7, 9, 11],
+				diminished: [0, 2, 3, 5, 6, 8, 9, 11],
+				wholeTone: [0, 2, 4, 6, 8, 10],
+				// Add more scales as needed
+			};
+	
+			// Check each scale
+			Object.entries(scales).forEach(([scaleName, scalePCS]) => {
+				// Check if all chord tones are in the scale
+				const isCompatible = pcs.every(pc => 
+					scalePCS.includes(pc) || 
+					scalePCS.includes((pc + 12) % 12)
+				);
+		
+				if (isCompatible) {
+					compatibleScales.push(scaleName);
+				}
+			});
+	
+			return compatibleScales;
+		}
+
+		// Add avoid note analysis
+		function analyzeAvoidNotes(pcs, quality) {
+			const avoidNotes = [];
+	
+			// Basic rules for avoid notes
+			if (quality.includes('maj') && !quality.includes('7')) {
+				// Major triads avoid the fourth
+				if (!pcs.includes(5)) avoidNotes.push(5);
+			}
+	
+			if (quality.includes('7') && !quality.includes('sus')) {
+				// Dominant seventh chords avoid the fourth unless it's specifically added
+				if (!pcs.includes(5)) avoidNotes.push(5);
+			}
+	
+			if (quality.includes('min7')) {
+				// Minor seventh chords avoid the major third
+				if (!pcs.includes(4)) avoidNotes.push(4);
+			}
+	
+			// Add more avoid note rules based on music theory
+	
+			return avoidNotes;
+		}
+		
         // Function to automatically load the chord dictionary
         async function loadChordDictionary() {
             try {
@@ -2080,7 +2244,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run Tests';
+            button.innerHTML = 'Run Tests 1';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
@@ -2098,6 +2262,11 @@
             filterChordTypes();
             addTestButton();
         });        
+        
+        
+
+
+
     </script>
 </body>
 </html>
