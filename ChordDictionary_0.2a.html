@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chord Dictionary January 18, 2025 at 4:49:25 PM EST</title>
+    <title>Chord Dictionary</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary January 18, 2025 at 4:49:51 PM EST</h1>
+        <h1>Chord Dictionary 2</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -226,15 +226,17 @@
  -->
 
         
+<!-- 
         <div class="export-section">
-<!-- 			<h2>Import/Export Chord Dictionary</h2> -->
+<!~~ 			<h2>Import/Export Chord Dictionary</h2> ~~>
 			<h2>Export Chord Dictionary</h2>
 			<button onclick="exportChordDictionary()">Export to JSON</button>
-			<!-- 
+			<!~~ 
 <button onclick="importChordDictionary()">Import from JSON</button>
 			<input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
- -->
+ ~~>
 		</div>
+ -->
 
 
 
@@ -569,53 +571,16 @@
 			return null;
 		}
 
-        function orderByDegrees(pcSet, root = 0, quality = '') {
-			const type = getChordType(quality);
-			const order = degreeOrder[type];
-	
-			// For sus chords, ensure sus notes come right after root in correct order
-			if (type === 'sus') {
-				const hasSus4 = pcSet.includes((root + 5) % 12);
-				const hasSus2 = pcSet.includes((root + 2) % 12);
-		
-				// Handle the specific ordering for sus chords
-				return [...pcSet].sort((a, b) => {
-					const relA = (a - root + 12) % 12;
-					const relB = (b - root + 12) % 12;
-			
-					// Root always comes first
-					if (relA === 0) return -1;
-					if (relB === 0) return 1;
-			
-					// Sus2 comes second if present
-					if (hasSus2) {
-						if (relA === 2) return -1;
-						if (relB === 2) return 1;
-					}
-			
-					// Sus4 comes next if present
-					if (hasSus4) {
-						if (relA === 5) return -1;
-						if (relB === 5) return 1;
-					}
-			
-					// Use standard order for remaining notes
-					const idxA = order.indexOf(relA);
-					const idxB = order.indexOf(relB);
-					return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
-				});
+        // Primary ordering function
+		function orderByDegrees(pcSet, root = 0, quality = '') {
+			// Handle suspended chords specially
+			if (isSuspendedChord(quality)) {
+				return orderSuspendedChord(pcSet, root, quality);
 			}
 	
-			// For non-sus chords, use standard ordering
-			return [...pcSet].sort((a, b) => {
-				const relA = (a - root + 12) % 12;
-				const relB = (b - root + 12) % 12;
-				const idxA = order.indexOf(relA);
-				const idxB = order.indexOf(relB);
-				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
-			});
+			// Standard ordering for other chords
+			return orderStandardChord(pcSet, root, quality);
 		}
-
 
         function toBinaryPCS(pcSet) {
             let binary = new Array(12).fill(0);
@@ -1576,49 +1541,37 @@
 		}
 				
 		function getIntervalQuality(interval, quality = '') {
-			const type = getChordType(quality);
+			const isSus = isSuspendedChord(quality);
+			const suspendedInterval = getSuspendedInterval(quality);
 	
-			// Base interval mapping
 			const degreeMap = {
 				0: 'R',
 				1: '♭9',
-				2: '9',
+				2: isSus && suspendedInterval === 2 ? '2' : '9',
 				3: '♭3',
 				4: '3',
-				5: '11',
+				5: isSus && suspendedInterval === 5 ? '4' : '11',
 				6: '♭5',
 				7: '5',
 				8: '♭13',
-				9: '13',
+				9: quality?.includes('6') && !quality?.includes('13') ? '6' : '13',
 				10: '♭7',
 				11: '7'
 			};
-
-			// Special cases based on chord type
-			if (type === 'sus') {
-				if (interval === 2) return '2';
-				if (interval === 5) return '4';
-			}
 	
-			if (type === 'sixth') {
-				if (interval === 9 && !quality?.includes('13')) return '6';
-			}
-
 			return degreeMap[interval];
 		}
 
 
+
 		// Update the priority map in the orderByDegrees function
 		function orderIntervals(intervals, quality = '') {
-			const type = getChordType(quality);
-			const order = degreeOrder[type];
-	
-			return intervals.sort((a, b) => {
-				const idxA = order.indexOf(a);
-				const idxB = order.indexOf(b);
-				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
-			});
+			if (isSuspendedChord(quality)) {
+				return orderSuspendedChord(intervals, 0, quality);
+			}
+			return orderStandardChord(intervals, 0, quality);
 		}
+
 
 		
 		// Helper function to determine enharmonic spelling based on chord context
@@ -1748,7 +1701,79 @@
 		}
 
 
+		// Helper to determine if a chord is suspended
+		function isSuspendedChord(quality = '') {
+			return quality.includes('sus');
+		}
 
+		// Helper to get suspended interval for a chord
+		function getSuspendedInterval(quality = '') {
+			if (quality.includes('sus2')) return 2;
+			if (quality.includes('sus4')) return 5;
+			return null;
+		}
+
+		// Order intervals for a suspended chord
+		function orderSuspendedChord(pcSet, root = 0, quality = '') {
+			const intervals = pcSet.map(pc => (pc - root + 12) % 12);
+			const ordered = [];
+	
+			// First add root
+			ordered.push(0);
+	
+			// Then add suspended note(s)
+			const suspendedInterval = getSuspendedInterval(quality);
+			if (intervals.includes(suspendedInterval)) {
+				ordered.push(suspendedInterval);
+			}
+	
+			// Then add fifth (7)
+			if (intervals.includes(7)) {
+				ordered.push(7);
+			}
+	
+			// Then add seventh (10 for dominant seventh)
+			if (intervals.includes(10)) {
+				ordered.push(10);
+			}
+	
+			// Then add ninth (2 when it's not sus2)
+			if (intervals.includes(2) && suspendedInterval !== 2) {
+				ordered.push(2);
+			}
+	
+			// Add any remaining intervals in standard order
+			intervals.forEach(interval => {
+				if (!ordered.includes(interval)) {
+					ordered.push(interval);
+				}
+			});
+	
+			// Convert back to pitch classes
+			return ordered.map(interval => (interval + root) % 12);
+		}
+
+		// Order intervals for a standard chord
+		function orderStandardChord(pcSet, root = 0, quality = '') {
+			const intervals = pcSet.map(pc => (pc - root + 12) % 12);
+			const standardOrder = [
+				0,   // root
+				3,4, // thirds
+				6,7, // fifths
+				10,11, // sevenths
+				1,2,   // ninths
+				5,     // elevenths
+				8,9    // thirteenths/sixths
+			];
+	
+			return [...pcSet].sort((a, b) => {
+				const relA = (a - root + 12) % 12;
+				const relB = (b - root + 12) % 12;
+				const idxA = standardOrder.indexOf(relA);
+				const idxB = standardOrder.indexOf(relB);
+				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+			});
+		}
 
 
 
