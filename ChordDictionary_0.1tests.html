@@ -185,15 +185,12 @@
         </div>
         <div id="result"></div>
 
-<!-- 
         <div class="chord-management-section">
             <h2>Manage Chord Qualities</h2>
-<!~~ 
             <div class="tabs">
                 <button onclick="switchTab('add')" class="tab-button active">Add New</button>
                 <button onclick="switchTab('edit')" class="tab-button">Edit Existing</button>
             </div>
- ~~>
             
 			<div id="addChordTab" class="tab-content">
 				<div class="input-group">
@@ -223,20 +220,13 @@
 				</div>
 			</div>
         </div>
- -->
-
         
-<!-- 
         <div class="export-section">
-<!~~ 			<h2>Import/Export Chord Dictionary</h2> ~~>
-			<h2>Export Chord Dictionary</h2>
+			<h2>Import/Export Chord Dictionary</h2>
 			<button onclick="exportChordDictionary()">Export to JSON</button>
-			<!~~ 
-<button onclick="importChordDictionary()">Import from JSON</button>
+			<button onclick="importChordDictionary()">Import from JSON</button>
 			<input type="file" id="jsonFileInput" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
- ~~>
 		</div>
- -->
 
 
         <div class="chord-dictionary">
@@ -269,15 +259,14 @@
 
         // Alternate notation mappings
 		const chordAliases = {
-// 			'maj7': ['Δ', 'Δ7', '∆', '∆7', 'M7'],
-// 			'maj9': ['Δ9', '∆9', 'M9'],
-// 			'maj11': ['Δ11', '∆11', 'M11'],
-// 			'maj13': ['Δ13', '∆13', 'M13'],
-			'min7': ['-7', 'm7'],
+			'maj7': ['Δ', 'Δ7', '∆', '∆7', 'M7'],
+			'maj9': ['Δ9', '∆9', 'M9'],
+			'maj11': ['Δ11', '∆11', 'M11'],
+			'maj13': ['Δ13', '∆13', 'M13'],
 			'min': ['m', '-'],
 			'dim': ['°', 'o'],
-			'aug': ['+', '+5', '#5'],
-// 			'minMaj7': ['mM7', 'm∆7', 'm∆', 'mΔ7', 'mΔ', '-∆7', '-∆'],
+			'aug': ['+'],
+			'minMaj7': ['mM7', 'm∆7', 'm∆', 'mΔ7', 'mΔ', '-∆7', '-∆'],
 		};
 
 		const chordForteNumbers = {
@@ -543,19 +532,12 @@
 		}
 
         function orderByDegrees(pcSet, root = 0) {
-			// Special case for sus4 chords
-			if (pcSet.includes((root + 5) % 12) && pcSet.length === 5) {
-				const susOrder = [0, 5, 7, 10, 1, 2, 3, 4, 6, 8, 9, 11];
-				return [...pcSet].sort((a, b) => 
-					susOrder.indexOf((a - root + 12) % 12) - 
-					susOrder.indexOf((b - root + 12) % 12)
-				);
-			}
-	
-			// Normal ordering for other chords
+			// Sort by standard degree order
 			return [...pcSet].sort((a, b) => {
+				// Normalize relative to root first
 				const relA = (a - root + 12) % 12;
 				const relB = (b - root + 12) % 12;
+				// Get index in degreeOrder (default to end if not found)
 				const idxA = degreeOrder.indexOf(relA);
 				const idxB = degreeOrder.indexOf(relB);
 				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
@@ -1037,25 +1019,25 @@
 		function findChordByPCS(inputPCS) {
 			// First note is our root
 			const rootPC = inputPCS[0];
-
-			// Get the interval pattern from input
-			const inputPattern = inputPCS.map(pc => (pc - rootPC + 12) % 12);
-
+	
+			// Get the interval pattern from our input, maintaining the order
+			const inputPattern = getIntervalPattern(inputPCS, rootPC);
+	
 			// Try each chord quality
 			for (const [quality, basePCS] of Object.entries(chordQualities)) {
 				// Skip if lengths don't match
 				if (basePCS.length !== inputPCS.length) continue;
-
-				// Compare patterns
-				const basePattern = basePCS.map(pc => (pc - 0 + 12) % 12);
 		
+				// Get the base intervals (starting from 0)
+				const basePattern = getIntervalPattern(basePCS, 0);
+		
+				// Compare patterns directly (maintaining order)
 				if (JSON.stringify(inputPattern) === JSON.stringify(basePattern)) {
-					const root = Object.entries(noteToPC).find(([_, pc]) => pc === rootPC)?.[0] || 'C';
 					return {
 						quality,
-						root,
+						root: noteToPCKeys[rootPC],
 						baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
-						pcs: inputPCS
+						pcs: inputPCS // Keep original ordered PCS
 					};
 				}
 			}
@@ -1313,71 +1295,10 @@
 
 
 		function parseChordInput(input) {
-			// Validate dependencies first
-			if (!input || !chordFullNames || !chordQualities || !noteToPC) {
-				console.log("Missing dependencies:", { chordFullNames, chordQualities, noteToPC });
-				return null;
-			}
-
+			// Clean up input
 			input = input.trim();
-
-			// Try full name parsing first (e.g., "C minor triad")
-			if (input.includes(' ')) {
-				const rootMatch = input.match(/^([A-G][b#]?)\s/);
-				console.log('Input:', input);
-				console.log('Root match:', rootMatch);
-				
-				if (rootMatch) {
-					const root = rootMatch[1];
-					const namePart = input.slice(rootMatch[0].length).trim().toLowerCase();
-					console.log('Parsing full name:', { 
-						root, 
-						namePart,
-						inputLength: input.length,
-						namePartLength: namePart.length 
-					});
-					console.log('Available full names:', JSON.stringify(chordFullNames, null, 2));
-			
-					// Search for matching quality
-					for (const [quality, fullName] of Object.entries(chordFullNames)) {
-						const lowerFullName = fullName.toLowerCase();
-						console.log('Comparing:', { 
-							quality, 
-							fullName: lowerFullName, 
-							namePart,
-							fullNameLength: lowerFullName.length,
-							namePartLength: namePart.length,
-							areEqual: lowerFullName === namePart,
-							stringComparison: JSON.stringify({lowerFullName, namePart})
-						});
-						if (lowerFullName === namePart) {
-							console.log('Found match:', quality);
-							const basePCS = chordQualities[quality];
-							if (basePCS) {
-								const rootPC = noteToPC[root];
-								return {
-									quality,
-									root,
-									baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
-									pcs: transposePitchClassSet(basePCS, rootPC)
-								};
-							}
-						}
-					}
-					console.log('No match found');
-				}
-			}
-
-			// Try PCS notation
-			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
-			if (pcsMatch) {
-				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
-				if (!pcs.some(isNaN)) {  // Ensure all numbers parsed correctly
-					return findChordByPCS(pcs);
-				}
-			}
-
-			// Try chord symbol
+	
+			// Try chord symbol first (e.g., "Cm7")
 			const parsed = parseChord(input);
 			if (parsed) {
 				const { root, quality } = parsed;
@@ -1398,10 +1319,34 @@
 				return findChordByDecimal(parseInt(input, 10));
 			}
 
+			// Try PCS notation [0,4,7] or [0, 4, 7]
+			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
+			if (pcsMatch) {
+				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
+				return findChordByPCS(pcs);
+			}
+
+			// Try full name (e.g., "C minor seventh")
+			const fullNameMatch = Object.entries(chordFullNames).find(([_, name]) => 
+				input.toLowerCase().includes(name.toLowerCase())
+			);
+			if (fullNameMatch) {
+				const [quality] = fullNameMatch;
+				// Extract root from input if present
+				const rootMatch = input.match(/^([A-G][b#]?)\s/);
+				const root = rootMatch ? rootMatch[1] : 'C';
+				const basePCS = chordQualities[quality];
+				const rootPC = noteToPC[root];
+				return {
+					quality,
+					root,
+					baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
+					pcs: transposePitchClassSet(basePCS, rootPC)
+				};
+			}
+
 			return null;
 		}
-
-
 
 		// Gets the base (C) version of any PCS
 		function getBasePCS(pcs, root) {
@@ -1433,6 +1378,138 @@
 		// Function to generate a quality name from PCS if none is provided
 		function generateQualityName(pcs) {
 			return `custom_${pcs.join('_')}`;
+		}
+
+		function importBulkChords(tsvData) {
+			const lines = tsvData.trim().split('\n');
+			const results = {
+				success: [],
+				merged: [],
+				errors: []
+			};
+
+			lines.forEach((line, index) => {
+				try {
+					const parts = line.split('\t').map(p => p.trim());
+					if (parts.length < 2) {
+						throw new Error('Each line must have at least PCS and full name');
+					}
+
+					const [pcsString, fullName, ...rest] = parts;
+					const aliasString = rest[0] || '{}';
+
+					// Parse PCS
+					const pcs = parsePCS(pcsString);
+					if (!pcs) {
+						throw new Error('Invalid PCS format');
+					}
+
+					// Parse aliases
+					const aliases = parseAliases(aliasString);
+
+					// Check for existing chord with same PCS
+					const existingQuality = findExistingQualityByPCS(pcs);
+			
+					if (existingQuality) {
+						// Merge with existing entry
+						const existingFullName = chordFullNames[existingQuality];
+						const existingAliases = chordAliases[existingQuality] || [];
+				
+						// Update full name to show both
+						chordFullNames[existingQuality] = 
+							`${existingFullName} -- ${fullName}`;
+				
+						// Merge aliases
+						chordAliases[existingQuality] = mergeUnique(existingAliases, aliases);
+				
+						results.merged.push({
+							quality: existingQuality,
+							pcs,
+							originalFullName: existingFullName,
+							newFullName: fullName,
+							mergedAliases: chordAliases[existingQuality]
+						});
+					} else {
+						// Create new entry
+						const qualityName = aliases[0]?.replace(/[{}]/g, '').trim() || generateQualityName(pcs);
+						chordQualities[qualityName] = pcs;
+						chordFullNames[qualityName] = fullName;
+						if (aliases.length > 0) {
+							chordAliases[qualityName] = aliases;
+						}
+
+						results.success.push({
+							quality: qualityName,
+							pcs,
+							fullName,
+							aliases
+						});
+					}
+
+				} catch (error) {
+					results.errors.push({
+						line: index + 1,
+						content: line,
+						error: error.message
+					});
+				}
+			});
+
+			return results;
+		}
+
+		// Add UI elements for bulk import
+		function addBulkImportUI() {
+			const exportSection = document.querySelector('.export-section');
+			const bulkImportSection = document.createElement('div');
+			bulkImportSection.className = 'bulk-import-section';
+			bulkImportSection.innerHTML = `
+				<h3>Bulk Import Chords</h3>
+				<p>Enter tab-separated values: PCS, full name, aliases (in braces)</p>
+				<textarea id="bulkImportText" rows="10" style="width: 100%; margin-bottom: 1rem;"
+					placeholder="[0, 4, 8]&#9;augmented&#9;{aug, +, +5}"></textarea>
+				<button onclick="processBulkImport()">Import Chords</button>
+				<div id="bulkImportResults"></div>
+			`;
+			exportSection.insertAdjacentElement('afterend', bulkImportSection);
+		}
+
+		function processBulkImport() {
+			const textarea = document.getElementById('bulkImportText');
+			const resultsDiv = document.getElementById('bulkImportResults');
+			const results = importBulkChords(textarea.value);
+
+			let resultHtml = '<h4>Import Results</h4>';
+	
+			// Show successful new additions
+			if (results.success.length > 0) {
+				resultHtml += `<p>Successfully imported ${results.success.length} new chord(s):</p>`;
+				resultHtml += '<ul>' + results.success.map(s => 
+					`<li>${s.quality}: ${s.fullName} ${s.aliases.length ? `(${s.aliases.join(', ')})` : ''}</li>`
+				).join('') + '</ul>';
+			}
+	
+			// Show merges
+			if (results.merged.length > 0) {
+				resultHtml += `<p>Merged ${results.merged.length} chord(s) with existing entries:</p>`;
+				resultHtml += '<ul>' + results.merged.map(m => 
+					`<li>${m.quality}: "${m.originalFullName}" merged with "${m.newFullName}"<br>` +
+					`Combined aliases: (${m.mergedAliases.join(', ')})</li>`
+				).join('') + '</ul>';
+			}
+	
+			// Show errors
+			if (results.errors.length > 0) {
+				resultHtml += `<p>Errors in ${results.errors.length} line(s):</p>`;
+				resultHtml += '<ul>' + results.errors.map(e => 
+					`<li>Line ${e.line}: ${e.error}<br><code>${e.content}</code></li>`
+				).join('') + '</ul>';
+			}
+
+			resultsDiv.innerHTML = resultHtml;
+	
+			// Update the display
+			filterChordTypes();
 		}
 		
 		// Helper to find existing chord quality by PCS
@@ -1550,42 +1627,21 @@
 			return degreeMap[interval];
 		}
 
-		// Update the priority map in the orderByDegrees function
 		function orderIntervals(intervals, quality = '') {
 			// First, normalize intervals relative to the root (0)
 			const normalized = intervals.map(interval => interval % 12);
-
-			// Priority map for interval ordering - updated for sus chords
+	
+			// Priority map for interval ordering
 			const priority = {
 				0: 0,    // Root
-				5: 1,    // Fourth (for sus4)
-				2: 1,    // Second (for sus2)
-				3: 1,    // Minor third
-				4: 1,    // Major third
+				3: 1, 4: 1, 2: 1,  // Third (or suspended)
 				7: 2,    // Fifth
-				10: 3,   // Minor seventh
-				11: 3,   // Major seventh
-				9: 3,    // Sixth/thirteenth
-				1: 4,    // Minor ninth
-				2: 4,    // Major ninth (when not sus)
-				5: 5,    // Eleventh (when not sus)
-				8: 6,    // Minor thirteenth
-				6: 7     // Others (altered fifths etc.)
+				10: 3, 11: 3, 9: 3,  // Seventh/sixth
+				1: 4, 2: 4,  // Ninths
+				5: 5,    // Eleventh
+				8: 6, 9: 6,  // Thirteenth
+				6: 7     // Others
 			};
-
-			// Special handling for sus chords
-			if (quality?.includes('sus')) {
-				// Prioritize sus intervals
-				if (quality.includes('sus4')) {
-					priority[5] = 1;  // Fourth takes third position
-					priority[3] = 8;  // Deprioritize thirds
-					priority[4] = 8;
-				} else if (quality.includes('sus2')) {
-					priority[2] = 1;  // Second takes third position
-					priority[3] = 8;  // Deprioritize thirds
-					priority[4] = 8;
-				}
-			}
 
 			return normalized.sort((a, b) => {
 				const aValue = priority[a] ?? 8;
@@ -2024,7 +2080,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run z7 Tests';
+            button.innerHTML = 'Run x Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
@@ -2040,7 +2096,7 @@
             console.log('Window loaded');
             await loadChordDictionary();
             filterChordTypes();
-//             addTestButton();
+            addTestButton();
         });        
     </script>
 </body>
