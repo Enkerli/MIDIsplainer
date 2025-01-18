@@ -263,9 +263,10 @@
 			'maj9': ['Δ9', '∆9', 'M9'],
 			'maj11': ['Δ11', '∆11', 'M11'],
 			'maj13': ['Δ13', '∆13', 'M13'],
+			'min7': ['-7', 'm7'],
 			'min': ['m', '-'],
 			'dim': ['°', 'o'],
-			'aug': ['+'],
+			'aug': ['+', '+5', '#5'],
 			'minMaj7': ['mM7', 'm∆7', 'm∆', 'mΔ7', 'mΔ', '-∆7', '-∆'],
 		};
 
@@ -2145,7 +2146,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run z5 Tests';
+            button.innerHTML = 'Run z6 Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
