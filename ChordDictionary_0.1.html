@@ -1825,7 +1825,78 @@
             }
         }
 
-        // Test Framework
+        // Test Framework - Defined before any usage
+        window.TestSuite = {
+            tests: [],
+            results: {
+                passed: 0,
+                failed: 0,
+                total: 0
+            },
+
+            test: function(name, fn) {
+                console.log(`Adding test: ${name}`);
+                this.tests.push({ name, fn });
+            },
+
+            assertEqual: function(actual, expected, message) {
+                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                    throw new Error(`${message}\nExpected: ${JSON.stringify(expected)}\nActual: ${JSON.stringify(actual)}`);
+                }
+            },
+
+            runTests: async function() {
+                console.log('Running tests...');
+                const resultDiv = document.createElement('div');
+                resultDiv.id = 'testResults';
+                resultDiv.style.padding = '20px';
+                resultDiv.style.margin = '20px';
+                resultDiv.style.border = '1px solid #ccc';
+                document.body.appendChild(resultDiv);
+
+                this.results = { passed: 0, failed: 0, total: 0 };
+
+                for (const test of this.tests) {
+                    try {
+                        await test.fn();
+                        this.results.passed++;
+                        resultDiv.innerHTML += `<p style="color: green">✓ ${test.name}</p>`;
+                    } catch (error) {
+                        this.results.failed++;
+                        resultDiv.innerHTML += `
+                            <p style="color: red">✗ ${test.name}</p>
+                            <pre style="background: #f8f8f8; padding: 10px; margin: 5px 0;">${error.message}</pre>
+                        `;
+                    }
+                    this.results.total++;
+                }
+
+                resultDiv.innerHTML += `
+                    <h3>Test Results</h3>
+                    <p>Total: ${this.results.total}</p>
+                    <p style="color: green">Passed: ${this.results.passed}</p>
+                    <p style="color: red">Failed: ${this.results.failed}</p>
+                `;
+            }
+        };
+
+        window.runChordTests = async function() {
+            console.log('Starting chord tests...');
+            
+            // Basic Chord Parsing Tests
+            TestSuite.test('Parse major triad', () => {
+                const result = parseChord('Cmaj');
+                TestSuite.assertEqual(result, { root: 'C', quality: 'maj' }, 'Failed to parse Cmaj');
+            });
+
+            TestSuite.test('Parse minor seventh', () => {
+                const result = parseChord('Dm7');
+                TestSuite.assertEqual(result, { root: 'D', quality: 'min7' }, 'Failed to parse Dm7');
+            });
+
+            // Run the tests
+            await TestSuite.runTests();
+        };
         const TestSuite = {
             tests: [],
             results: {
@@ -1940,20 +2011,15 @@
 
         // Add button to run tests
         function addTestButton() {
-            console.log('Adding test button...');
             const button = document.createElement('button');
-            button.innerHTML = 'Run Those Tests';
+            button.innerHTML = 'Run Tests';
             button.style.margin = '20px';
             button.onclick = function() {
-                console.log('Test button clicked');
-                ChordDictionaryTests.init();
+                runChordTests();
             };
             const container = document.querySelector('.container');
             if (container) {
-                console.log('Found container, inserting button');
                 container.insertBefore(button, container.firstChild);
-            } else {
-                console.warn('Container not found');
             }
         }
 
