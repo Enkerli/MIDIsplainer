@@ -498,15 +498,41 @@
 		const namedInversions = {};
 		
 		// Fixed order for chord components (in degree order)
-		const degreeOrder = [
-			0,   // root
-			3,4, // thirds
-			6,7, // fifths
-			10,11, // sevenths
-			1,2,   // ninths
-			5,   // elevenths
-			8,9    // thirteenths (or sixths)
-		];
+		const degreeOrder = {
+			// Default ordering
+			default: [
+				0,   // root
+				3,4, // thirds
+				6,7, // fifths
+				10,11, // sevenths
+				1,2,   // ninths
+				5,     // elevenths
+				8,9    // thirteenths/sixths
+			],
+	
+			// Special ordering for sus chords
+			sus: [
+				0,   // root
+				2,5, // sus2/4 (replacing third)
+				6,7, // fifths
+				10,11, // sevenths
+				1,   // ninths (flat nine in altered chords)
+				3,4, // thirds (if present, come after sus)
+				8,9  // thirteenths
+			],
+	
+			// Special ordering for sixth chords
+			sixth: [
+				0,   // root
+				3,4, // thirds
+				6,7, // fifths
+				9,   // sixth (replacing seventh)
+				10,11, // sevenths (if present)
+				1,2, // ninths
+				5,   // elevenths
+				8    // thirteenths
+			]
+		};
 
 
 		// Build the named inversions for each chord quality
@@ -542,22 +568,19 @@
 			return null;
 		}
 
-        function orderByDegrees(pcSet, root = 0) {
-			// Special case for sus4 chords
-			if (pcSet.includes((root + 5) % 12) && pcSet.length === 5) {
-				const susOrder = [0, 5, 7, 10, 1, 2, 3, 4, 6, 8, 9, 11];
-				return [...pcSet].sort((a, b) => 
-					susOrder.indexOf((a - root + 12) % 12) - 
-					susOrder.indexOf((b - root + 12) % 12)
-				);
-			}
+        function orderByDegrees(pcSet, root = 0, quality = '') {
+			const type = getChordType(quality);
+			const order = degreeOrder[type];
 	
-			// Normal ordering for other chords
+			// Convert PCs to intervals relative to root
+			const intervals = pcSet.map(pc => (pc - root + 12) % 12);
+	
+			// Sort based on degree order for this chord type
 			return [...pcSet].sort((a, b) => {
 				const relA = (a - root + 12) % 12;
 				const relB = (b - root + 12) % 12;
-				const idxA = degreeOrder.indexOf(relA);
-				const idxB = degreeOrder.indexOf(relB);
+				const idxA = order.indexOf(relA);
+				const idxB = order.indexOf(relB);
 				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
 			});
 		}
@@ -1521,6 +1544,9 @@
 		}
 				
 		function getIntervalQuality(interval, quality = '') {
+			const type = getChordType(quality);
+	
+			// Base interval mapping
 			const degreeMap = {
 				0: 'R',
 				1: '♭9',
@@ -1531,20 +1557,19 @@
 				6: '♭5',
 				7: '5',
 				8: '♭13',
-				9: '13',  // Changed from '6'
+				9: '13',
 				10: '♭7',
 				11: '7'
 			};
 
-			// Special case handling
-			if (interval === 9 && !quality?.includes('13')) {
-				return '6';
-			}
-	
-			// Handle suspensions
-			if (quality?.includes('sus')) {
+			// Special cases based on chord type
+			if (type === 'sus') {
 				if (interval === 2) return '2';
 				if (interval === 5) return '4';
+			}
+	
+			if (type === 'sixth') {
+				if (interval === 9 && !quality?.includes('13')) return '6';
 			}
 
 			return degreeMap[interval];
@@ -1552,45 +1577,13 @@
 
 		// Update the priority map in the orderByDegrees function
 		function orderIntervals(intervals, quality = '') {
-			// First, normalize intervals relative to the root (0)
-			const normalized = intervals.map(interval => interval % 12);
-
-			// Priority map for interval ordering - updated for sus chords
-			const priority = {
-				0: 0,    // Root
-				5: 1,    // Fourth (for sus4)
-				2: 1,    // Second (for sus2)
-				3: 1,    // Minor third
-				4: 1,    // Major third
-				7: 2,    // Fifth
-				10: 3,   // Minor seventh
-				11: 3,   // Major seventh
-				9: 3,    // Sixth/thirteenth
-				1: 4,    // Minor ninth
-				2: 4,    // Major ninth (when not sus)
-				5: 5,    // Eleventh (when not sus)
-				8: 6,    // Minor thirteenth
-				6: 7     // Others (altered fifths etc.)
-			};
-
-			// Special handling for sus chords
-			if (quality?.includes('sus')) {
-				// Prioritize sus intervals
-				if (quality.includes('sus4')) {
-					priority[5] = 1;  // Fourth takes third position
-					priority[3] = 8;  // Deprioritize thirds
-					priority[4] = 8;
-				} else if (quality.includes('sus2')) {
-					priority[2] = 1;  // Second takes third position
-					priority[3] = 8;  // Deprioritize thirds
-					priority[4] = 8;
-				}
-			}
-
-			return normalized.sort((a, b) => {
-				const aValue = priority[a] ?? 8;
-				const bValue = priority[b] ?? 8;
-				return aValue === bValue ? a - b : aValue - bValue;
+			const type = getChordType(quality);
+			const order = degreeOrder[type];
+	
+			return intervals.sort((a, b) => {
+				const idxA = order.indexOf(a);
+				const idxB = order.indexOf(b);
+				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
 			});
 		}
 
@@ -1714,6 +1707,21 @@
 			return html;
 		}
         
+		// Helper to determine chord type for ordering
+		function getChordType(quality = '') {
+			if (quality.includes('sus')) return 'sus';
+			if (quality.includes('6') && !quality.includes('13')) return 'sixth';
+			return 'default';
+		}
+		
+		
+
+
+
+
+
+
+
         // Function to automatically load the chord dictionary
         async function loadChordDictionary() {
             try {
