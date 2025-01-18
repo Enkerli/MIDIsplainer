@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chord Dictionary January 18, 2025 at 3:06:52 PM EST</title>
+    <title>Chord Dictionary January 18, 2025 at 4:49:25 PM EST</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -178,10 +178,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord to Pitch Class Set Converter</h1>
+        <h1>Chord Dictionary January 18, 2025 at 4:49:51 PM EST</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
-            <button id="convertButton" onclick="convertToPCS()">Convert</button>
+            <button id="convertButton" onclick="convertToPCS()">Find</button>
         </div>
         <div id="result"></div>
 
@@ -616,6 +616,7 @@
 				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
 			});
 		}
+
 
         function toBinaryPCS(pcSet) {
             let binary = new Array(12).fill(0);
@@ -1607,6 +1608,7 @@
 			return degreeMap[interval];
 		}
 
+
 		// Update the priority map in the orderByDegrees function
 		function orderIntervals(intervals, quality = '') {
 			const type = getChordType(quality);
@@ -1745,8 +1747,6 @@
 			if (quality.includes('6') && !quality.includes('13')) return 'sixth';
 			return 'default';
 		}
-
-		
 
 
 
