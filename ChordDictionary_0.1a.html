@@ -1305,23 +1305,14 @@
 			if (!input) return null;
 			input = input.trim();
 
-			// Try PCS notation first [0,4,7] or [0, 4, 7]
-			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
-			if (pcsMatch) {
-				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
-				if (!pcs.some(isNaN)) {  // Ensure all numbers parsed correctly
-					const result = findChordByPCS(pcs);
-					if (result) return result;
-				}
-			}
-
-			// Try full name parsing (e.g., "C minor triad")
+			// Try full name parsing first
 			if (input.includes(' ')) {
 				const rootMatch = input.match(/^([A-G][b#]?)\s/);
 				if (rootMatch) {
 					const root = rootMatch[1];
 					const namePart = input.slice(root.length).trim().toLowerCase();
 			
+					// Important: This needs to come before other parsing attempts
 					for (const [quality, fullName] of Object.entries(chordFullNames)) {
 						if (namePart === fullName.toLowerCase()) {
 							const basePCS = chordQualities[quality];
@@ -1337,7 +1328,16 @@
 				}
 			}
 
-			// Try chord symbol (e.g., "Cm7")
+			// Try PCS notation
+			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
+			if (pcsMatch) {
+				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
+				if (!pcs.some(isNaN)) {  // Ensure all numbers parsed correctly
+					return findChordByPCS(pcs);
+				}
+			}
+
+			// Try chord symbol
 			const parsed = parseChord(input);
 			if (parsed) {
 				const { root, quality } = parsed;
@@ -2116,7 +2116,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run y6 Tests';
+            button.innerHTML = 'Run y7 Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
