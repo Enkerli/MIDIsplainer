@@ -1026,25 +1026,25 @@
 		function findChordByPCS(inputPCS) {
 			// First note is our root
 			const rootPC = inputPCS[0];
-	
-			// Get the interval pattern from our input, maintaining the order
-			const inputPattern = getIntervalPattern(inputPCS, rootPC);
-	
+
+			// Get the interval pattern from input
+			const inputPattern = inputPCS.map(pc => (pc - rootPC + 12) % 12);
+
 			// Try each chord quality
 			for (const [quality, basePCS] of Object.entries(chordQualities)) {
 				// Skip if lengths don't match
 				if (basePCS.length !== inputPCS.length) continue;
+
+				// Compare patterns
+				const basePattern = basePCS.map(pc => (pc - 0 + 12) % 12);
 		
-				// Get the base intervals (starting from 0)
-				const basePattern = getIntervalPattern(basePCS, 0);
-		
-				// Compare patterns directly (maintaining order)
 				if (JSON.stringify(inputPattern) === JSON.stringify(basePattern)) {
+					const root = Object.entries(noteToPC).find(([_, pc]) => pc === rootPC)?.[0] || 'C';
 					return {
 						quality,
-						root: noteToPCKeys[rootPC],
+						root,
 						baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
-						pcs: inputPCS // Keep original ordered PCS
+						pcs: inputPCS
 					};
 				}
 			}
@@ -1305,24 +1305,34 @@
 			if (!input) return null;
 			input = input.trim();
 
+			// Try PCS notation first [0,4,7] or [0, 4, 7]
+			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
+			if (pcsMatch) {
+				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
+				if (!pcs.some(isNaN)) {  // Ensure all numbers parsed correctly
+					const result = findChordByPCS(pcs);
+					if (result) return result;
+				}
+			}
+
 			// Try full name parsing (e.g., "C minor triad")
 			if (input.includes(' ')) {
 				const rootMatch = input.match(/^([A-G][b#]?)\s/);
-				if (!rootMatch) return null;
-		
-				const root = rootMatch[1];
-				const namePart = input.slice(root.length).trim().toLowerCase();
-		
-				for (const [quality, fullName] of Object.entries(chordFullNames)) {
-					if (namePart === fullName.toLowerCase()) {
-						const basePCS = chordQualities[quality];
-						const rootPC = noteToPC[root];
-						return {
-							quality,
-							root,
-							baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
-							pcs: transposePitchClassSet(basePCS, rootPC)
-						};
+				if (rootMatch) {
+					const root = rootMatch[1];
+					const namePart = input.slice(root.length).trim().toLowerCase();
+			
+					for (const [quality, fullName] of Object.entries(chordFullNames)) {
+						if (namePart === fullName.toLowerCase()) {
+							const basePCS = chordQualities[quality];
+							const rootPC = noteToPC[root];
+							return {
+								quality,
+								root,
+								baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
+								pcs: transposePitchClassSet(basePCS, rootPC)
+							};
+						}
 					}
 				}
 			}
@@ -1348,15 +1358,10 @@
 				return findChordByDecimal(parseInt(input, 10));
 			}
 
-			// Try PCS notation [0,4,7] or [0, 4, 7]
-			const pcsMatch = input.match(/\[([\d,\s]+)\]/);
-			if (pcsMatch) {
-				const pcs = pcsMatch[1].split(',').map(n => parseInt(n.trim()));
-				return findChordByPCS(pcs);
-			}
-
 			return null;
 		}
+
+
 
 		// Gets the base (C) version of any PCS
 		function getBasePCS(pcs, root) {
@@ -2111,7 +2116,7 @@
         // Add button to run tests
         function addTestButton() {
             const button = document.createElement('button');
-            button.innerHTML = 'Run y5 Tests';
+            button.innerHTML = 'Run y6 Tests';
             button.style.margin = '20px';
             button.onclick = function() {
                 runChordTests();
