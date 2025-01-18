@@ -1771,6 +1771,63 @@
 		}
 		
 		
+		// Function to automatically load the chord dictionary
+        async function loadChordDictionary() {
+            try {
+                const response = await fetch('chord_dictionary.json');
+                if (!response.ok) {
+                    console.warn('Could not load chord_dictionary.json, using default dictionary');
+                    return;
+                }
+                const data = await response.json();
+                
+                // Validate data format
+                if (typeof data !== 'object') {
+                    console.warn('Invalid JSON format in chord_dictionary.json, using default dictionary');
+                    return;
+                }
+
+                // Populate chord qualities and all related data
+                Object.entries(data).forEach(([quality, info]) => {
+                    // Required fields
+                    if (info.pcs && Array.isArray(info.pcs)) {
+                        chordQualities[quality] = info.pcs;
+                    }
+            
+                    // Optional fields
+                    if (info.aliases && Array.isArray(info.aliases)) {
+                        chordAliases[quality] = info.aliases;
+                    }
+            
+                    if (info.fullName) {
+                        chordFullNames[quality] = info.fullName;
+                    }
+            
+                    if (info.forteNumber) {
+                        chordForteNumbers[quality] = info.forteNumber;
+                    }
+            
+                    if (info.compatibleScales && Array.isArray(info.compatibleScales)) {
+                        compatibleScales[quality] = info.compatibleScales;
+                    }
+            
+                    if (info.avoidNotes && Array.isArray(info.avoidNotes)) {
+                        avoidNotes[quality] = info.avoidNotes;
+                    }
+            
+                    if (info.namedInversions && Array.isArray(info.namedInversions)) {
+                        namedInversions[quality] = info.namedInversions;
+                    }
+                });
+
+                console.log('Chord dictionary loaded successfully');
+            } catch (error) {
+                console.warn('Error loading chord_dictionary.json, using default dictionary:', error);
+            }
+        }
+
+        
+
 
 		
 		// Initialize bulk import UI when page loads
@@ -1780,7 +1837,10 @@
 		
 		
         // Initialize chord dictionary on load
-        window.onload = filterChordTypes;
+        window.onload = async function() {
+            await loadChordDictionary();
+            filterChordTypes();
+        };
     </script>
 </body>
 </html>
