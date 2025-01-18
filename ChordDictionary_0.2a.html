@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 5</h1>
+        <h1>Chord Dictionary 6</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -573,12 +573,7 @@
 
         // Primary ordering function
 		function orderByDegrees(pcSet, root = 0, quality = '') {
-			if (isSuspendedChord(quality)) {
-				return orderSuspendedChord(pcSet, root, quality);
-			}
-	
-			// Handle sixth chords and other types normally
-			return orderStandardChord(pcSet, root, quality);
+			return orderPitchClasses(pcSet, root, quality);
 		}
 
         function toBinaryPCS(pcSet) {
@@ -1192,16 +1187,12 @@
             'altered': ['7b5', '7#5', '7b9', '7#9', '7#11', '7b13']
         };
 
+		// Helper function for interval string creation
 		function intervalToString(intervals, quality = '') {
-			// Make sure root comes first
-			const withoutRoot = intervals.filter(i => i !== 0);
-			const orderedInts = [0, ...orderIntervals(withoutRoot)];
-	
-			return orderedInts
-				.map(interval => getIntervalQuality(interval, quality))
-				.join(', ');
+			const orderedInts = orderIntervals(intervals, quality);
+			return orderedInts.map(interval => getIntervalQuality(interval, quality)).join(', ');
 		}
-        
+
         function filterChordTypes() {
 			const category = document.getElementById('chordCategory').value;
 			const chordList = document.getElementById('chordList');
@@ -1486,42 +1477,37 @@
 			return orderedInts.map(interval => getIntervalQuality(interval, quality)).join(', ');
 		}
 
-		// New function to get note names
+		// Function to get notes in correct order
 		function getChordNotes(root, intervals, quality = '') {
+			// Use the same ordering function for consistency
+			const orderedIntervals = orderIntervals(intervals, quality);
+	
 			// Root letter and standard letter sequence
 			const rootLetter = root.charAt(0);
 			const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-	
-			return intervals.map(interval => {
+
+			return orderedIntervals.map(interval => {
 				if (interval === 0) return root;
 		
 				// Get target letter based on standard intervals
 				let steps;
 				switch (interval) {
+					case 2:  steps = 1; break;  // second = 1 letter up
 					case 4:  steps = 2; break;  // major third = 2 letters up
+					case 5:  steps = 3; break;  // perfect fourth = 3 letters up
 					case 7:  steps = 4; break;  // perfect fifth = 4 letters up
+					case 9:  steps = 5; break;  // sixth = 5 letters up
 					case 11: steps = 6; break;  // major seventh = 6 letters up
-					case 2:  steps = 1; break;  // major second = 1 letter up
-					case 9:  steps = 5; break;  // major sixth = 5 letters up
 					default: steps = Math.floor(interval * 2/3);
 				}
-		
-				// Get target letter
+
+				// Get target letter and add appropriate accidental
 				const rootIndex = letterNames.indexOf(rootLetter);
 				const targetLetter = letterNames[(rootIndex + steps) % 7];
-		
-				// Calculate required pitch adjustment
 				const naturalPC = noteToPC[targetLetter];
 				const desiredPC = (noteToPC[root] + interval) % 12;
 				const adjustment = (desiredPC - naturalPC + 12) % 12;
 
-				// Special cases for sharp keys
-				if ((root === 'C#' || root === 'F#') && quality.indexOf('min') === -1) {
-					if (interval === 4) return targetLetter + '♯';  // E# instead of F
-					if (interval === 11) return targetLetter + '♯'; // B# instead of C
-				}
-		
-				// Add appropriate accidental
 				switch (adjustment) {
 					case 0:  return targetLetter;
 					case 1:  return root.includes('b') ? targetLetter + '♭' : targetLetter + '♯';
@@ -1532,6 +1518,7 @@
 				}
 			});
 		}
+
 
 		// Function to get note names for a transposition
 		function getTranspositionNotes(rootNote, intervals) {
@@ -1563,10 +1550,10 @@
 
 		// Helper function for ordering intervals
 		function orderIntervals(intervals, quality = '') {
-			if (isSuspendedChord(quality)) {
-				return orderSuspendedChord(intervals, 0, quality);
-			}
-			return orderStandardChord(intervals, 0, quality);
+			// Convert intervals to PCS (treating first interval as root)
+			const pcSet = intervals.map(interval => interval);
+			// Use the same ordering function
+			return orderPitchClasses(pcSet, 0, quality);
 		}
 
 
@@ -1776,6 +1763,63 @@
 				const idxB = standardOrder.indexOf(relB);
 				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
 			});
+		}
+
+		// Primary ordering function for all chord types
+		function orderPitchClasses(pcSet, root = 0, quality = '') {
+			const intervals = pcSet.map(pc => (pc - root + 12) % 12);
+			let ordered = [];
+	
+			// Add root first
+			ordered.push(0);
+	
+			// Special handling for suspended chords
+			if (quality.includes('sus')) {
+				// Add suspended note if present
+				if (quality.includes('sus4') && intervals.includes(5)) {
+					ordered.push(5);  // add fourth
+				} else if (quality.includes('sus2') && intervals.includes(2)) {
+					ordered.push(2);  // add second
+				}
+		
+				// Add fifth
+				if (intervals.includes(7)) {
+					ordered.push(7);
+				}
+		
+				// Add seventh if present
+				if (intervals.includes(10)) {
+					ordered.push(10);
+				}
+		
+				// Add ninth if present (and not sus2)
+				if (intervals.includes(2) && !quality.includes('sus2')) {
+					ordered.push(2);
+				}
+		
+				// Add any remaining intervals
+				intervals.forEach(interval => {
+					if (!ordered.includes(interval)) {
+						ordered.push(interval);
+					}
+				});
+			} else {
+				// Standard ordering for non-sus chords
+				[3,4,   // thirds
+				 6,7,   // fifths
+				 10,11, // sevenths
+				 1,2,   // ninths
+				 5,     // eleventh
+				 8,9    // thirteenths
+				].forEach(interval => {
+					if (intervals.includes(interval)) {
+						ordered.push(interval);
+					}
+				});
+			}
+	
+			// Convert intervals back to pitch classes
+			return ordered.map(interval => (interval + root) % 12);
 		}
 
 
