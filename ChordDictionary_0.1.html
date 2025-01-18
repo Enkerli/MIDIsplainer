@@ -1769,9 +1769,8 @@
 			html += '</ul>\n</div>';
 			return html;
 		}
-		
-		
-// Function to automatically load the chord dictionary
+        
+        // Function to automatically load the chord dictionary
         async function loadChordDictionary() {
             try {
                 const response = await fetch('chord_dictionary.json');
@@ -1941,19 +1940,31 @@
 
         // Add button to run tests
         function addTestButton() {
+            console.log('Adding test button...');
             const button = document.createElement('button');
             button.innerHTML = 'Run Tests';
             button.style.margin = '20px';
-            button.onclick = ChordDictionaryTests.init;
-            document.body.insertBefore(button, document.body.firstChild);
+            button.onclick = function() {
+                console.log('Test button clicked');
+                ChordDictionaryTests.init();
+            };
+            const container = document.querySelector('.container');
+            if (container) {
+                console.log('Found container, inserting button');
+                container.insertBefore(button, container.firstChild);
+            } else {
+                console.warn('Container not found');
+            }
         }
 
         // Initialize chord dictionary and tests on load
-        window.onload = async function() {
+        window.addEventListener('load', async function() {
+            console.log('Window loaded');
             await loadChordDictionary();
             filterChordTypes();
             addTestButton();
-        };
+        });
+        
     </script>
 </body>
 </html>
