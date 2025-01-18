@@ -1327,24 +1327,30 @@
 			}
 
 			// Try full name (e.g., "C minor seventh")
-			const fullNameMatch = Object.entries(chordFullNames).find(([_, name]) => 
-				input.toLowerCase().includes(name.toLowerCase())
-			);
-			if (fullNameMatch) {
-				const [quality] = fullNameMatch;
-				// Extract root from input if present
+			if (input.includes(' ')) {  // Only try full name parsing if input contains spaces
+				// Extract root if present
 				const rootMatch = input.match(/^([A-G][b#]?)\s/);
 				const root = rootMatch ? rootMatch[1] : 'C';
-				const basePCS = chordQualities[quality];
-				const rootPC = noteToPC[root];
-				return {
-					quality,
-					root,
-					baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
-					pcs: transposePitchClassSet(basePCS, rootPC)
-				};
+	
+				// Find matching quality by full name
+				const fullNameMatch = Object.entries(chordFullNames).find(([_, name]) => 
+					input.toLowerCase().includes(name.toLowerCase())
+				);
+	
+				if (fullNameMatch) {
+					const [quality] = fullNameMatch;
+					const basePCS = chordQualities[quality];
+					if (basePCS) {
+						const rootPC = noteToPC[root];
+						return {
+							quality,
+							root,
+							baseDecimal: parseInt(toBinaryPCS(basePCS), 2),
+							pcs: transposePitchClassSet(basePCS, rootPC)
+						};
+					}
+				}
 			}
-
 			return null;
 		}
 
@@ -1627,21 +1633,42 @@
 			return degreeMap[interval];
 		}
 
+		// Update the priority map in the orderByDegrees function
 		function orderIntervals(intervals, quality = '') {
 			// First, normalize intervals relative to the root (0)
 			const normalized = intervals.map(interval => interval % 12);
-	
-			// Priority map for interval ordering
+
+			// Priority map for interval ordering - updated for sus chords
 			const priority = {
 				0: 0,    // Root
-				3: 1, 4: 1, 2: 1,  // Third (or suspended)
+				5: 1,    // Fourth (for sus4)
+				2: 1,    // Second (for sus2)
+				3: 1,    // Minor third
+				4: 1,    // Major third
 				7: 2,    // Fifth
-				10: 3, 11: 3, 9: 3,  // Seventh/sixth
-				1: 4, 2: 4,  // Ninths
-				5: 5,    // Eleventh
-				8: 6, 9: 6,  // Thirteenth
-				6: 7     // Others
+				10: 3,   // Minor seventh
+				11: 3,   // Major seventh
+				9: 3,    // Sixth/thirteenth
+				1: 4,    // Minor ninth
+				2: 4,    // Major ninth (when not sus)
+				5: 5,    // Eleventh (when not sus)
+				8: 6,    // Minor thirteenth
+				6: 7     // Others (altered fifths etc.)
 			};
+
+			// Special handling for sus chords
+			if (quality?.includes('sus')) {
+				// Prioritize sus intervals
+				if (quality.includes('sus4')) {
+					priority[5] = 1;  // Fourth takes third position
+					priority[3] = 8;  // Deprioritize thirds
+					priority[4] = 8;
+				} else if (quality.includes('sus2')) {
+					priority[2] = 1;  // Second takes third position
+					priority[3] = 8;  // Deprioritize thirds
+					priority[4] = 8;
+				}
+			}
 
 			return normalized.sort((a, b) => {
 				const aValue = priority[a] ?? 8;
