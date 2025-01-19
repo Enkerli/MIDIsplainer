@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 20</h1>
+        <h1>Chord Dictionary 21</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -703,7 +703,7 @@
 			return result;
 		}
 		// Wrapper for card display
-		function orderByDegreesFromRoot(pcs, root) {
+		function orderByDegreesFromRoot(pcs, root, quality = '') {
 			if (!quality) {
 				// Only try to detect quality if none was provided
 				const intervals = pcs.map(pc => (pc - root + 12) % 12);
