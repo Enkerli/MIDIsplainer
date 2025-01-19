@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 22</h1>
+        <h1>Chord Dictionary</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -536,7 +536,7 @@
 				8    // thirteenths
 			]
 		};
-		
+
 		// Core ordering function that everything else should use
 		function orderPitchClasses(pcSet, root = 0, quality = '') {
 			const intervals = pcSet.map(pc => (pc - root + 12) % 12);
@@ -583,21 +583,25 @@
 					}
 				});
 			} else {
-				// Standard ordering for non-suspended chords
-				[3, 4,    // thirds
-				 7,       // fifth 
-				 10, 11,  // sevenths
-				 2,       // ninth
-				 5,       // eleventh
-				 9,       // thirteenth
-				 1,       // flat nine
-				 6, 8     // altered fifths
-				].forEach(interval => {
-					if (intervals.includes(interval)) {
-						ordered.push(interval);
-					}
-				});
-			}
+        // Check if it's a 6 chord (has '6' in quality but not '13')
+        const isSixthChord = quality?.includes('6') && !quality?.includes('13');
+
+        // Standard ordering for non-suspended chords
+        [3, 4,    // thirds
+         7,       // fifth 
+         ...(isSixthChord ? [9] : []), // sixth comes after fifth in 6 chords
+         10, 11,  // sevenths
+         2,       // ninth
+         5,       // eleventh
+         ...(isSixthChord ? [] : [9]),  // thirteenth (if not a 6 chord)
+         1,       // flat nine
+         6, 8     // altered fifths
+        ].forEach(interval => {
+            if (intervals.includes(interval)) {
+                ordered.push(interval);
+            }
+        });
+    }
 
 			// Convert intervals back to pitch classes
 			return ordered.map(interval => (interval + root) % 12);
@@ -613,6 +617,7 @@
 			ordered.push(0);
 
 			if (quality?.includes('sus')) {
+				// Suspended chord handling stays the same
 				// Add suspended note (2 or 5) right after root
 				if (quality.includes('sus2') && normalizedIntervals.includes(2)) {
 					ordered.push(2);  // add second
@@ -649,13 +654,17 @@
 					}
 				});
 			} else {
+				// Check if it's a 6 chord (has '6' in quality but not '13')
+				const isSixthChord = quality?.includes('6') && !quality?.includes('13');
+
 				// Standard ordering for non-suspended chords
 				[3, 4,    // thirds
 				 7,       // fifth 
+				 ...(isSixthChord ? [9] : []), // sixth comes after fifth in 6 chords
 				 10, 11,  // sevenths
 				 2,       // ninth
 				 5,       // eleventh
-				 9,       // thirteenth
+				 ...(isSixthChord ? [] : [9]),  // thirteenth (if not a 6 chord)
 				 1,       // flat nine
 				 6, 8     // altered fifths
 				].forEach(interval => {
@@ -786,33 +795,33 @@
             return rotations[0].map(pc => pc % 12);
         }
         
-		function getAllTranspositionsWithBaseRef(pcs, root, baseDecimal) {
+		function getAllTranspositionsWithBaseRef(pcs, root, baseDecimal, quality = '') { // Add quality param
 			const transpositions = {};
-	
+
 			// Get the base (C) version first
 			const basePCS = getBasePCS(pcs, root);
-			const orderedBasePCS = orderByDegreesFromRoot(basePCS, 0);
-	
+			const orderedBasePCS = orderByDegreesFromRoot(basePCS, 0, quality);
+
 			// If no baseDecimal provided, calculate it from the base version
 			if (baseDecimal === null) {
 				baseDecimal = parseInt(toBinaryPCS(orderedBasePCS), 2);
 			}
-	
+
 			// Now generate all transpositions starting from the base version
 			for (let i = 0; i < 12; i++) {
 				const currentRoot = noteToPCKeys[i];
 				const transposedPCS = transposePitchClassSet(orderedBasePCS, i);
-				const orderedTransposedPCS = orderByDegreesFromRoot(transposedPCS, i);
+				const orderedTransposedPCS = orderByDegreesFromRoot(transposedPCS, i, quality);
 				const binary = toBinaryPCS(orderedTransposedPCS);
 				const decimal = parseInt(binary, 2);
-		
+
 				transpositions[currentRoot] = {
 					pcs: orderedTransposedPCS,
 					binary,
 					decimal
 				};
 			}
-	
+
 			return transpositions;
 		}
 		
@@ -1194,16 +1203,16 @@
 		
 		function findChordByDecimal(decimal) {
 			const searchPCS = decimalToPCS(decimal);
-	
+
 			// Try each quality and transposition
 			for (const [quality, basePCS] of Object.entries(chordQualities)) {
 				const baseDecimal = parseInt(toBinaryPCS(basePCS), 2);
-		
+
 				// Try each possible transposition
 				for (let i = 0; i < 12; i++) {
 					const transposedPCS = transposePitchClassSet(basePCS, i);
 					const transposedDecimal = parseInt(toBinaryPCS(transposedPCS), 2);
-			
+
 					if (transposedDecimal === decimal) {
 						// Find root note based on transposition
 						const rootNote = noteToPCKeys[i];
@@ -1211,7 +1220,7 @@
 							quality,
 							root: rootNote,
 							baseDecimal,
-							pcs: orderByDegreesFromRoot(transposedPCS, i)
+							pcs: orderByDegreesFromRoot(transposedPCS, i, quality) // Pass quality
 						};
 					}
 				}
@@ -1299,7 +1308,7 @@
 			let transpositionOutput = '';
 			Object.entries(noteToPC).forEach(([note, pc]) => {
 				const transPCS = transposePitchClassSet(basePCS || pcs, pc);
-				const orderedTransPCS = orderByDegrees(transPCS, pc);
+				const orderedTransPCS = orderByDegrees(transPCS, pc, quality); // Pass quality
 				const transIntervals = orderedTransPCS.map(tpc => (tpc - pc + 12) % 12);
 				const transNotes = getChordNotes(note, transIntervals, quality);
 				const binary = toBinaryPCS(orderedTransPCS);
@@ -1405,6 +1414,9 @@
 					<div class="chord-pcs">PCS: [${orderedPCS.join(', ')}]</div>
 					<div class="chord-binary">Binary: <span class="binary-format">${binaryPCS}</span></div>
 					<div class="chord-decimal">Decimal: ${decimalPCS}</div>
+					<div class="chord-transpositions">
+						${getTranspositionsDisplay(intervals, quality)}
+					</div>
 				`;
 				chordList.appendChild(chordItem);
 			});
@@ -1698,9 +1710,17 @@
 		}
 
 		// Function to get note names for a transposition
-		function getTranspositionNotes(rootNote, intervals) {
-			const notes = getChordNotes(rootNote, intervals);
-			return notes.join(', ');
+		function getTranspositionsDisplay(intervals, quality) {
+			let output = '<div class="transpositions"><h4>Transpositions:</h4>';
+			Object.entries(noteToPC).forEach(([note, pc]) => {
+				const transPCS = transposePitchClassSet(intervals, pc);
+				const orderedTransPCS = orderByDegrees(transPCS, pc, quality);
+				const transIntervals = orderedTransPCS.map(tpc => (tpc - pc + 12) % 12);
+				const transNotes = getChordNotes(note, transIntervals, quality);
+				output += `<div>${note}: [${transNotes.join(', ')}]</div>`;
+			});
+			output += '</div>';
+			return output;
 		}
 		
 		// Helper function to determine enharmonic spelling based on chord context
@@ -1873,11 +1893,6 @@
 			console.log('getOrderedIntervals output:', ordered);
 			return ordered.map(pc => (pc - root + 12) % 12);
 		}
-// 		function getOrderedIntervals(pcSet, root = 0, quality = '') {
-// 			const ordered = orderPitchClasses(pcSet, root, quality);
-// 			return ordered.map(pc => (pc - root + 12) % 12);
-// 		}
-
 
 		
 		
