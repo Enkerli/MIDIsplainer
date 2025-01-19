@@ -793,35 +793,40 @@
             return rotations[0].map(pc => pc % 12);
         }
         
-		function getAllTranspositionsWithBaseRef(pcs, root, baseDecimal, quality = '') { // Add quality param
-			const transpositions = {};
-
-			// Get the base (C) version first
+		function getAllTranspositionsWithBaseRef(pcs, root, baseDecimal, quality = '') {
 			const basePCS = getBasePCS(pcs, root);
 			const orderedBasePCS = orderByDegreesFromRoot(basePCS, 0, quality);
-
-			// If no baseDecimal provided, calculate it from the base version
+	
 			if (baseDecimal === null) {
 				baseDecimal = parseInt(toBinaryPCS(orderedBasePCS), 2);
 			}
 
-			// Now generate all transpositions starting from the base version
-			for (let i = 0; i < 12; i++) {
-				const currentRoot = noteToPCKeys[i];
-				const transposedPCS = transposePitchClassSet(orderedBasePCS, i);
-				const orderedTransposedPCS = orderByDegreesFromRoot(transposedPCS, i, quality);
-				const binary = toBinaryPCS(orderedTransposedPCS);
-				const decimal = parseInt(binary, 2);
-
+			const transpositions = {};
+	
+			// Generate transpositions for all possible roots
+			Object.entries(noteToPC).forEach(([currentRoot, currentPC]) => {
+				// Transpose the base PCS to the new root
+				const transposedPCS = transposePitchClassSet(orderedBasePCS, currentPC);
+		
+				// Order correctly from this root
+				const orderedTransposedPCS = orderByDegreesFromRoot(transposedPCS, currentPC, quality);
+		
+				// Calculate intervals from this root
+				const intervals = orderedTransposedPCS.map(pc => (pc - currentPC + 12) % 12);
+		
+				// Get notes with consistent spelling
+				const notes = getChordNotes(currentRoot, intervals, quality);
+		
 				transpositions[currentRoot] = {
+					notes: notes,
 					pcs: orderedTransposedPCS,
-					binary,
-					decimal
+					decimal: parseInt(toBinaryPCS(orderedTransposedPCS), 2)
 				};
-			}
+			});
 
 			return transpositions;
 		}
+		
 		
 		function getAllTranspositionsAndInversions(pcSet) {
 			const transpositions = {};
@@ -1112,11 +1117,13 @@
 			const dictionary = {};
 
 			Object.entries(chordQualities).forEach(([quality, pcs]) => {
-				const orderedPCS = orderByDegrees(pcs);
-				const binaryPCS = toBinaryPCS(pcs);
+				const orderedPCS = orderByDegrees(pcs, 0, quality);
+				const binaryPCS = toBinaryPCS(orderedPCS);
 				const decimalPCS = parseInt(binaryPCS, 2);
-				const transpositions = getAllTranspositions(pcs);
-				const baseNotes = getChordNotes('C', orderedPCS);
+				const baseNotes = getChordNotes('C', orderedPCS, quality);
+				
+				// Get all transpositions using the refined function
+				const transpositions = getAllTranspositionsWithBaseRef(pcs, 'C', decimalPCS, quality);
 		
 				dictionary[quality] = {
 					pcs: orderedPCS,
@@ -1129,17 +1136,7 @@
 					baseDecimal: decimalPCS,
 					intervals: intervalToString(orderedPCS, quality),
 					namedInversions: namedInversions[quality] || [],
-					transpositions: Object.fromEntries(
-						Object.entries(noteToPC).map(([note, pc]) => {
-							const transposedPCS = transposePitchClassSet(orderedPCS, pc);
-							const transposedNotes = getChordNotes(note, transposedPCS);
-							return [note, {
-								notes: transposedNotes,
-								pcs: transposedPCS,
-								decimal: parseInt(toBinaryPCS(transposedPCS), 2)
-							}];
-						})
-					),
+					transpositions: transpositions,
 					compatibleScales: compatibleScales[quality] || [],
 					avoidNotes: avoidNotes[quality] || []
 				};
@@ -1861,27 +1858,12 @@
 			return null;
 		}
 
-		
-
-
-
-		
-
-		
-
-
 		// Use same function for both notes and intervals
 		function orderNotesAndIntervals(intervals, quality = '') {
 			// Just use the same core function and return intervals
 			return orderPitchClasses(intervals, 0, quality)
 				.map(pc => pc % 12);
 		}
-
-
-
-
-
-
 		
 		// Get ordered intervals for a given PC set
 		function getOrderedIntervals(intervals, root = 0, quality = '') {
@@ -1892,7 +1874,7 @@
 			return ordered.map(pc => (pc - root + 12) % 12);
 		}
 
-		
+
 		
 		
 
