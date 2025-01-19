@@ -1177,10 +1177,14 @@
 		function convertToPCS() {
 			const input = document.getElementById('chordInput').value.trim();
 			const resultDiv = document.getElementById('result');
-	
+
+			console.log('convertToPCS input:', input);
 			const result = parseChordInput(input);
+			console.log('parseChordInput result:', result);
+	
 			if (result) {
 				const { pcs, quality, root, baseDecimal } = result;
+				console.log('About to display:', { pcs, quality, root, baseDecimal });
 				displayDetailedResult(pcs, quality, root, baseDecimal);
 			} else {
 				resultDiv.innerHTML = 'Invalid input. Please enter a valid chord, PCS, or decimal notation.';
@@ -1860,10 +1864,17 @@
 
 		
 		// Get ordered intervals for a given PC set
-		function getOrderedIntervals(pcSet, root = 0, quality = '') {
-			const ordered = orderPitchClasses(pcSet, root, quality);
+		function getOrderedIntervals(intervals, root = 0, quality = '') {
+			console.log('getOrderedIntervals input:', { intervals, root, quality });
+			// Use orderPitchClasses logic but return intervals
+			const ordered = orderPitchClasses(intervals, root, quality);
+			console.log('getOrderedIntervals output:', ordered);
 			return ordered.map(pc => (pc - root + 12) % 12);
 		}
+// 		function getOrderedIntervals(pcSet, root = 0, quality = '') {
+// 			const ordered = orderPitchClasses(pcSet, root, quality);
+// 			return ordered.map(pc => (pc - root + 12) % 12);
+// 		}
 
 
 		
