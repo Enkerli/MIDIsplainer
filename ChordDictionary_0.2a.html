@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 21</h1>
+        <h1>Chord Dictionary 22</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -1382,11 +1382,12 @@
 			chordsToShow.forEach(([quality, intervals]) => {
 				console.log('Processing chord:', quality);
 		        console.log('Raw intervals:', intervals);
-				const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
+				// Pass the quality through consistently
+			    const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
 				console.log('Ordered PCS:', orderedPCS);
 				const binaryPCS = toBinaryPCS(intervals);
 				const decimalPCS = parseInt(binaryPCS, 2);
-				const notes = getChordNotes('C', orderedPCS);
+				const notes = getChordNotes('C', orderedPCS, quality);  // Pass quality here too
 				const aliases = chordAliases[quality] ? `(${chordAliases[quality].join(', ')})` : '';
 				const inversions = getInversionsList(intervals, quality);
 
