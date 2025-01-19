@@ -779,10 +779,7 @@
         "decimal": 297
       }
     },
-    "compatibleScales": [
-      "major",
-      "major pentatonic"
-    ],
+    "compatibleScales": [],
     "avoidNotes": []
   },
   "7": {
@@ -1066,16 +1063,8 @@
         "decimal": 293
       }
     },
-    "compatibleScales": [
-      "mixolydian",
-      "lydian dominant",
-      "dominant bebop",
-      "blues"
-    ],
-    "avoidNotes": [
-      "4",
-      "11"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "9": {
     "pcs": [
@@ -1393,14 +1382,8 @@
         "decimal": 1317
       }
     },
-    "compatibleScales": [
-      "mixolydian",
-      "lydian dominant"
-    ],
-    "avoidNotes": [
-      "4",
-      "11"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "11": {
     "pcs": [
@@ -2112,13 +2095,8 @@
         "decimal": 1325
       }
     },
-    "compatibleScales": [
-      "mixolydian",
-      "lydian dominant"
-    ],
-    "avoidNotes": [
-      "11"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "maj": {
     "pcs": [
@@ -2367,11 +2345,7 @@
         "decimal": 289
       }
     },
-    "compatibleScales": [
-      "major",
-      "lydian",
-      "major bebop"
-    ],
+    "compatibleScales": [],
     "avoidNotes": []
   },
   "min": {
@@ -2620,12 +2594,7 @@
         "decimal": 545
       }
     },
-    "compatibleScales": [
-      "minor",
-      "dorian",
-      "phrygian",
-      "melodic minor"
-    ],
+    "compatibleScales": [],
     "avoidNotes": []
   },
   "dim": {
@@ -3415,15 +3384,8 @@
         "decimal": 291
       }
     },
-    "compatibleScales": [
-      "major",
-      "lydian",
-      "major bebop"
-    ],
-    "avoidNotes": [
-      "4",
-      "#4"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "min7": {
     "pcs": [
@@ -3710,16 +3672,8 @@
         "decimal": 549
       }
     },
-    "compatibleScales": [
-      "dorian",
-      "minor bebop",
-      "minor pentatonic",
-      "minor"
-    ],
-    "avoidNotes": [
-      "6",
-      "b6"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "dim7": {
     "pcs": [
@@ -4003,13 +3957,8 @@
         "decimal": 585
       }
     },
-    "compatibleScales": [
-      "diminished",
-      "whole-half diminished"
-    ],
-    "avoidNotes": [
-      "maj7"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "m7b5": {
     "pcs": [
@@ -4297,13 +4246,8 @@
         "decimal": 581
       }
     },
-    "compatibleScales": [
-      "locrian",
-      "locrian #2"
-    ],
-    "avoidNotes": [
-      "5"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "minMaj7": {
     "pcs": [
@@ -5464,10 +5408,7 @@
         "decimal": 553
       }
     },
-    "compatibleScales": [
-      "melodic minor",
-      "dorian"
-    ],
+    "compatibleScales": [],
     "avoidNotes": []
   },
   "maj9": {
@@ -5790,13 +5731,8 @@
         "decimal": 1315
       }
     },
-    "compatibleScales": [
-      "major",
-      "lydian"
-    ],
-    "avoidNotes": [
-      "4"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "min9": {
     "pcs": [
@@ -6115,13 +6051,8 @@
         "decimal": 1573
       }
     },
-    "compatibleScales": [
-      "dorian",
-      "melodic minor"
-    ],
-    "avoidNotes": [
-      "6"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "maj11": {
     "pcs": [
@@ -6833,13 +6764,8 @@
         "decimal": 1701
       }
     },
-    "compatibleScales": [
-      "dorian",
-      "minor"
-    ],
-    "avoidNotes": [
-      "13"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "maj13": {
     "pcs": [
@@ -7199,14 +7125,8 @@
         "decimal": 1323
       }
     },
-    "compatibleScales": [
-      "major",
-      "lydian"
-    ],
-    "avoidNotes": [
-      "4",
-      "7"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "min13": {
     "pcs": [
@@ -7597,10 +7517,7 @@
         "decimal": 1709
       }
     },
-    "compatibleScales": [
-      "dorian",
-      "melodic minor"
-    ],
+    "compatibleScales": [],
     "avoidNotes": []
   },
   "sus2": {
@@ -8383,10 +8300,7 @@
         "decimal": 165
       }
     },
-    "compatibleScales": [
-      "mixolydian",
-      "suspended pentatonic"
-    ],
+    "compatibleScales": [],
     "avoidNotes": []
   },
   "9sus4": {
@@ -9591,13 +9505,8 @@
         "decimal": 2341
       }
     },
-    "compatibleScales": [
-      "half-whole diminished",
-      "altered"
-    ],
-    "avoidNotes": [
-      "9"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "7#9": {
     "pcs": [
@@ -9915,10 +9824,7 @@
         "decimal": 805
       }
     },
-    "compatibleScales": [
-      "altered",
-      "diminished whole tone"
-    ],
+    "compatibleScales": [],
     "avoidNotes": []
   },
   "7#11": {
@@ -10238,13 +10144,8 @@
         "decimal": 357
       }
     },
-    "compatibleScales": [
-      "lydian dominant",
-      "altered"
-    ],
-    "avoidNotes": [
-      "11"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "7b13": {
     "pcs": [
@@ -10596,13 +10497,8 @@
         "decimal": 1333
       }
     },
-    "compatibleScales": [
-      "altered",
-      "phrygian dominant"
-    ],
-    "avoidNotes": [
-      "13"
-    ]
+    "compatibleScales": [],
+    "avoidNotes": []
   },
   "6add9": {
     "pcs": [

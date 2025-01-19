@@ -396,64 +396,48 @@
         };
         
 		const compatibleScales = {
-			// Major-based chords
-			'maj': ['major', 'lydian', 'major bebop'],
-			'maj7': ['major', 'lydian', 'major bebop'],
-			'maj9': ['major', 'lydian'],
-			'maj13': ['major', 'lydian'],
-			'6': ['major', 'major pentatonic'],
-	
-			// Minor-based chords
-			'min': ['minor', 'dorian', 'phrygian', 'melodic minor'],
-			'min7': ['dorian', 'minor bebop', 'minor pentatonic', 'minor'],
-			'min9': ['dorian', 'melodic minor'],
-			'min11': ['dorian', 'minor'],
-			'min13': ['dorian', 'melodic minor'],
-			'm6': ['melodic minor', 'dorian'],
-	
-			// Dominant chords
-			'7': ['mixolydian', 'lydian dominant', 'dominant bebop', 'blues'],
-			'9': ['mixolydian', 'lydian dominant'],
-			'13': ['mixolydian', 'lydian dominant'],
-			'7sus4': ['mixolydian', 'suspended pentatonic'],
-			'7alt': ['altered', 'diminished whole tone'],
-	
-			// Half-diminished and diminished
-			'm7b5': ['locrian', 'locrian #2'],
-			'dim7': ['diminished', 'whole-half diminished'],
-	
-			// Altered dominants
-			'7b9': ['half-whole diminished', 'altered'],
-			'7#9': ['altered', 'diminished whole tone'],
-			'7#11': ['lydian dominant', 'altered'],
-			'7b13': ['altered', 'phrygian dominant']
+			// Structure preserved but data cleared
+			'maj': [],
+			'maj7': [],
+			'maj9': [],
+			'maj13': [],
+			'6': [],
+			'min': [],
+			'min7': [],
+			'min9': [],
+			'min11': [],
+			'min13': [],
+			'm6': [],
+			'7': [],
+			'9': [],
+			'13': [],
+			'7sus4': [],
+			'7alt': [],
+			'm7b5': [],
+			'dim7': [],
+			'7b9': [],
+			'7#9': [],
+			'7#11': [],
+			'7b13': []
 		};
 
 		const avoidNotes = {
-			// Major-based chords
-			'maj7': ['4', '#4'],  // avoid perfect 4th and tritone
-			'maj9': ['4'],        // avoid perfect 4th
-			'maj13': ['4', '7'],  // avoid perfect 4th and minor 7th
-	
-			// Minor-based chords
-			'min7': ['6', 'b6'],  // avoid both natural and flat 6th
-			'min9': ['6'],        // avoid natural 6th
-			'min11': ['13'],      // avoid 13th
-	
-			// Dominant chords
-			'7': ['4', '11'],     // avoid perfect 4th/11th
-			'9': ['4', '11'],     // avoid perfect 4th/11th
-			'13': ['11'],         // avoid 11th
-	
-			// Half-diminished and diminished
-			'm7b5': ['5'],        // avoid perfect 5th
-			'dim7': ['maj7'],     // avoid major 7th
-	
-			// Altered dominants
-			'7alt': ['5'],        // avoid perfect 5th
-			'7b9': ['9'],         // avoid natural 9th
-			'7#11': ['11'],       // avoid perfect 11th
-			'7b13': ['13']        // avoid natural 13th
+			// Structure preserved but data cleared
+			'maj7': [],
+			'maj9': [],
+			'maj13': [],
+			'min7': [],
+			'min9': [],
+			'min11': [],
+			'7': [],
+			'9': [],
+			'13': [],
+			'm7b5': [],
+			'dim7': [],
+			'7alt': [],
+			'7b9': [],
+			'7#11': [],
+			'7b13': []
 		};
 		
 		// Letter names in order (for calculating proper spelling distances)
@@ -1338,7 +1322,7 @@
 					<p>Decimal: ${decimalPCS}</p>
 					<p>Base Decimal (C): ${baseDecimal}</p>
 					<p>Compatible Scales: ${compatibleScales[quality]?.join(', ') || 'N/A'}</p>
-					<p>Avoid Notes: ${avoidNotes[quality]?.join(', ') || 'None'}</p>
+					<p>Avoid Notes: ${avoidNotes[quality]?.join(', ') || 'N/A'}</p>
 					${inversionsHtml}
 					<p>Transpositions:</p>
 					<div>${transpositionOutput}</div>
@@ -1404,7 +1388,7 @@
 					<div class="chord-notes">Notes: [${notes.join(', ')}]</div>
 					<div class="chord-intervals">Intervals: ${intervalToString(intervals, quality)}</div>
 					<div class="chord-scales">Scales: ${compatibleScales[quality]?.join(', ') || 'N/A'}</div>
-					<div class="chord-avoid">Avoid: ${avoidNotes[quality]?.join(', ') || 'None'}</div>
+					<div class="chord-avoid">Avoid: ${avoidNotes[quality]?.join(', ') || 'N/A'}</div>
 					${inversions}
 					<div class="chord-pcs">PCS: [${orderedPCS.join(', ')}]</div>
 					<div class="chord-binary">Binary: <span class="binary-format">${binaryPCS}</span></div>
@@ -1877,7 +1861,10 @@
 
 		
 		
-
+		
+		
+		
+		
 
         // Function to automatically load the chord dictionary
         async function loadChordDictionary() {
