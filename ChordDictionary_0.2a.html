@@ -178,7 +178,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary 19</h1>
+        <h1>Chord Dictionary 20</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
             <button id="convertButton" onclick="convertToPCS()">Find</button>
@@ -704,13 +704,14 @@
 		}
 		// Wrapper for card display
 		function orderByDegreesFromRoot(pcs, root) {
-			let quality = '';
-			// Try to detect if it's a sus chord from the intervals
-			const intervals = pcs.map(pc => (pc - root + 12) % 12);
-			if (intervals.includes(5) && !intervals.includes(3) && !intervals.includes(4)) {
-				quality = 'sus4';
-			} else if (intervals.includes(2) && !intervals.includes(3) && !intervals.includes(4)) {
-				quality = 'sus2';
+			if (!quality) {
+				// Only try to detect quality if none was provided
+				const intervals = pcs.map(pc => (pc - root + 12) % 12);
+				if (intervals.includes(5) && !intervals.includes(3) && !intervals.includes(4)) {
+					quality = 'sus4';
+				} else if (intervals.includes(2) && !intervals.includes(3) && !intervals.includes(4)) {
+					quality = 'sus2';
+				}
 			}
 	
 			// Use orderPitchClasses to maintain consistent ordering
@@ -1261,7 +1262,7 @@
 			console.log('transposedPCS:', transposedPCS);
 	
 			// Order PCS by degrees from the root
-			const orderedPCS = orderByDegrees(transposedPCS, rootPC);
+			const orderedPCS = orderByDegrees(transposedPCS, rootPC, quality);
 		    console.log('orderedPCS:', orderedPCS);
 	
 			// Calculate display values
