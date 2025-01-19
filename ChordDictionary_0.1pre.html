@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chord Dictionary</title>
+    <title>Chord to Pitch Class Set Converter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -178,10 +178,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chord Dictionary</h1>
+        <h1>Chord to Pitch Class Set Converter</h1>
         <div class="input-group">
             <input type="text" id="chordInput" placeholder="Enter chord (e.g., Cmaj7)">
-            <button id="convertButton" onclick="convertToPCS()">Find</button>
+            <button id="convertButton" onclick="convertToPCS()">Convert</button>
         </div>
         <div id="result"></div>
 
@@ -237,7 +237,6 @@
  ~~>
 		</div>
  -->
-
 
 
         <div class="chord-dictionary">
@@ -499,234 +498,17 @@
 		const namedInversions = {};
 		
 		// Fixed order for chord components (in degree order)
-		const degreeOrder = {
-			// Default ordering
-			default: [
-				0,   // root
-				3,4, // thirds
-				6,7, // fifths
-				10,11, // sevenths
-				1,2,   // ninths
-				5,     // elevenths
-				8,9    // thirteenths/sixths
-			],
-	
-			// Special ordering for sus chords - sus notes come immediately after root
-			sus: [
-				0,    // root
-				2,    // sus2 (if present, comes first)
-				5,    // sus4 (if present, comes after sus2)
-				7,    // fifth
-				10,   // seventh (if present)
-				1,    // ninth
-				3,4,  // thirds (if present, deprioritized)
-				6,    // altered fifth
-				8,9   // thirteenths
-			],
-	
-			// Special ordering for sixth chords
-			sixth: [
-				0,   // root
-				3,4, // thirds
-				6,7, // fifths
-				9,   // sixth (replacing seventh)
-				10,11, // sevenths (if present)
-				1,2, // ninths
-				5,   // elevenths
-				8    // thirteenths
-			]
-		};
+		const degreeOrder = [
+			0,   // root
+			3,4, // thirds
+			6,7, // fifths
+			10,11, // sevenths
+			1,2,   // ninths
+			5,   // elevenths
+			8,9    // thirteenths (or sixths)
+		];
 
-		// Core ordering function that everything else should use
-		function orderPitchClasses(pcSet, root = 0, quality = '') {
-			const intervals = pcSet.map(pc => (pc - root + 12) % 12);
-			let ordered = [];
 
-			// Root always first
-			ordered.push(0);
-
-			// Special handling for suspended chords
-			if (quality?.includes('sus')) {
-				// Add suspended note (2 or 5) right after root
-				if (quality.includes('sus2') && intervals.includes(2)) {
-					ordered.push(2);  // add second
-				} else if (intervals.includes(5)) {
-					ordered.push(5);  // add fourth
-				}
-
-				// Add fifth if present
-				if (intervals.includes(7)) {
-					ordered.push(7);
-				}
-
-				// Add seventh if present
-				if (intervals.includes(10)) {
-					ordered.push(10);
-				} else if (intervals.includes(11)) {
-					ordered.push(11);
-				}
-
-				// Add ninth if present and not sus2
-				if (intervals.includes(2) && !quality.includes('sus2')) {
-					ordered.push(2);
-				}
-
-				// Add other intervals in standard order
-				[1,      // flat nine
-				 3, 4,   // thirds (deprioritized in sus chords)
-				 6,      // tritone
-				 8,      // augmented fifth
-				 9       // sixth/thirteenth
-				].forEach(interval => {
-					if (intervals.includes(interval) && !ordered.includes(interval)) {
-						ordered.push(interval);
-					}
-				});
-			} else {
-        // Check if it's a 6 chord (has '6' in quality but not '13')
-        const isSixthChord = quality?.includes('6') && !quality?.includes('13');
-
-        // Standard ordering for non-suspended chords
-        [3, 4,    // thirds
-         7,       // fifth 
-         ...(isSixthChord ? [9] : []), // sixth comes after fifth in 6 chords
-         10, 11,  // sevenths
-         2,       // ninth
-         5,       // eleventh
-         ...(isSixthChord ? [] : [9]),  // thirteenth (if not a 6 chord)
-         1,       // flat nine
-         6, 8     // altered fifths
-        ].forEach(interval => {
-            if (intervals.includes(interval)) {
-                ordered.push(interval);
-            }
-        });
-    }
-
-			// Convert intervals back to pitch classes
-			return ordered.map(interval => (interval + root) % 12);
-		}
-
-		// Helper to put intervals in functional order
-		function orderIntervals(intervals, quality = '') {
-			// Convert intervals to relative to root (0)
-			const normalizedIntervals = intervals.map(i => i % 12);
-			let ordered = [];
-
-			// Root always first
-			ordered.push(0);
-
-			if (quality?.includes('sus')) {
-				// Suspended chord handling stays the same
-				// Add suspended note (2 or 5) right after root
-				if (quality.includes('sus2') && normalizedIntervals.includes(2)) {
-					ordered.push(2);  // add second
-				} else if (normalizedIntervals.includes(5)) {
-					ordered.push(5);  // add fourth
-				}
-
-				// Add fifth if present
-				if (normalizedIntervals.includes(7)) {
-					ordered.push(7);
-				}
-
-				// Add seventh if present
-				if (normalizedIntervals.includes(10)) {
-					ordered.push(10);
-				} else if (normalizedIntervals.includes(11)) {
-					ordered.push(11);
-				}
-
-				// Add ninth if present and not sus2
-				if (normalizedIntervals.includes(2) && !quality.includes('sus2')) {
-					ordered.push(2);
-				}
-
-				// Add remaining intervals in standard order
-				[1,      // flat nine
-				 3, 4,   // thirds (deprioritized in sus chords)
-				 6,      // tritone
-				 8,      // augmented fifth
-				 9       // sixth/thirteenth
-				].forEach(interval => {
-					if (normalizedIntervals.includes(interval) && !ordered.includes(interval)) {
-						ordered.push(interval);
-					}
-				});
-			} else {
-				// Check if it's a 6 chord (has '6' in quality but not '13')
-				const isSixthChord = quality?.includes('6') && !quality?.includes('13');
-
-				// Standard ordering for non-suspended chords
-				[3, 4,    // thirds
-				 7,       // fifth 
-				 ...(isSixthChord ? [9] : []), // sixth comes after fifth in 6 chords
-				 10, 11,  // sevenths
-				 2,       // ninth
-				 5,       // eleventh
-				 ...(isSixthChord ? [] : [9]),  // thirteenth (if not a 6 chord)
-				 1,       // flat nine
-				 6, 8     // altered fifths
-				].forEach(interval => {
-					if (normalizedIntervals.includes(interval)) {
-						ordered.push(interval);
-					}
-				});
-			}
-
-			return ordered;
-		}
-
-		// Get interval quality name
-		function getIntervalQuality(interval, quality = '') {
-			const degreeMap = {
-				0: 'R',
-				1: '♭9',
-				2: quality?.includes('sus2') ? '2' : '9',
-				3: '♭3',
-				4: '3',
-				5: quality?.includes('sus4') ? '4' : '11',
-				6: '♭5',
-				7: '5',
-				8: '♭13',
-				9: quality?.includes('6') && !quality?.includes('13') ? '6' : '13',
-				10: '♭7',
-				11: '7'
-			};
-			return degreeMap[interval];
-		}
-
-		// Get interval string
-		function intervalToString(intervals, quality = '') {
-			// First get ordered intervals
-			const orderedInts = getOrderedIntervals(intervals, 0, quality);
-			// Then convert to quality names
-			return orderedInts.map(interval => getIntervalQuality(interval, quality)).join(', ');
-		}
-
-		// Wrapper for display functions
-		function orderByDegrees(pcSet, root = 0, quality = '') {
-			console.log('orderByDegrees input:', { pcSet, root, quality });
-			const result = orderPitchClasses(pcSet, root, quality);
-			console.log('orderByDegrees output:', result);
-			return result;
-		}
-		// Wrapper for card display
-		function orderByDegreesFromRoot(pcs, root, quality = '') {
-			if (!quality) {
-				// Only try to detect quality if none was provided
-				const intervals = pcs.map(pc => (pc - root + 12) % 12);
-				if (intervals.includes(5) && !intervals.includes(3) && !intervals.includes(4)) {
-					quality = 'sus4';
-				} else if (intervals.includes(2) && !intervals.includes(3) && !intervals.includes(4)) {
-					quality = 'sus2';
-				}
-			}
-	
-			// Use orderPitchClasses to maintain consistent ordering
-			return orderPitchClasses(pcs, root, quality);
-		}
-		
 		// Build the named inversions for each chord quality
 		Object.entries(chordQualities).forEach(([quality, pcs]) => {
 			const invs = findNamedInversions(quality, pcs);
@@ -760,7 +542,26 @@
 			return null;
 		}
 
-        
+        function orderByDegrees(pcSet, root = 0) {
+			// Special case for sus4 chords
+			if (pcSet.includes((root + 5) % 12) && pcSet.length === 5) {
+				const susOrder = [0, 5, 7, 10, 1, 2, 3, 4, 6, 8, 9, 11];
+				return [...pcSet].sort((a, b) => 
+					susOrder.indexOf((a - root + 12) % 12) - 
+					susOrder.indexOf((b - root + 12) % 12)
+				);
+			}
+	
+			// Normal ordering for other chords
+			return [...pcSet].sort((a, b) => {
+				const relA = (a - root + 12) % 12;
+				const relB = (b - root + 12) % 12;
+				const idxA = degreeOrder.indexOf(relA);
+				const idxB = degreeOrder.indexOf(relB);
+				return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+			});
+		}
+
         function toBinaryPCS(pcSet) {
             let binary = new Array(12).fill(0);
             pcSet.forEach(pc => binary[pc] = 1);
@@ -795,33 +596,33 @@
             return rotations[0].map(pc => pc % 12);
         }
         
-		function getAllTranspositionsWithBaseRef(pcs, root, baseDecimal, quality = '') { // Add quality param
+		function getAllTranspositionsWithBaseRef(pcs, root, baseDecimal) {
 			const transpositions = {};
-
+	
 			// Get the base (C) version first
 			const basePCS = getBasePCS(pcs, root);
-			const orderedBasePCS = orderByDegreesFromRoot(basePCS, 0, quality);
-
+			const orderedBasePCS = orderByDegreesFromRoot(basePCS, 0);
+	
 			// If no baseDecimal provided, calculate it from the base version
 			if (baseDecimal === null) {
 				baseDecimal = parseInt(toBinaryPCS(orderedBasePCS), 2);
 			}
-
+	
 			// Now generate all transpositions starting from the base version
 			for (let i = 0; i < 12; i++) {
 				const currentRoot = noteToPCKeys[i];
 				const transposedPCS = transposePitchClassSet(orderedBasePCS, i);
-				const orderedTransposedPCS = orderByDegreesFromRoot(transposedPCS, i, quality);
+				const orderedTransposedPCS = orderByDegreesFromRoot(transposedPCS, i);
 				const binary = toBinaryPCS(orderedTransposedPCS);
 				const decimal = parseInt(binary, 2);
-
+		
 				transpositions[currentRoot] = {
 					pcs: orderedTransposedPCS,
 					binary,
 					decimal
 				};
 			}
-
+	
 			return transpositions;
 		}
 		
@@ -1159,6 +960,15 @@
 			document.body.removeChild(linkElement);
 		}
 	
+        function orderByDegreesFromRoot(pcs, root) {
+            // Normalize all PCs relative to the root
+            let normalizedPcs = pcs.map(pc => (pc - root + 12) % 12);
+            // Sort in ascending order
+            normalizedPcs.sort((a, b) => a - b);
+            // Shift back to original root
+            return normalizedPcs.map(pc => (pc + root) % 12);
+        }
+
 		function findChordByTransposedPCS(pcs) {
 			const normalizedPCS = normalForm(pcs);
 
@@ -1187,14 +997,10 @@
 		function convertToPCS() {
 			const input = document.getElementById('chordInput').value.trim();
 			const resultDiv = document.getElementById('result');
-
-			console.log('convertToPCS input:', input);
-			const result = parseChordInput(input);
-			console.log('parseChordInput result:', result);
 	
+			const result = parseChordInput(input);
 			if (result) {
 				const { pcs, quality, root, baseDecimal } = result;
-				console.log('About to display:', { pcs, quality, root, baseDecimal });
 				displayDetailedResult(pcs, quality, root, baseDecimal);
 			} else {
 				resultDiv.innerHTML = 'Invalid input. Please enter a valid chord, PCS, or decimal notation.';
@@ -1203,16 +1009,16 @@
 		
 		function findChordByDecimal(decimal) {
 			const searchPCS = decimalToPCS(decimal);
-
+	
 			// Try each quality and transposition
 			for (const [quality, basePCS] of Object.entries(chordQualities)) {
 				const baseDecimal = parseInt(toBinaryPCS(basePCS), 2);
-
+		
 				// Try each possible transposition
 				for (let i = 0; i < 12; i++) {
 					const transposedPCS = transposePitchClassSet(basePCS, i);
 					const transposedDecimal = parseInt(toBinaryPCS(transposedPCS), 2);
-
+			
 					if (transposedDecimal === decimal) {
 						// Find root note based on transposition
 						const rootNote = noteToPCKeys[i];
@@ -1220,7 +1026,7 @@
 							quality,
 							root: rootNote,
 							baseDecimal,
-							pcs: orderByDegreesFromRoot(transposedPCS, i, quality) // Pass quality
+							pcs: orderByDegreesFromRoot(transposedPCS, i)
 						};
 					}
 				}
@@ -1258,21 +1064,15 @@
 		
 		// Function to add named inversions to detailed result display
 		function displayDetailedResult(pcs, quality = 'Custom PCS', root = 'C', baseDecimal = null) {
-		   console.log('displayDetailedResult input:', { pcs, quality, root, baseDecimal });
-		   
 			const resultDiv = document.getElementById('result');
 			const rootPC = noteToPC[root];
-			console.log('rootPC:', rootPC);
 
 			// Get the base chord quality's PCS and transpose it
 			const basePCS = chordQualities[quality];
-			console.log('basePCS:', basePCS);
 			const transposedPCS = basePCS ? transposePitchClassSet(basePCS, rootPC) : pcs;
-			console.log('transposedPCS:', transposedPCS);
 	
 			// Order PCS by degrees from the root
-			const orderedPCS = orderByDegrees(transposedPCS, rootPC, quality);
-		    console.log('orderedPCS:', orderedPCS);
+			const orderedPCS = orderByDegrees(transposedPCS, rootPC);
 	
 			// Calculate display values
 			const binaryPCS = toBinaryPCS(orderedPCS);
@@ -1308,7 +1108,7 @@
 			let transpositionOutput = '';
 			Object.entries(noteToPC).forEach(([note, pc]) => {
 				const transPCS = transposePitchClassSet(basePCS || pcs, pc);
-				const orderedTransPCS = orderByDegrees(transPCS, pc, quality); // Pass quality
+				const orderedTransPCS = orderByDegrees(transPCS, pc);
 				const transIntervals = orderedTransPCS.map(tpc => (tpc - pc + 12) % 12);
 				const transNotes = getChordNotes(note, transIntervals, quality);
 				const binary = toBinaryPCS(orderedTransPCS);
@@ -1373,9 +1173,17 @@
             'altered': ['7b5', '7#5', '7b9', '7#9', '7#11', '7b13']
         };
 
-		
+		function intervalToString(intervals, quality = '') {
+			// Make sure root comes first
+			const withoutRoot = intervals.filter(i => i !== 0);
+			const orderedInts = [0, ...orderIntervals(withoutRoot)];
+	
+			return orderedInts
+				.map(interval => getIntervalQuality(interval, quality))
+				.join(', ');
+		}
+        
         function filterChordTypes() {
-        	console.log('Starting filterChordTypes');
 			const category = document.getElementById('chordCategory').value;
 			const chordList = document.getElementById('chordList');
 			chordList.innerHTML = '';
@@ -1389,14 +1197,10 @@
 			}
 
 			chordsToShow.forEach(([quality, intervals]) => {
-				console.log('Processing chord:', quality);
-		        console.log('Raw intervals:', intervals);
-				// Pass the quality through consistently
-			    const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
-				console.log('Ordered PCS:', orderedPCS);
+				const orderedPCS = orderByDegreesFromRoot(intervals, 0);
 				const binaryPCS = toBinaryPCS(intervals);
 				const decimalPCS = parseInt(binaryPCS, 2);
-				const notes = getChordNotes('C', orderedPCS, quality);  // Pass quality here too
+				const notes = getChordNotes('C', orderedPCS);
 				const aliases = chordAliases[quality] ? `(${chordAliases[quality].join(', ')})` : '';
 				const inversions = getInversionsList(intervals, quality);
 
@@ -1414,9 +1218,6 @@
 					<div class="chord-pcs">PCS: [${orderedPCS.join(', ')}]</div>
 					<div class="chord-binary">Binary: <span class="binary-format">${binaryPCS}</span></div>
 					<div class="chord-decimal">Decimal: ${decimalPCS}</div>
-					<div class="chord-transpositions">
-						${getTranspositionsDisplay(intervals, quality)}
-					</div>
 				`;
 				chordList.appendChild(chordItem);
 			});
@@ -1661,40 +1462,47 @@
 			return isSus || (isAdd && quality.includes('add' + interval));
 		}
 
+		function intervalToString(intervals, quality = '') {
+			const orderedInts = orderIntervals(intervals);
+			return orderedInts.map(interval => getIntervalQuality(interval, quality)).join(', ');
+		}
 
-		// Get chord notes in the right order
+		// New function to get note names
 		function getChordNotes(root, intervals, quality = '') {
-			console.log('getChordNotes input:', { root, intervals, quality });
-			// Order the intervals first
-			const orderedIntervals = getOrderedIntervals(intervals, 0, quality);
-			console.log('getChordNotes orderedIntervals:', orderedIntervals);
-
 			// Root letter and standard letter sequence
 			const rootLetter = root.charAt(0);
 			const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-
-			const result = orderedIntervals.map(interval => {
+	
+			return intervals.map(interval => {
 				if (interval === 0) return root;
-
+		
 				// Get target letter based on standard intervals
 				let steps;
 				switch (interval) {
-					case 2:  steps = 1; break;  // second = 1 letter up
 					case 4:  steps = 2; break;  // major third = 2 letters up
-					case 5:  steps = 3; break;  // perfect fourth = 3 letters up
 					case 7:  steps = 4; break;  // perfect fifth = 4 letters up
-					case 9:  steps = 5; break;  // sixth = 5 letters up
 					case 11: steps = 6; break;  // major seventh = 6 letters up
+					case 2:  steps = 1; break;  // major second = 1 letter up
+					case 9:  steps = 5; break;  // major sixth = 5 letters up
 					default: steps = Math.floor(interval * 2/3);
 				}
-
-				// Calculate target letter and accidental
+		
+				// Get target letter
 				const rootIndex = letterNames.indexOf(rootLetter);
 				const targetLetter = letterNames[(rootIndex + steps) % 7];
+		
+				// Calculate required pitch adjustment
 				const naturalPC = noteToPC[targetLetter];
 				const desiredPC = (noteToPC[root] + interval) % 12;
 				const adjustment = (desiredPC - naturalPC + 12) % 12;
 
+				// Special cases for sharp keys
+				if ((root === 'C#' || root === 'F#') && quality.indexOf('min') === -1) {
+					if (interval === 4) return targetLetter + '♯';  // E# instead of F
+					if (interval === 11) return targetLetter + '♯'; // B# instead of C
+				}
+		
+				// Add appropriate accidental
 				switch (adjustment) {
 					case 0:  return targetLetter;
 					case 1:  return root.includes('b') ? targetLetter + '♭' : targetLetter + '♯';
@@ -1704,24 +1512,88 @@
 					default: return targetLetter;
 				}
 			});
-	
-			console.log('getChordNotes output:', result);
-			return result;
 		}
 
 		// Function to get note names for a transposition
-		function getTranspositionsDisplay(intervals, quality) {
-			let output = '<div class="transpositions"><h4>Transpositions:</h4>';
-			Object.entries(noteToPC).forEach(([note, pc]) => {
-				const transPCS = transposePitchClassSet(intervals, pc);
-				const orderedTransPCS = orderByDegrees(transPCS, pc, quality);
-				const transIntervals = orderedTransPCS.map(tpc => (tpc - pc + 12) % 12);
-				const transNotes = getChordNotes(note, transIntervals, quality);
-				output += `<div>${note}: [${transNotes.join(', ')}]</div>`;
-			});
-			output += '</div>';
-			return output;
+		function getTranspositionNotes(rootNote, intervals) {
+			const notes = getChordNotes(rootNote, intervals);
+			return notes.join(', ');
 		}
+				
+		function getIntervalQuality(interval, quality = '') {
+			const degreeMap = {
+				0: 'R',
+				1: '♭9',
+				2: '9',
+				3: '♭3',
+				4: '3',
+				5: '11',
+				6: '♭5',
+				7: '5',
+				8: '♭13',
+				9: '13',  // Changed from '6'
+				10: '♭7',
+				11: '7'
+			};
+
+			// Special case handling
+			if (interval === 9 && !quality?.includes('13')) {
+				return '6';
+			}
+	
+			// Handle suspensions
+			if (quality?.includes('sus')) {
+				if (interval === 2) return '2';
+				if (interval === 5) return '4';
+			}
+
+			return degreeMap[interval];
+		}
+
+		// Update the priority map in the orderByDegrees function
+		function orderIntervals(intervals, quality = '') {
+			// First, normalize intervals relative to the root (0)
+			const normalized = intervals.map(interval => interval % 12);
+
+			// Priority map for interval ordering - updated for sus chords
+			const priority = {
+				0: 0,    // Root
+				5: 1,    // Fourth (for sus4)
+				2: 1,    // Second (for sus2)
+				3: 1,    // Minor third
+				4: 1,    // Major third
+				7: 2,    // Fifth
+				10: 3,   // Minor seventh
+				11: 3,   // Major seventh
+				9: 3,    // Sixth/thirteenth
+				1: 4,    // Minor ninth
+				2: 4,    // Major ninth (when not sus)
+				5: 5,    // Eleventh (when not sus)
+				8: 6,    // Minor thirteenth
+				6: 7     // Others (altered fifths etc.)
+			};
+
+			// Special handling for sus chords
+			if (quality?.includes('sus')) {
+				// Prioritize sus intervals
+				if (quality.includes('sus4')) {
+					priority[5] = 1;  // Fourth takes third position
+					priority[3] = 8;  // Deprioritize thirds
+					priority[4] = 8;
+				} else if (quality.includes('sus2')) {
+					priority[2] = 1;  // Second takes third position
+					priority[3] = 8;  // Deprioritize thirds
+					priority[4] = 8;
+				}
+			}
+
+			return normalized.sort((a, b) => {
+				const aValue = priority[a] ?? 8;
+				const bValue = priority[b] ?? 8;
+				return aValue === bValue ? a - b : aValue - bValue;
+			});
+		}
+
 		
 		// Helper function to determine enharmonic spelling based on chord context
 		function getEnharmonicSpelling(pc, root, quality) {
@@ -1842,63 +1714,6 @@
 			return html;
 		}
         
-		// Helper to determine chord type for ordering
-		function getChordType(quality = '') {
-			if (quality.includes('sus')) return 'sus';
-			if (quality.includes('6') && !quality.includes('13')) return 'sixth';
-			return 'default';
-		}
-
-
-		// Helper to determine if a chord is suspended
-		function isSuspendedChord(quality = '') {
-			return quality.includes('sus');
-		}
-
-
-		// Helper to get suspended interval for a chord
-		function getSuspendedInterval(quality = '') {
-			if (quality.includes('sus2')) return 2;
-			if (quality.includes('sus4')) return 5;
-			return null;
-		}
-
-		
-
-
-
-		
-
-		
-
-
-		// Use same function for both notes and intervals
-		function orderNotesAndIntervals(intervals, quality = '') {
-			// Just use the same core function and return intervals
-			return orderPitchClasses(intervals, 0, quality)
-				.map(pc => pc % 12);
-		}
-
-
-
-
-
-
-		
-		// Get ordered intervals for a given PC set
-		function getOrderedIntervals(intervals, root = 0, quality = '') {
-			console.log('getOrderedIntervals input:', { intervals, root, quality });
-			// Use orderPitchClasses logic but return intervals
-			const ordered = orderPitchClasses(intervals, root, quality);
-			console.log('getOrderedIntervals output:', ordered);
-			return ordered.map(pc => (pc - root + 12) % 12);
-		}
-
-		
-		
-		
-
-
         // Function to automatically load the chord dictionary
         async function loadChordDictionary() {
             try {
