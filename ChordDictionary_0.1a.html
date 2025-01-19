@@ -443,6 +443,64 @@
 		// Letter names in order (for calculating proper spelling distances)
 		const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 		
+		// Natural pitch classes for each letter name
+		const naturalPCs = {
+			'C': 0, 'D': 2, 'E': 4, 
+			'F': 5, 'G': 7, 'A': 9, 'B': 11
+		};
+		
+		// Get chord notes in the right order
+		function getChordNotes(root, intervals, quality = '') {
+			// Get root letter and any accidental
+			const rootLetter = root.charAt(0);
+			const rootAccidental = root.slice(1);
+			const isRootSharp = rootAccidental === '♯';
+			const isRootFlat = rootAccidental === '♭';
+			const rootPC = noteToPC[root];
+
+			// Handle special cases for augmented triads
+			if (quality === 'aug') {
+				// Third is natural major third
+				const third = getLetterNameForInterval(rootLetter, 4) +
+					(isRootSharp ? '𝄪' : '♯');
+				
+				// Fifth is always sharp relative to perfect fifth
+				const fifth = getLetterNameForInterval(rootLetter, 7) + '♯';
+				
+				return [root, third, fifth];
+			}
+
+			// Handle diminished triads
+			if (quality === 'dim') {
+				return [
+					root,
+					getLetterNameForInterval(rootLetter, 3) + 
+						(isRootSharp ? '♮' : '♭'),
+					getLetterNameForInterval(rootLetter, 6) + 
+						(isRootSharp ? '♮' : '♭')
+				];
+			}
+
+			// Order the intervals first
+			const orderedIntervals = getOrderedIntervals(intervals, 0, quality);
+			
+			// Standard chord spelling
+			return orderedIntervals.map(interval => {
+				if (interval === 0) return root;
+
+				// Calculate target pitch class
+				const targetPC = (rootPC + interval) % 12;
+
+				// Get proper letter name based on interval function
+				const targetLetter = getLetterNameForInterval(rootLetter, interval);
+
+				// Get proper accidental based on context
+				const accidental = getAccidental(targetLetter, targetPC, root, quality);
+
+				return targetLetter + accidental;
+			});
+		}
+
 		// Function to find named inversions for a chord quality
 		function findNamedInversions(quality, basePCS) {
 			const inversions = [];
@@ -1640,53 +1698,74 @@
 			return isSus || (isAdd && quality.includes('add' + interval));
 		}
 
-
-		// Get chord notes in the right order
-		function getChordNotes(root, intervals, quality = '') {
-			console.log('getChordNotes input:', { root, intervals, quality });
-			// Order the intervals first
-			const orderedIntervals = getOrderedIntervals(intervals, 0, quality);
-			console.log('getChordNotes orderedIntervals:', orderedIntervals);
-
-			// Root letter and standard letter sequence
-			const rootLetter = root.charAt(0);
-			const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-
-			const result = orderedIntervals.map(interval => {
-				if (interval === 0) return root;
-
-				// Get target letter based on standard intervals
-				let steps;
-				switch (interval) {
-					case 2:  steps = 1; break;  // second = 1 letter up
-					case 4:  steps = 2; break;  // major third = 2 letters up
-					case 5:  steps = 3; break;  // perfect fourth = 3 letters up
-					case 7:  steps = 4; break;  // perfect fifth = 4 letters up
-					case 9:  steps = 5; break;  // sixth = 5 letters up
-					case 11: steps = 6; break;  // major seventh = 6 letters up
-					default: steps = Math.floor(interval * 2/3);
-				}
-
-				// Calculate target letter and accidental
-				const rootIndex = letterNames.indexOf(rootLetter);
-				const targetLetter = letterNames[(rootIndex + steps) % 7];
-				const naturalPC = noteToPC[targetLetter];
-				const desiredPC = (noteToPC[root] + interval) % 12;
-				const adjustment = (desiredPC - naturalPC + 12) % 12;
-
-				switch (adjustment) {
-					case 0:  return targetLetter;
-					case 1:  return root.includes('b') ? targetLetter + '♭' : targetLetter + '♯';
-					case 2:  return targetLetter + '♯';
-					case 10: return targetLetter + '♭';
-					case 11: return targetLetter + '♭';
-					default: return targetLetter;
-				}
-			});
-	
-			console.log('getChordNotes output:', result);
-			return result;
+		// Get the proper letter name for an interval above a root note
+		function getLetterNameForInterval(rootLetter, interval) {
+			const rootIndex = letterNames.indexOf(rootLetter);
+			let steps;
+			
+			// Standard interval steps
+			switch(interval) {
+				case 0: return rootLetter;  // unison
+				case 1: steps = 1; break;   // minor 2nd
+				case 2: steps = 1; break;   // major 2nd
+				case 3: steps = 2; break;   // minor 3rd
+				case 4: steps = 2; break;   // major 3rd
+				case 5: steps = 3; break;   // perfect 4th
+				case 6: steps = 3; break;   // tritone
+				case 7: steps = 4; break;   // perfect 5th
+				case 8: steps = 5; break;   // minor 6th
+				case 9: steps = 5; break;   // major 6th
+				case 10: steps = 6; break;  // minor 7th
+				case 11: steps = 6; break;  // major 7th
+				default: steps = Math.floor((interval * 7) / 12);
+			}
+			
+			return letterNames[(rootIndex + steps) % 7];
 		}
+
+		// Calculate proper accidental for a target pitch class given a letter name and context
+		function getAccidental(letterName, targetPC, rootLetter = '', quality = '') {
+			const naturalPC = naturalPCs[letterName];
+			const diff = (targetPC - naturalPC + 12) % 12;
+			
+			// Handle special cases for augmented chords
+			if (quality === 'aug') {
+				const rootFirstChar = rootLetter.charAt(0);
+				const rootAcc = rootLetter.slice(1);
+				const isRootSharp = rootAcc === '♯';
+				const isRootFlat = rootAcc === '♭';
+				
+				// Get interval position (0 = root, 1 = third, 2 = fifth)
+				const intervalIdx = [rootFirstChar, 
+				                    getLetterNameForInterval(rootFirstChar, 4, 'aug'),
+				                    getLetterNameForInterval(rootFirstChar, 8, 'aug')]
+				                   .indexOf(letterName);
+				
+				if (intervalIdx >= 0) {
+					if (isRootSharp) {
+						// With sharp root: ♯ -> 𝄪 -> 𝄪
+						return intervalIdx === 0 ? '♯' : '𝄪';
+					} else if (isRootFlat) {
+						// With flat root: ♭ -> ♮ -> ♯
+						return ['♭', '', '♯'][intervalIdx];
+					} else {
+						// With natural root: ♮ -> ♯ -> 𝄪 
+						return ['', '♯', '♯'][intervalIdx];
+					}
+				}
+			}
+			
+			// Standard accidental calculation
+			switch(diff) {
+				case 0: return '';           // Natural
+				case 1: return '♯';          // Sharp
+				case 2: return '𝄪';          // Double sharp
+				case 10: return '♭';         // Flat
+				case 11: return '𝄫';         // Double flat
+				default: return '';          // Other cases
+			}
+		}
+		
 
 		// Function to get note names for a transposition
 		function getTranspositionsDisplay(intervals, quality) {
@@ -1859,6 +1938,24 @@
 		}
 
 
+		
+		
+		
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		

@@ -1,0 +1,2479 @@
+{
+  "4": {
+    "pcs": [
+      0,
+      3,
+      10,
+      5
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B\u266d",
+      "F"
+    ],
+    "aliases": [
+      "4",
+      "quartal"
+    ],
+    "fullName": "quartal",
+    "decimal": 2370,
+    "intervals": "R, \u266d3, \u266d7, 11"
+  },
+  "5": {
+    "pcs": [
+      0,
+      7
+    ],
+    "notes": [
+      "C",
+      "G"
+    ],
+    "aliases": [
+      "5"
+    ],
+    "fullName": "fifth",
+    "decimal": 2064,
+    "intervals": "R, 5"
+  },
+  "6": {
+    "pcs": [
+      0,
+      4,
+      7,
+      9
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "A"
+    ],
+    "aliases": [
+      "6",
+      "add6",
+      "add13",
+      "M6"
+    ],
+    "fullName": "major sixth",
+    "decimal": 2196,
+    "intervals": "R, 3, 5, 6"
+  },
+  "7": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d"
+    ],
+    "aliases": [
+      "7",
+      "dom"
+    ],
+    "fullName": "dominant seventh",
+    "decimal": 2194,
+    "intervals": "R, 3, 5, \u266d7"
+  },
+  "9": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      2
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "D"
+    ],
+    "aliases": [
+      "9"
+    ],
+    "fullName": "dominant ninth",
+    "decimal": 2706,
+    "intervals": "R, 3, 5, \u266d7, 9"
+  },
+  "11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      2,
+      5
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "D",
+      "F"
+    ],
+    "aliases": [
+      "11"
+    ],
+    "fullName": "dominant eleventh",
+    "decimal": 2770,
+    "intervals": "R, 3, 5, \u266d7, 9, 11"
+  },
+  "13": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      2,
+      9
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "D",
+      "A"
+    ],
+    "aliases": [
+      "13"
+    ],
+    "fullName": "dominant thirteenth",
+    "decimal": 2710,
+    "intervals": "R, 3, 5, \u266d7, 9, 13"
+  },
+  "maj": {
+    "pcs": [
+      0,
+      4,
+      7
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G"
+    ],
+    "aliases": [
+      "M",
+      "^",
+      "",
+      "maj"
+    ],
+    "fullName": "major triad",
+    "decimal": 2192,
+    "intervals": "R, 3, 5"
+  },
+  "min": {
+    "pcs": [
+      0,
+      3,
+      7
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G"
+    ],
+    "aliases": [
+      "m",
+      "-",
+      "min"
+    ],
+    "fullName": "minor triad",
+    "decimal": 2320,
+    "intervals": "R, \u266d3, 5"
+  },
+  "dim": {
+    "pcs": [
+      0,
+      3,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G\u266d"
+    ],
+    "aliases": [
+      "\u00b0",
+      "o",
+      "dim"
+    ],
+    "fullName": "diminished triad",
+    "decimal": 2336,
+    "intervals": "R, \u266d3, \u266d5"
+  },
+  "aug": {
+    "pcs": [
+      0,
+      4,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "A\u266d"
+    ],
+    "aliases": [
+      "+",
+      "aug",
+      "+5",
+      "^#5"
+    ],
+    "fullName": "augmented triad",
+    "decimal": 2184,
+    "intervals": "R, 3, \u266d13"
+  },
+  "maj7": {
+    "pcs": [
+      0,
+      4,
+      7,
+      11
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B"
+    ],
+    "aliases": [
+      "\u0394",
+      "\u03947",
+      "\u2206",
+      "\u22067",
+      "M7",
+      "maj7",
+      "ma7",
+      "Maj7",
+      "^7"
+    ],
+    "fullName": "major seventh",
+    "decimal": 2193,
+    "intervals": "R, 3, 5, 7"
+  },
+  "min7": {
+    "pcs": [
+      0,
+      3,
+      7,
+      10
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B\u266d"
+    ],
+    "aliases": [
+      "m7",
+      "min7",
+      "mi7",
+      "-7"
+    ],
+    "fullName": "minor seventh",
+    "decimal": 2322,
+    "intervals": "R, \u266d3, 5, \u266d7"
+  },
+  "dim7": {
+    "pcs": [
+      0,
+      3,
+      9,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "A",
+      "G\u266d"
+    ],
+    "aliases": [
+      "dim7",
+      "\u00b07",
+      "o7"
+    ],
+    "fullName": "diminished seventh",
+    "decimal": 2340,
+    "intervals": "R, \u266d3, 13, \u266d5"
+  },
+  "m7b5": {
+    "pcs": [
+      0,
+      3,
+      10,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B\u266d",
+      "G\u266d"
+    ],
+    "aliases": [
+      "m7b5",
+      "\u00f8",
+      "-7b5",
+      "h7",
+      "h"
+    ],
+    "fullName": "half-diminished seventh",
+    "decimal": 2338,
+    "intervals": "R, \u266d3, \u266d7, \u266d5"
+  },
+  "minMaj7": {
+    "pcs": [
+      0,
+      3,
+      7,
+      11
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B"
+    ],
+    "aliases": [
+      "mM7",
+      "m\u22067",
+      "m\u2206",
+      "m\u03947",
+      "m\u0394",
+      "-\u22067",
+      "-\u2206",
+      "m/ma7",
+      "m/maj7",
+      "mMaj7",
+      "m/M7",
+      "-\u03947",
+      "-^7",
+      "-maj7"
+    ],
+    "fullName": "minor-major seventh",
+    "decimal": 2321,
+    "intervals": "R, \u266d3, 5, 7"
+  },
+  "aug7": {
+    "pcs": [
+      0,
+      4,
+      10,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7#5",
+      "+7",
+      "7+",
+      "7aug",
+      "aug7",
+      "7b13"
+    ],
+    "fullName": "augmented dominant seventh",
+    "decimal": 2186,
+    "intervals": "R, 3, \u266d7, \u266d13"
+  },
+  "augMaj7": {
+    "pcs": [
+      0,
+      4,
+      11,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B",
+      "A\u266d"
+    ],
+    "aliases": [
+      "M7b6",
+      "^7b6",
+      "maj7#5",
+      "maj7+5",
+      "+maj7",
+      "^7#5",
+      "\u2206#5",
+      "+M7"
+    ],
+    "fullName": "augmented major seventh",
+    "decimal": 2185,
+    "intervals": "R, 3, 7, \u266d13"
+  },
+  "m6": {
+    "pcs": [
+      0,
+      3,
+      7,
+      9
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "A"
+    ],
+    "aliases": [
+      "m6",
+      "-6"
+    ],
+    "fullName": "minor sixth",
+    "decimal": 2324,
+    "intervals": "R, \u266d3, 5, 6"
+  },
+  "maj9": {
+    "pcs": [
+      0,
+      4,
+      7,
+      11,
+      2
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B",
+      "D"
+    ],
+    "aliases": [
+      "\u03949",
+      "\u22069",
+      "M9",
+      "maj9",
+      "^9"
+    ],
+    "fullName": "major ninth",
+    "decimal": 2705,
+    "intervals": "R, 3, 5, 7, 9"
+  },
+  "min9": {
+    "pcs": [
+      0,
+      3,
+      7,
+      10,
+      2
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B\u266d",
+      "D"
+    ],
+    "aliases": [
+      "m9",
+      "-9"
+    ],
+    "fullName": "minor ninth",
+    "decimal": 2834,
+    "intervals": "R, \u266d3, 5, \u266d7, 9"
+  },
+  "maj11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      11,
+      2,
+      5
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B",
+      "D",
+      "F"
+    ],
+    "aliases": [
+      "\u039411",
+      "\u220611",
+      "M11"
+    ],
+    "fullName": "major eleventh",
+    "decimal": 2769,
+    "intervals": "R, 3, 5, 7, 9, 11"
+  },
+  "min11": {
+    "pcs": [
+      0,
+      3,
+      7,
+      10,
+      2,
+      5
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B\u266d",
+      "D",
+      "F"
+    ],
+    "aliases": [
+      "m11",
+      "-11"
+    ],
+    "fullName": "minor eleventh",
+    "decimal": 2898,
+    "intervals": "R, \u266d3, 5, \u266d7, 9, 11"
+  },
+  "maj13": {
+    "pcs": [
+      0,
+      4,
+      7,
+      11,
+      2,
+      9
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B",
+      "D",
+      "A"
+    ],
+    "aliases": [
+      "maj13",
+      "Maj13",
+      "^13",
+      "M7add13"
+    ],
+    "fullName": "major thirteenth",
+    "decimal": 2709,
+    "intervals": "R, 3, 5, 7, 9, 13"
+  },
+  "min13": {
+    "pcs": [
+      0,
+      3,
+      7,
+      10,
+      2,
+      5,
+      9
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B\u266d",
+      "D",
+      "F",
+      "A"
+    ],
+    "aliases": [],
+    "fullName": "minor thirteenth",
+    "decimal": 2902,
+    "intervals": "R, \u266d3, 5, \u266d7, 9, 11, 13"
+  },
+  "sus2": {
+    "pcs": [
+      0,
+      2,
+      7
+    ],
+    "notes": [
+      "C",
+      "D",
+      "G"
+    ],
+    "aliases": [
+      "sus2"
+    ],
+    "fullName": "suspended second",
+    "decimal": 2576,
+    "intervals": "R, 2, 5"
+  },
+  "sus4": {
+    "pcs": [
+      0,
+      5,
+      7
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G"
+    ],
+    "aliases": [
+      "sus4",
+      "sus"
+    ],
+    "fullName": "suspended fourth",
+    "decimal": 2128,
+    "intervals": "R, 4, 5"
+  },
+  "7sus4": {
+    "pcs": [
+      0,
+      5,
+      7,
+      10
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G",
+      "B\u266d"
+    ],
+    "aliases": [
+      "7sus4",
+      "7sus"
+    ],
+    "fullName": "dominant seventh suspended fourth",
+    "decimal": 2130,
+    "intervals": "R, 4, 5, \u266d7"
+  },
+  "9sus4": {
+    "pcs": [
+      0,
+      5,
+      7,
+      10,
+      2
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G",
+      "B\u266d",
+      "D"
+    ],
+    "aliases": [
+      "9sus4",
+      "9sus"
+    ],
+    "fullName": "dominant ninth suspended fourth",
+    "decimal": 2642,
+    "intervals": "R, 4, 5, \u266d7, 9"
+  },
+  "7b5": {
+    "pcs": [
+      0,
+      4,
+      10,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "G\u266d"
+    ],
+    "aliases": [
+      "7b5"
+    ],
+    "fullName": "dominant seventh diminished",
+    "decimal": 2210,
+    "intervals": "R, 3, \u266d7, \u266d5"
+  },
+  "7#5": {
+    "pcs": [
+      0,
+      4,
+      10,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "A\u266d"
+    ],
+    "aliases": [],
+    "fullName": "dominant seventh sharp five",
+    "decimal": 2186,
+    "intervals": "R, 3, \u266d7, \u266d13"
+  },
+  "7b9": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      1
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "C\u266f"
+    ],
+    "aliases": [
+      "7b9"
+    ],
+    "fullName": "dominant seventh flat ninth",
+    "decimal": 3218,
+    "intervals": "R, 3, 5, \u266d7, \u266d9"
+  },
+  "7#9": {
+    "pcs": [
+      0,
+      3,
+      4,
+      7,
+      10
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "G",
+      "B\u266d"
+    ],
+    "aliases": [
+      "7#9"
+    ],
+    "fullName": "dominant seventh sharp ninth",
+    "decimal": 2450,
+    "intervals": "R, \u266d3, 3, 5, \u266d7"
+  },
+  "7#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "G\u266d"
+    ],
+    "aliases": [
+      "7#11",
+      "7#4"
+    ],
+    "fullName": "lydian dominant seventh",
+    "decimal": 2226,
+    "intervals": "R, 3, 5, \u266d7, \u266d5"
+  },
+  "7b13": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      2,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "D",
+      "A\u266d"
+    ],
+    "aliases": [],
+    "fullName": "dominant seventh flat thirteen",
+    "decimal": 2714,
+    "intervals": "R, 3, 5, \u266d7, 9, \u266d13"
+  },
+  "6add9": {
+    "pcs": [
+      0,
+      4,
+      7,
+      9,
+      2
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "A",
+      "D"
+    ],
+    "aliases": [
+      "6add9",
+      "6/9",
+      "69",
+      "M69"
+    ],
+    "fullName": "sixth added ninth",
+    "decimal": 2708,
+    "intervals": "R, 3, 5, 6, 9"
+  },
+  "M6#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      9,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "A",
+      "G\u266d"
+    ],
+    "aliases": [
+      "M6#11",
+      "M6b5",
+      "6#11",
+      "6b5"
+    ],
+    "fullName": "sixth sharp eleventh",
+    "decimal": 2228,
+    "intervals": "R, 3, 5, 6, \u266d5"
+  },
+  "69#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      9,
+      2,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "A",
+      "D",
+      "G\u266d"
+    ],
+    "aliases": [
+      "69#11"
+    ],
+    "fullName": "major sixth ninth sharp eleventh",
+    "decimal": 2740,
+    "intervals": "R, 3, 5, 6, 9, \u266d5"
+  },
+  "maj#4": {
+    "pcs": [
+      0,
+      4,
+      7,
+      11,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B",
+      "G\u266d"
+    ],
+    "aliases": [
+      "maj#4",
+      "\u0394#4",
+      "\u0394#11",
+      "M7#11",
+      "^7#11",
+      "maj7#11"
+    ],
+    "fullName": "major seventh sharp eleventh",
+    "decimal": 2225,
+    "intervals": "R, 3, 5, 7, \u266d5"
+  },
+  "maj9#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      11,
+      2,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B",
+      "D",
+      "G\u266d"
+    ],
+    "aliases": [
+      "maj9#11",
+      "\u03949#11",
+      "^9#11"
+    ],
+    "fullName": "major sharp eleventh (lydian)",
+    "decimal": 2737,
+    "intervals": "R, 3, 5, 7, 9, \u266d5"
+  },
+  "maj7#9#11": {
+    "pcs": [
+      0,
+      3,
+      4,
+      7,
+      11,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "G",
+      "B",
+      "G\u266d"
+    ],
+    "aliases": [
+      "maj7#9#11"
+    ],
+    "fullName": "major sharp ninth sharp eleventh",
+    "decimal": 2481,
+    "intervals": "R, \u266d3, 3, 5, 7, \u266d5"
+  },
+  "M13#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      11,
+      2,
+      9,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B",
+      "D",
+      "A",
+      "G\u266d"
+    ],
+    "aliases": [
+      "M13#11",
+      "maj13#11",
+      "M13+4",
+      "M13#4"
+    ],
+    "fullName": "major thirteenth sharp eleventh",
+    "decimal": 2741,
+    "intervals": "R, 3, 5, 7, 9, 13, \u266d5"
+  },
+  "M7b9": {
+    "pcs": [
+      0,
+      4,
+      7,
+      11,
+      1
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B",
+      "C\u266f"
+    ],
+    "aliases": [
+      "M7b9"
+    ],
+    "fullName": "major seventh flat ninth",
+    "decimal": 3217,
+    "intervals": "R, 3, 5, 7, \u266d9"
+  },
+  "Madd9": {
+    "pcs": [
+      0,
+      4,
+      7,
+      2
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "D"
+    ],
+    "aliases": [
+      "Madd9",
+      "2",
+      "add9",
+      "add2"
+    ],
+    "fullName": "major added ninth",
+    "decimal": 2704,
+    "intervals": "R, 3, 5, 9"
+  },
+  "Maddb9": {
+    "pcs": [
+      0,
+      4,
+      7,
+      1
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "C\u266f"
+    ],
+    "aliases": [
+      "Maddb9"
+    ],
+    "fullName": "major added flat ninth",
+    "decimal": 3216,
+    "intervals": "R, 3, 5, \u266d9"
+  },
+  "Mb5": {
+    "pcs": [
+      0,
+      4,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G\u266d"
+    ],
+    "aliases": [
+      "Mb5"
+    ],
+    "fullName": "major diminished",
+    "decimal": 2208,
+    "intervals": "R, 3, \u266d5"
+  },
+  "M7b5": {
+    "pcs": [
+      0,
+      4,
+      11,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B",
+      "G\u266d"
+    ],
+    "aliases": [
+      "M7b5"
+    ],
+    "fullName": "major seventh diminished",
+    "decimal": 2209,
+    "intervals": "R, 3, 7, \u266d5"
+  },
+  "M9b5": {
+    "pcs": [
+      0,
+      4,
+      11,
+      2,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B",
+      "D",
+      "G\u266d"
+    ],
+    "aliases": [
+      "M9b5"
+    ],
+    "fullName": "major ninth diminished",
+    "decimal": 2721,
+    "intervals": "R, 3, 7, 9, \u266d5"
+  },
+  "mb6": {
+    "pcs": [
+      0,
+      3,
+      7,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "A\u266d"
+    ],
+    "aliases": [
+      "mb6",
+      "minb6",
+      "-b6"
+    ],
+    "fullName": "minor flat sixth",
+    "decimal": 2328,
+    "intervals": "R, \u266d3, 5, \u266d13"
+  },
+  "m69": {
+    "pcs": [
+      0,
+      3,
+      7,
+      9,
+      2
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "A",
+      "D"
+    ],
+    "aliases": [
+      "m69",
+      "-69"
+    ],
+    "fullName": "minor sixth ninth",
+    "decimal": 2836,
+    "intervals": "R, \u266d3, 5, 6, 9"
+  },
+  "m7b9": {
+    "pcs": [
+      0,
+      3,
+      7,
+      10,
+      1
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B\u266d",
+      "C\u266f"
+    ],
+    "aliases": [
+      "m7b9",
+      "min7b9",
+      "-7b9"
+    ],
+    "fullName": "minor seventh flat 9th",
+    "decimal": 3346,
+    "intervals": "R, \u266d3, 5, \u266d7, \u266d9"
+  },
+  "mM9": {
+    "pcs": [
+      0,
+      3,
+      7,
+      11,
+      2
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B",
+      "D"
+    ],
+    "aliases": [
+      "mM9",
+      "mMaj9",
+      "-^9"
+    ],
+    "fullName": "minor/major ninth",
+    "decimal": 2833,
+    "intervals": "R, \u266d3, 5, 7, 9"
+  },
+  "m13": {
+    "pcs": [
+      0,
+      3,
+      7,
+      10,
+      2,
+      9
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B\u266d",
+      "D",
+      "A"
+    ],
+    "aliases": [
+      "m13",
+      "-13"
+    ],
+    "fullName": "minor thirteenth",
+    "decimal": 2838,
+    "intervals": "R, \u266d3, 5, \u266d7, 9, 13"
+  },
+  "m7add11": {
+    "pcs": [
+      0,
+      3,
+      7,
+      10,
+      5
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B\u266d",
+      "F"
+    ],
+    "aliases": [
+      "m7add11",
+      "m7add4"
+    ],
+    "fullName": "minor seventh added sharp eleventh",
+    "decimal": 2386,
+    "intervals": "R, \u266d3, 5, \u266d7, 11"
+  },
+  "madd4": {
+    "pcs": [
+      0,
+      3,
+      7,
+      5
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "F"
+    ],
+    "aliases": [
+      "madd4"
+    ],
+    "fullName": "minor added fourth",
+    "decimal": 2384,
+    "intervals": "R, \u266d3, 5, 11"
+  },
+  "mMaj7b6": {
+    "pcs": [
+      0,
+      3,
+      7,
+      11,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B",
+      "A\u266d"
+    ],
+    "aliases": [
+      "mMaj7b6"
+    ],
+    "fullName": "minor/Major seventh flat sixth",
+    "decimal": 2329,
+    "intervals": "R, \u266d3, 5, 7, \u266d13"
+  },
+  "mMaj9b6": {
+    "pcs": [
+      0,
+      3,
+      7,
+      11,
+      2,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "B",
+      "D",
+      "A\u266d"
+    ],
+    "aliases": [
+      "mMaj9b6"
+    ],
+    "fullName": "minor/Major ninth flat sixth",
+    "decimal": 2841,
+    "intervals": "R, \u266d3, 5, 7, 9, \u266d13"
+  },
+  "madd9": {
+    "pcs": [
+      0,
+      3,
+      7,
+      2
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "G",
+      "D"
+    ],
+    "aliases": [
+      "madd9"
+    ],
+    "fullName": "minor added ninth",
+    "decimal": 2832,
+    "intervals": "R, \u266d3, 5, 9"
+  },
+  "mb6M7": {
+    "pcs": [
+      0,
+      3,
+      11,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B",
+      "A\u266d"
+    ],
+    "aliases": [
+      "mb6M7"
+    ],
+    "fullName": "minor flat sixth major seventh",
+    "decimal": 2313,
+    "intervals": "R, \u266d3, 7, \u266d13"
+  },
+  "m7#5": {
+    "pcs": [
+      0,
+      3,
+      10,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "m7#5"
+    ],
+    "fullName": "minor seventh sharp fifth",
+    "decimal": 2314,
+    "intervals": "R, \u266d3, \u266d7, \u266d13"
+  },
+  "m9#5": {
+    "pcs": [
+      0,
+      3,
+      10,
+      2,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B\u266d",
+      "D",
+      "A\u266d"
+    ],
+    "aliases": [
+      "m9#5"
+    ],
+    "fullName": "minor ninth sharp fifth",
+    "decimal": 2826,
+    "intervals": "R, \u266d3, \u266d7, 9, \u266d13"
+  },
+  "m11A": {
+    "pcs": [
+      0,
+      3,
+      10,
+      2,
+      5,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B\u266d",
+      "D",
+      "F",
+      "A\u266d"
+    ],
+    "aliases": [
+      "m11A"
+    ],
+    "fullName": "minor augmented fourth",
+    "decimal": 2890,
+    "intervals": "R, \u266d3, \u266d7, 9, 11, \u266d13"
+  },
+  "mb6b9": {
+    "pcs": [
+      0,
+      3,
+      1,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "C\u266f",
+      "A\u266d"
+    ],
+    "aliases": [
+      "mb6b9"
+    ],
+    "fullName": "minor flat sixth flat ninth",
+    "decimal": 3336,
+    "intervals": "R, \u266d3, \u266d9, \u266d13"
+  },
+  "m9b5": {
+    "pcs": [
+      0,
+      3,
+      10,
+      2,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B\u266d",
+      "D",
+      "G\u266d"
+    ],
+    "aliases": [
+      "m9b5"
+    ],
+    "fullName": "minor ninth flat fifth",
+    "decimal": 2850,
+    "intervals": "R, \u266d3, \u266d7, 9, \u266d5"
+  },
+  "o7M7": {
+    "pcs": [
+      0,
+      3,
+      11,
+      9,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B",
+      "A",
+      "G\u266d"
+    ],
+    "aliases": [
+      "o7M7"
+    ],
+    "fullName": "diminished seventh Major seventh",
+    "decimal": 2341,
+    "intervals": "R, \u266d3, 7, 13, \u266d5"
+  },
+  "oM7": {
+    "pcs": [
+      0,
+      3,
+      11,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "B",
+      "G\u266d"
+    ],
+    "aliases": [
+      "oM7"
+    ],
+    "fullName": "diminished/Major seventh",
+    "decimal": 2337,
+    "intervals": "R, \u266d3, 7, \u266d5"
+  },
+  "alt7": {
+    "pcs": [
+      0,
+      4,
+      10,
+      1
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "C\u266f"
+    ],
+    "aliases": [
+      "alt7"
+    ],
+    "fullName": "altered",
+    "decimal": 3202,
+    "intervals": "R, 3, \u266d7, \u266d9"
+  },
+  "7b6": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7b6"
+    ],
+    "fullName": "dominant flat sixth",
+    "decimal": 2202,
+    "intervals": "R, 3, 5, \u266d7, \u266d13"
+  },
+  "7#11b13": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      6,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "G\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7#11b13",
+      "7b5b13"
+    ],
+    "fullName": "dominant flat sixth sharp eleventh",
+    "decimal": 2234,
+    "intervals": "R, 3, 5, \u266d7, \u266d5, \u266d13"
+  },
+  "7add6": {
+    "pcs": [
+      0,
+      4,
+      7,
+      9,
+      10
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "A",
+      "B\u266d"
+    ],
+    "aliases": [
+      "7add6",
+      "67",
+      "7add13"
+    ],
+    "fullName": "dominant added thirteenth",
+    "decimal": 2198,
+    "intervals": "R, 3, 5, 6, \u266d7"
+  },
+  "7#9#11": {
+    "pcs": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "G",
+      "B\u266d",
+      "G\u266d"
+    ],
+    "aliases": [
+      "7#9#11",
+      "7b5#9",
+      "7#9b5"
+    ],
+    "fullName": "dominant sharp ninth sharp eleventh",
+    "decimal": 2482,
+    "intervals": "R, \u266d3, 3, 5, \u266d7, \u266d5"
+  },
+  "13#9#11": {
+    "pcs": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      9,
+      6
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "G",
+      "B\u266d",
+      "A",
+      "G\u266d"
+    ],
+    "aliases": [
+      "13#9#11"
+    ],
+    "fullName": "dominant thirteenth sharp ninth sharp eleventh",
+    "decimal": 2486,
+    "intervals": "R, \u266d3, 3, 5, \u266d7, 13, \u266d5"
+  },
+  "7#9#11b13": {
+    "pcs": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      6,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "G",
+      "B\u266d",
+      "G\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7#9#11b13"
+    ],
+    "fullName": "dominanth flat thirteenth sharp ninth sharp eleventh",
+    "decimal": 2490,
+    "intervals": "R, \u266d3, 3, 5, \u266d7, \u266d5, \u266d13"
+  },
+  "13#9": {
+    "pcs": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      9
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "G",
+      "B\u266d",
+      "A"
+    ],
+    "aliases": [
+      "13#9"
+    ],
+    "fullName": "dominant thirteenth sharp ninth",
+    "decimal": 2454,
+    "intervals": "R, \u266d3, 3, 5, \u266d7, 13"
+  },
+  "7#9b13": {
+    "pcs": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "G",
+      "B\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7#9b13"
+    ],
+    "fullName": "dominant sharp ninth flat thirteenth",
+    "decimal": 2458,
+    "intervals": "R, \u266d3, 3, 5, \u266d7, \u266d13"
+  },
+  "9#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      2,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "D",
+      "G\u266d"
+    ],
+    "aliases": [
+      "9#11",
+      "9+4",
+      "9#4"
+    ],
+    "fullName": "dominant ninth sharp eleventh",
+    "decimal": 2738,
+    "intervals": "R, 3, 5, \u266d7, 9, \u266d5"
+  },
+  "13#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      2,
+      9,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "D",
+      "A",
+      "G\u266d"
+    ],
+    "aliases": [
+      "13#11",
+      "13+4",
+      "13#4"
+    ],
+    "fullName": "dominant thirteenth sharp eleventh",
+    "decimal": 2742,
+    "intervals": "R, 3, 5, \u266d7, 9, 13, \u266d5"
+  },
+  "9#11b13": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      2,
+      6,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "D",
+      "G\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "9#11b13",
+      "9b5b13"
+    ],
+    "fullName": "dominant ninth sharp eleventh flat thirteenth",
+    "decimal": 2746,
+    "intervals": "R, 3, 5, \u266d7, 9, \u266d5, \u266d13"
+  },
+  "7b9#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      1,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "C\u266f",
+      "G\u266d"
+    ],
+    "aliases": [
+      "7b9#11",
+      "7b5b9",
+      "7b9b5"
+    ],
+    "fullName": "dominant flat ninth sharp eleventh",
+    "decimal": 3250,
+    "intervals": "R, 3, 5, \u266d7, \u266d9, \u266d5"
+  },
+  "13b9#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      9,
+      1,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "A",
+      "C\u266f",
+      "G\u266d"
+    ],
+    "aliases": [
+      "13b9#11"
+    ],
+    "fullName": "dominant thirteenth flat ninth sharp eleventh",
+    "decimal": 3254,
+    "intervals": "R, 3, 5, \u266d7, 13, \u266d9, \u266d5"
+  },
+  "7b9b13#11": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      1,
+      6,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "C\u266f",
+      "G\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7b9b13#11",
+      "7b9#11b13",
+      "7b5b9b13"
+    ],
+    "fullName": "dominant flat thirteenth flat ninth sharp eleventh",
+    "decimal": 3258,
+    "intervals": "R, 3, 5, \u266d7, \u266d9, \u266d5, \u266d13"
+  },
+  "13b9": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      9,
+      1
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "A",
+      "C\u266f"
+    ],
+    "aliases": [
+      "13b9"
+    ],
+    "fullName": "dominant thirteenth flat ninth",
+    "decimal": 3222,
+    "intervals": "R, 3, 5, \u266d7, 13, \u266d9"
+  },
+  "7b9b13": {
+    "pcs": [
+      0,
+      4,
+      7,
+      10,
+      1,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "G",
+      "B\u266d",
+      "C\u266f",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7b9b13"
+    ],
+    "fullName": "dominant flat thirteenth flat ninth",
+    "decimal": 3226,
+    "intervals": "R, 3, 5, \u266d7, \u266d9, \u266d13"
+  },
+  "7b9#9": {
+    "pcs": [
+      0,
+      3,
+      4,
+      7,
+      10,
+      1
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "G",
+      "B\u266d",
+      "C\u266f"
+    ],
+    "aliases": [
+      "7b9#9"
+    ],
+    "fullName": "dominant flat ninth sharp ninth",
+    "decimal": 3474,
+    "intervals": "R, \u266d3, 3, 5, \u266d7, \u266d9"
+  },
+  "7#5#9": {
+    "pcs": [
+      0,
+      3,
+      4,
+      10,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "B\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7#5#9",
+      "7#9#5",
+      "7alt"
+    ],
+    "fullName": "altered dominant",
+    "decimal": 2442,
+    "intervals": "R, \u266d3, 3, \u266d7, \u266d13"
+  },
+  "9#5": {
+    "pcs": [
+      0,
+      4,
+      10,
+      2,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "D",
+      "A\u266d"
+    ],
+    "aliases": [
+      "9#5",
+      "9+",
+      "aug9",
+      "9b13"
+    ],
+    "fullName": "dominant ninth augmented",
+    "decimal": 2698,
+    "intervals": "R, 3, \u266d7, 9, \u266d13"
+  },
+  "9#5#11": {
+    "pcs": [
+      0,
+      4,
+      10,
+      2,
+      6,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "D",
+      "G\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "9#5#11"
+    ],
+    "fullName": "dominant ninth augmented sharp eleventh",
+    "decimal": 2730,
+    "intervals": "R, 3, \u266d7, 9, \u266d5, \u266d13"
+  },
+  "7#5b9": {
+    "pcs": [
+      0,
+      4,
+      10,
+      1,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "C\u266f",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7#5b9",
+      "7b9#5"
+    ],
+    "fullName": "dominant augmented flat ninth",
+    "decimal": 3210,
+    "intervals": "R, 3, \u266d7, \u266d9, \u266d13"
+  },
+  "7#5b9#11": {
+    "pcs": [
+      0,
+      4,
+      10,
+      1,
+      6,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "C\u266f",
+      "G\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7#5b9#11"
+    ],
+    "fullName": "dominant augmented flat ninth sharp eleventh",
+    "decimal": 3242,
+    "intervals": "R, 3, \u266d7, \u266d9, \u266d5, \u266d13"
+  },
+  "13b5": {
+    "pcs": [
+      0,
+      4,
+      10,
+      2,
+      9,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "D",
+      "A",
+      "G\u266d"
+    ],
+    "aliases": [
+      "13b5"
+    ],
+    "fullName": "dominant thirteenth diminished",
+    "decimal": 2726,
+    "intervals": "R, 3, \u266d7, 9, 13, \u266d5"
+  },
+  "9b5": {
+    "pcs": [
+      0,
+      4,
+      10,
+      2,
+      6
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "D",
+      "G\u266d"
+    ],
+    "aliases": [
+      "9b5"
+    ],
+    "fullName": "dominant ninth diminished",
+    "decimal": 2722,
+    "intervals": "R, 3, \u266d7, 9, \u266d5"
+  },
+  "7no5": {
+    "pcs": [
+      0,
+      4,
+      10
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d"
+    ],
+    "aliases": [
+      "7no5"
+    ],
+    "fullName": "dominant seventh no fifth",
+    "decimal": 2178,
+    "intervals": "R, 3, \u266d7"
+  },
+  "9no5": {
+    "pcs": [
+      0,
+      4,
+      10,
+      2
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "D"
+    ],
+    "aliases": [
+      "9no5"
+    ],
+    "fullName": "dominant ninth no fifth",
+    "decimal": 2690,
+    "intervals": "R, 3, \u266d7, 9"
+  },
+  "13no5": {
+    "pcs": [
+      0,
+      4,
+      10,
+      2,
+      9
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B\u266d",
+      "D",
+      "A"
+    ],
+    "aliases": [
+      "13no5"
+    ],
+    "fullName": "dominant thirteenth no fifth",
+    "decimal": 2694,
+    "intervals": "R, 3, \u266d7, 9, 13"
+  },
+  "sus24": {
+    "pcs": [
+      0,
+      2,
+      7
+    ],
+    "notes": [
+      "C",
+      "D",
+      "G"
+    ],
+    "aliases": [
+      "sus24",
+      "sus4add9"
+    ],
+    "fullName": "suspended second fourth",
+    "decimal": 2576,
+    "intervals": "R, 2, 5"
+  },
+  "b9sus": {
+    "pcs": [
+      0,
+      5,
+      7,
+      10,
+      1
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G",
+      "B\u266d",
+      "C\u266f"
+    ],
+    "aliases": [
+      "b9sus",
+      "phryg",
+      "7b9sus",
+      "7b9sus4",
+      "11b9"
+    ],
+    "fullName": "suspended fourth flat ninth",
+    "decimal": 3154,
+    "intervals": "R, 11, 5, \u266d7, \u266d9"
+  },
+  "13sus4": {
+    "pcs": [
+      0,
+      5,
+      7,
+      10,
+      2,
+      9
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G",
+      "B\u266d",
+      "D",
+      "A"
+    ],
+    "aliases": [
+      "13sus4",
+      "13sus"
+    ],
+    "fullName": "dominant thirteenth suspended fourth",
+    "decimal": 2646,
+    "intervals": "R, 4, 5, \u266d7, 9, 13"
+  },
+  "7sus4b9b13": {
+    "pcs": [
+      0,
+      5,
+      7,
+      10,
+      1,
+      8
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G",
+      "B\u266d",
+      "C\u266f",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7sus4b9b13",
+      "7b9b13sus4"
+    ],
+    "fullName": "dominant seventh suspended fourth flat ninth flat thirteenth",
+    "decimal": 3162,
+    "intervals": "R, 4, 5, \u266d7, \u266d9, \u266d13"
+  },
+  "M7sus4": {
+    "pcs": [
+      0,
+      5,
+      7,
+      11
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G",
+      "B"
+    ],
+    "aliases": [
+      "M7sus4"
+    ],
+    "fullName": "major seventh suspended fourth",
+    "decimal": 2129,
+    "intervals": "R, 4, 5, 7"
+  },
+  "M9sus4": {
+    "pcs": [
+      0,
+      5,
+      7,
+      11,
+      2
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G",
+      "B",
+      "D"
+    ],
+    "aliases": [
+      "M9sus4"
+    ],
+    "fullName": "major ninth suspended fourth",
+    "decimal": 2641,
+    "intervals": "R, 4, 5, 7, 9"
+  },
+  "M7#5sus4": {
+    "pcs": [
+      0,
+      5,
+      11,
+      8
+    ],
+    "notes": [
+      "C",
+      "F",
+      "B",
+      "A\u266d"
+    ],
+    "aliases": [
+      "M7#5sus4"
+    ],
+    "fullName": "major seventh augmented suspended fourth",
+    "decimal": 2121,
+    "intervals": "R, 4, 7, \u266d13"
+  },
+  "M9#5sus4": {
+    "pcs": [
+      0,
+      5,
+      11,
+      2,
+      8
+    ],
+    "notes": [
+      "C",
+      "F",
+      "B",
+      "D",
+      "A\u266d"
+    ],
+    "aliases": [
+      "M9#5sus4"
+    ],
+    "fullName": "major ninth augmented suspended fourth",
+    "decimal": 2633,
+    "intervals": "R, 4, 7, 9, \u266d13"
+  },
+  "7b13sus": {
+    "pcs": [
+      0,
+      5,
+      7,
+      8
+    ],
+    "notes": [
+      "C",
+      "F",
+      "G",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7b13sus"
+    ],
+    "fullName": "dominant flat 13th sus",
+    "decimal": 2136,
+    "intervals": "R, 11, 5, \u266d13"
+  },
+  "7#5sus4": {
+    "pcs": [
+      0,
+      5,
+      10,
+      8
+    ],
+    "notes": [
+      "C",
+      "F",
+      "B\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "7#5sus4"
+    ],
+    "fullName": "dominant seventh sharp fifth suspended fourth",
+    "decimal": 2122,
+    "intervals": "R, 4, \u266d7, \u266d13"
+  },
+  "m#5": {
+    "pcs": [
+      0,
+      3,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "A\u266d"
+    ],
+    "aliases": [
+      "m#5",
+      "-#5",
+      "m+"
+    ],
+    "fullName": "minor augmented",
+    "decimal": 2312,
+    "intervals": "R, \u266d3, \u266d13"
+  },
+  "maj9#5": {
+    "pcs": [
+      0,
+      4,
+      11,
+      2,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "B",
+      "D",
+      "A\u266d"
+    ],
+    "aliases": [
+      "maj9#5",
+      "Maj9#5",
+      "+M9"
+    ],
+    "fullName": "augmented ninth",
+    "decimal": 2697,
+    "intervals": "R, 3, 7, 9, \u266d13"
+  },
+  "M#5add9": {
+    "pcs": [
+      0,
+      4,
+      2,
+      8
+    ],
+    "notes": [
+      "C",
+      "E",
+      "D",
+      "A\u266d"
+    ],
+    "aliases": [
+      "M#5add9",
+      "+add9"
+    ],
+    "fullName": "augmented added ninth",
+    "decimal": 2696,
+    "intervals": "R, 3, 9, \u266d13"
+  },
+  "+add#9": {
+    "pcs": [
+      0,
+      3,
+      4,
+      8
+    ],
+    "notes": [
+      "C",
+      "E\u266d",
+      "E",
+      "A\u266d"
+    ],
+    "aliases": [
+      "+add#9"
+    ],
+    "fullName": "augmented added sharp ninth",
+    "decimal": 2440,
+    "intervals": "R, \u266d3, 3, \u266d13"
+  }
+}
