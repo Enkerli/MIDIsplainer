@@ -13,7 +13,7 @@ updated_filtered_data = {
 }
 
 # Save the updated filtered JSON to a new file
-updated_filtered_file_path = "/mnt/data/chord_dictionary_transpositions_filtered.json"
+updated_filtered_file_path = "chord_dictionary_transpositions_filtered.json"
 with open(updated_filtered_file_path, "w") as updated_filtered_file:
     json.dump(updated_filtered_data, updated_filtered_file, indent=2)
 

@@ -174,48 +174,6 @@
 			border: 1px solid #ccc;
 			border-radius: 4px;
 		}
-		
-		.test-section {
-			margin-top: 2rem;
-			padding: 2rem;
-			background: #f5f5f5;
-			border-radius: 8px;
-			border: 1px solid #ddd;
-		}
-
-		.test-controls {
-			margin-bottom: 1rem;
-		}
-
-		.test-button {
-			padding: 0.5rem 1rem;
-			font-size: 1rem;
-			background-color: #007bff;
-			color: white;
-			border: none;
-			border-radius: 4px;
-			cursor: pointer;
-		}
-
-		.test-button:hover {
-			background-color: #0056b3;
-		}
-
-		.test-case {
-			margin: 1rem 0;
-			padding: 1rem;
-			border: 1px solid #ddd;
-			border-radius: 4px;
-			background: white;
-		}
-
-		.test-case.pass {
-			border-color: #4caf50;
-		}
-
-		.test-case.fail {
-			border-color: #f44336;
-		}
     </style>
 </head>
 <body>
@@ -226,24 +184,13 @@
             <button id="convertButton" onclick="convertToPCS()">Find</button>
         </div>
         <div id="result"></div>
-        <div class="test-section">
-			<h2>Chord Tests</h2>
-			<div class="test-controls">
-				<button id="runTestsButton" class="test-button">Run Chord Tests</button>
-			</div>
-			<div id="testResults"></div>
-		</div>
 
-
-<!-- 
         <div class="chord-management-section">
             <h2>Manage Chord Qualities</h2>
-<!~~ 
             <div class="tabs">
                 <button onclick="switchTab('add')" class="tab-button active">Add New</button>
                 <button onclick="switchTab('edit')" class="tab-button">Edit Existing</button>
             </div>
- ~~>
             
 			<div id="addChordTab" class="tab-content">
 				<div class="input-group">
@@ -273,7 +220,7 @@
 				</div>
 			</div>
         </div>
- -->
+
 
         
         <div class="export-section">
@@ -577,52 +524,67 @@
 			// Root always first
 			ordered.push(0);
 
-			// Special case for b5 chords - order is R, 3, b5, b7
-			if (quality?.includes('b5')) {
-				const ordering = [4, 6, 10]; // 3, b5, b7
-				ordering.forEach(interval => {
-					if (intervals.includes(interval)) {
-						ordered.push(interval);
-					}
-				});
-				return ordered.map(interval => (interval + root) % 12);
-			}
-
-			// Special case for augmented chords
-			if (quality?.includes('aug')) {
-				const ordering = [4, 8]; // 3, #5
-				ordering.forEach(interval => {
-					if (intervals.includes(interval)) {
-						ordered.push(interval);
-					}
-				});
-				// Add sevenths and extensions after
-				[10, 11, 2, 5, 9].forEach(interval => {
-					if (intervals.includes(interval)) {
-						ordered.push(interval);
-					}
-				});
-				return ordered.map(interval => (interval + root) % 12);
-			}
-
-			// Rest of existing ordering...
-			[3, 4,    // thirds
-			 7,       // fifth
-			 10, 11,  // sevenths
-			 2,       // ninth
-			 5,       // eleventh
-			 9,       // thirteenth
-			 1,       // flat nine
-			 6, 8     // altered fifths
-			].forEach(interval => {
-				if (intervals.includes(interval)) {
-					ordered.push(interval);
+			// Special handling for suspended chords
+			if (quality?.includes('sus')) {
+				// Add suspended note (2 or 5) right after root
+				if (quality.includes('sus2') && intervals.includes(2)) {
+					ordered.push(2);  // add second
+				} else if (intervals.includes(5)) {
+					ordered.push(5);  // add fourth
 				}
-			});
 
+				// Add fifth if present
+				if (intervals.includes(7)) {
+					ordered.push(7);
+				}
+
+				// Add seventh if present
+				if (intervals.includes(10)) {
+					ordered.push(10);
+				} else if (intervals.includes(11)) {
+					ordered.push(11);
+				}
+
+				// Add ninth if present and not sus2
+				if (intervals.includes(2) && !quality.includes('sus2')) {
+					ordered.push(2);
+				}
+
+				// Add other intervals in standard order
+				[1,      // flat nine
+				 3, 4,   // thirds (deprioritized in sus chords)
+				 6,      // tritone
+				 8,      // augmented fifth
+				 9       // sixth/thirteenth
+				].forEach(interval => {
+					if (intervals.includes(interval) && !ordered.includes(interval)) {
+						ordered.push(interval);
+					}
+				});
+			} else {
+        // Check if it's a 6 chord (has '6' in quality but not '13')
+        const isSixthChord = quality?.includes('6') && !quality?.includes('13');
+
+        // Standard ordering for non-suspended chords
+        [3, 4,    // thirds
+         7,       // fifth 
+         ...(isSixthChord ? [9] : []), // sixth comes after fifth in 6 chords
+         10, 11,  // sevenths
+         2,       // ninth
+         5,       // eleventh
+         ...(isSixthChord ? [] : [9]),  // thirteenth (if not a 6 chord)
+         1,       // flat nine
+         6, 8     // altered fifths
+        ].forEach(interval => {
+            if (intervals.includes(interval)) {
+                ordered.push(interval);
+            }
+        });
+    }
+
+			// Convert intervals back to pitch classes
 			return ordered.map(interval => (interval + root) % 12);
-		}		
-
+		}
 
 		// Helper to put intervals in functional order
 		function orderIntervals(intervals, quality = '') {
@@ -694,53 +656,24 @@
 			return ordered;
 		}
 
-		
-
-		
-
-		
-		
-		
-		
-		
 		// Get interval quality name
 		function getIntervalQuality(interval, quality = '') {
-			// Special handling for augmented fifth
-			if (interval === 8 && quality?.includes('aug')) {
-				return '#5';
-			}
-
-			// Special handling for sixth chords
-			if (interval === 9 && quality?.includes('6') && !quality?.includes('13')) {
-				return '6';
-			}
-
-			// Special handling for sus chords
-			if (interval === 2 && quality?.includes('sus2')) {
-				return '2';
-			}
-			if (interval === 5 && quality?.includes('sus4')) {
-				return '4';
-			}
-
-			// Basic interval mapping
 			const degreeMap = {
 				0: 'R',
 				1: '♭9',
-				2: '9',
+				2: quality?.includes('sus2') ? '2' : '9',
 				3: '♭3',
 				4: '3',
-				5: '11',
+				5: quality?.includes('sus4') ? '4' : '11',
 				6: '♭5',
 				7: '5',
-				8: quality?.includes('7') ? '♭13' : '#5', // ♭13 in dominant context, #5 otherwise
-				9: '13',
+				8: '♭13',
+				9: quality?.includes('6') && !quality?.includes('13') ? '6' : '13',
 				10: '♭7',
 				11: '7'
 			};
 			return degreeMap[interval];
 		}
-
 
 		// Get interval string
 		function intervalToString(intervals, quality = '') {
@@ -783,36 +716,29 @@
 
         function parseChord(chordName) {
 			if (!chordName) return null;
-
-			// Normalize root spellings for B and E
-			const normalizeRoot = (root) => {
-				if (root === 'A#') return 'B♭';
-				if (root === 'D#') return 'E♭';
-				return root;
-			};
-
+	
 			// Try to match root and quality
 			const match = chordName.match(/^([A-G][b#]?)(.*)$/);
 			if (!match) return null;
 
 			const [_, root, rawQuality] = match;
-			let normalizedRoot = normalizeRoot(root);
 			let quality = rawQuality || 'maj'; // Default to major triad
 
 			// Direct match with chord qualities
 			if (chordQualities[quality]) {
-				return { root: normalizedRoot, quality };
+				return { root, quality };
 			}
 
 			// Check aliases
 			for (const [standardQuality, aliases] of Object.entries(chordAliases)) {
 				if (aliases.includes(quality)) {
-					return { root: normalizedRoot, quality: standardQuality };
+					return { root, quality: standardQuality };
 				}
 			}
 
 			return null;
 		}
+
         
         function toBinaryPCS(pcSet) {
             let binary = new Array(12).fill(0);
@@ -1712,78 +1638,52 @@
 		}
 
 
-		
-
-		
-
 		// Get chord notes in the right order
 		function getChordNotes(root, intervals, quality = '') {
+			console.log('getChordNotes input:', { root, intervals, quality });
+			// Order the intervals first
+			const orderedIntervals = getOrderedIntervals(intervals, 0, quality);
+			console.log('getChordNotes orderedIntervals:', orderedIntervals);
+
 			// Root letter and standard letter sequence
 			const rootLetter = root.charAt(0);
 			const letterNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 
-			// Map each interval to number of letter steps up from root
-			function getLetterSteps(interval) {
-				switch(interval) {
-					case 0: return 0;  // root
-					case 2: return 1;  // second/ninth
-					case 3: return 2;  // minor third
-					case 4: return 2;  // major third
-					case 5: return 3;  // fourth/eleventh
-					case 6: return 4;  // diminished fifth
-					case 7: return 4;  // perfect fifth
-					case 8: return 4;  // augmented fifth
-					case 9: return 5;  // sixth/thirteenth
-					case 10: return 6; // minor seventh
-					case 11: return 6; // major seventh
-					default: return Math.floor(interval * 2/3);
-				}
-			}
-
-			// Get base PC for a letter
-			function getNaturalPC(letter) {
-				return {
-					'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11
-				}[letter];
-			}
-
-			return intervals.map((interval, index) => {
+			const result = orderedIntervals.map(interval => {
 				if (interval === 0) return root;
 
-				// Calculate letter
-				const steps = getLetterSteps(interval);
+				// Get target letter based on standard intervals
+				let steps;
+				switch (interval) {
+					case 2:  steps = 1; break;  // second = 1 letter up
+					case 4:  steps = 2; break;  // major third = 2 letters up
+					case 5:  steps = 3; break;  // perfect fourth = 3 letters up
+					case 7:  steps = 4; break;  // perfect fifth = 4 letters up
+					case 9:  steps = 5; break;  // sixth = 5 letters up
+					case 11: steps = 6; break;  // major seventh = 6 letters up
+					default: steps = Math.floor(interval * 2/3);
+				}
+
+				// Calculate target letter and accidental
 				const rootIndex = letterNames.indexOf(rootLetter);
 				const targetLetter = letterNames[(rootIndex + steps) % 7];
-
-				// Calculate pitch class
-				const naturalPC = getNaturalPC(targetLetter);
+				const naturalPC = noteToPC[targetLetter];
 				const desiredPC = (noteToPC[root] + interval) % 12;
-		
-				// Handle augmented triad specially
-				if (quality === 'aug') {
-					if (index === 1) return targetLetter + '♯';  // third is sharp
-					if (index === 2) return targetLetter + '𝄪';  // fifth is double sharp
-				}
+				const adjustment = (desiredPC - naturalPC + 12) % 12;
 
-				// Handle diminished triad specially
-				if (quality === 'dim') {
-					if (index === 1) return targetLetter + '♭';  // third is flat
-					if (index === 2) return targetLetter + '𝄫';  // fifth is double flat
-				}
-
-				// Regular accidental calculation
-				const diff = (desiredPC - naturalPC + 12) % 12;
-				switch (diff) {
+				switch (adjustment) {
 					case 0:  return targetLetter;
-					case 1:  return targetLetter + '♯';
-					case 2:  return targetLetter + '𝄪';
+					case 1:  return root.includes('b') ? targetLetter + '♭' : targetLetter + '♯';
+					case 2:  return targetLetter + '♯';
 					case 10: return targetLetter + '♭';
-					case 11: return targetLetter + '𝄫';
+					case 11: return targetLetter + '♭';
 					default: return targetLetter;
 				}
 			});
+	
+			console.log('getChordNotes output:', result);
+			return result;
 		}
-
 
 		// Function to get note names for a transposition
 		function getTranspositionsDisplay(intervals, quality) {
@@ -1958,7 +1858,8 @@
 
 		
 		
-
+		
+		
 		
 		
 
@@ -2016,92 +1917,272 @@
                 console.warn('Error loading chord_dictionary.json, using default dictionary:', error);
             }
         }
-        
 
-		// Test cases
-		const testCases = [
-			{
-				name: 'Baug',
-				chord: 'Baug',
-				expect: {
-					notes: ['B', 'D♯', 'F𝄪'],
-					intervals: ['R', '3', '#5'],
-					pcs: [11, 3, 7]
-				}
-			},
-			{
-				name: 'Ebdim',
-				chord: 'Ebdim',
-				expect: {
-					notes: ['E♭', 'G♭', 'B𝄫'],
-					intervals: ['R', '♭3', '♭5'],
-					pcs: [3, 6, 9]
-				}
-			},
-			{
-				name: 'G7b5',
-				chord: 'G7b5',
-				expect: {
-					notes: ['G', 'B', 'D♭', 'F'],
-					intervals: ['R', '3', '♭5', '♭7'],
-					pcs: [7, 11, 1, 5]
-				}
-			}
-		];
+        // Test Framework - Defined before any usage
+        window.TestSuite = {
+            tests: [],
+            results: {
+                passed: 0,
+                failed: 0,
+                total: 0
+            },
 
-		// Test runner function
-		function runChordTests() {
-			const results = document.getElementById('testResults');
-			results.innerHTML = ''; // Clear previous results
+            test: function(name, fn) {
+                console.log(`Adding test: ${name}`);
+                this.tests.push({ name, fn });
+            },
 
-			testCases.forEach(test => {
-				const result = parseChordInput(test.chord);
-				if (!result) {
-					addTestResult(test.name, false, `Failed to parse chord ${test.chord}`);
-					return;
-				}
+            assertEqual: function(actual, expected, message) {
+                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                    throw new Error(`${message}\nExpected: ${JSON.stringify(expected)}\nActual: ${JSON.stringify(actual)}`);
+                }
+            },
 
-				// Get actual values
-				const actual = {
-					notes: getChordNotes(result.root, result.pcs, result.quality),
-					intervals: result.pcs.map(pc => 
-						getIntervalQuality((pc - noteToPC[result.root] + 12) % 12, result.quality)
-					),
-					pcs: result.pcs
-				};
+            runTests: async function() {
+                console.log('Running tests...');
+                const resultDiv = document.createElement('div');
+                resultDiv.id = 'testResults';
+                resultDiv.style.padding = '20px';
+                resultDiv.style.margin = '20px';
+                resultDiv.style.border = '1px solid #ccc';
+                document.body.appendChild(resultDiv);
 
-				// Compare with expected
-				const notesMatch = JSON.stringify(actual.notes) === JSON.stringify(test.expect.notes);
-				const intervalsMatch = JSON.stringify(actual.intervals) === JSON.stringify(test.expect.intervals);
-				const pcsMatch = JSON.stringify(actual.pcs) === JSON.stringify(test.expect.pcs);
-		
-				const testDiv = document.createElement('div');
-				testDiv.className = `test-case ${notesMatch && intervalsMatch && pcsMatch ? 'pass' : 'fail'}`;
+                this.results = { passed: 0, failed: 0, total: 0 };
 
-				testDiv.innerHTML = `
-					<h3>${test.name}</h3>
-					<div class="test-details">
-						<div style="color: ${notesMatch ? 'green' : 'red'}">
-							Notes: Expected ${JSON.stringify(test.expect.notes)}, got ${JSON.stringify(actual.notes)}
-						</div>
-						<div style="color: ${intervalsMatch ? 'green' : 'red'}">
-							Intervals: Expected ${JSON.stringify(test.expect.intervals)}, got ${JSON.stringify(actual.intervals)}
-						</div>
-						<div style="color: ${pcsMatch ? 'green' : 'red'}">
-							PCS: Expected ${JSON.stringify(test.expect.pcs)}, got ${JSON.stringify(actual.pcs)}
-						</div>
-					</div>
-				`;
+                for (const test of this.tests) {
+                    try {
+                        await test.fn();
+                        this.results.passed++;
+                        resultDiv.innerHTML += `<p style="color: green">✓ ${test.name}</p>`;
+                    } catch (error) {
+                        this.results.failed++;
+                        resultDiv.innerHTML += `
+                            <p style="color: red">✗ ${test.name}</p>
+                            <pre style="background: #f8f8f8; padding: 10px; margin: 5px 0;">${error.message}</pre>
+                        `;
+                    }
+                    this.results.total++;
+                }
 
-				results.appendChild(testDiv);
-			});
-		}
+                resultDiv.innerHTML += `
+                    <h3>Test Results</h3>
+                    <p>Total: ${this.results.total}</p>
+                    <p style="color: green">Passed: ${this.results.passed}</p>
+                    <p style="color: red">Failed: ${this.results.failed}</p>
+                `;
+            }
+        };
 
-		// Initialize on page load
-		document.addEventListener('DOMContentLoaded', () => {
-			document.getElementById('runTestsButton').addEventListener('click', runChordTests);
-		});
+        window.runChordTests = async function() {
+            console.log('Starting chord tests...');
+            
+            // Basic Chord Parsing Tests
+            TestSuite.test('Parse major triad', () => {
+                const result = parseChord('Cmaj');
+                TestSuite.assertEqual(result, { root: 'C', quality: 'maj' }, 'Failed to parse Cmaj');
+            });
 
+            TestSuite.test('Parse minor seventh', () => {
+                const result = parseChord('Dm7');
+                TestSuite.assertEqual(result, { root: 'D', quality: 'min7' }, 'Failed to parse Dm7');
+            });
+
+            // Full Name Parsing Tests
+            TestSuite.test('Parse full name - minor triad', () => {
+                console.log('Testing full name parsing for minor triad...');
+                const result = parseChordInput('C minor triad');
+                console.log('Result:', result);
+                TestSuite.assertEqual(result.quality, 'min', 'Failed to parse minor triad from full name');
+            });
+
+            TestSuite.test('Parse full name - major seventh', () => {
+                console.log('Testing full name parsing for major seventh...');
+                const result = parseChordInput('D major seventh');
+                console.log('Result:', result);
+                TestSuite.assertEqual(result.quality, 'maj7', 'Failed to parse major seventh from full name');
+            });
+
+            // PCS Notation Tests
+            TestSuite.test('Parse PCS - major triad', () => {
+                const result = parseChordInput('[0, 4, 7]');
+                TestSuite.assertEqual(result.quality, 'maj', 'Failed to parse major triad from PCS');
+            });
+
+            TestSuite.test('Parse PCS - major sixth', () => {
+                const result = parseChordInput('[0, 4, 7, 9]');
+                TestSuite.assertEqual(result.quality, '6', 'Failed to parse major sixth from PCS');
+            });
+
+            // Decimal Notation Tests
+            TestSuite.test('Parse decimal - C#maj7', () => {
+                const result = parseChordInput('3144');  // Should be C#maj7
+                TestSuite.assertEqual(
+                    { root: result.root, quality: result.quality }, 
+                    { root: 'C#', quality: 'maj7' }, 
+                    'Failed to parse C#maj7 from decimal 3144'
+                );
+            });
+
+            // Degree Ordering Tests
+            TestSuite.test('Degree ordering - min13', () => {
+                const pcs = chordQualities['min13'];
+                const ordered = orderByDegrees(pcs);
+                TestSuite.assertEqual(
+                    ordered, 
+                    [0, 3, 7, 10, 2, 5, 9], 
+                    'Failed to order min13 correctly'
+                );
+            });
+
+            TestSuite.test('Degree ordering - 7b9sus4', () => {
+                const pcs = chordQualities['7b9sus4'] || [0, 5, 7, 10, 1];
+                const ordered = orderByDegrees(pcs);
+                TestSuite.assertEqual(
+                    ordered, 
+                    [0, 5, 7, 10, 1], 
+                    'Failed to order 7b9sus4 correctly'
+                );
+            });
+
+            // Transposition Tests
+            TestSuite.test('Transposition - Bbmaj7', () => {
+                const result = parseChordInput('Bbmaj7');
+                const expectedPCS = [10, 2, 5, 9];  // Properly ordered Bbmaj7
+                TestSuite.assertEqual(
+                    result.pcs, 
+                    expectedPCS, 
+                    'Failed to get correct PCS for Bbmaj7'
+                );
+            });
+
+            // Run the tests
+            await TestSuite.runTests();
+        };
+        const TestSuite = {
+            tests: [],
+            results: {
+                passed: 0,
+                failed: 0,
+                total: 0
+            },
+
+            test: function(name, fn) {
+                this.tests.push({ name, fn });
+            },
+
+            assertEqual: function(actual, expected, message) {
+                if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                    throw new Error(`${message}\nExpected: ${JSON.stringify(expected)}\nActual: ${JSON.stringify(actual)}`);
+                }
+            },
+
+            runTests: async function() {
+                const resultDiv = document.createElement('div');
+                resultDiv.id = 'testResults';
+                resultDiv.style.padding = '20px';
+                resultDiv.style.margin = '20px';
+                resultDiv.style.border = '1px solid #ccc';
+                document.body.appendChild(resultDiv);
+
+                this.results = { passed: 0, failed: 0, total: 0 };
+
+                for (const test of this.tests) {
+                    try {
+                        await test.fn();
+                        this.results.passed++;
+                        resultDiv.innerHTML += `<p style="color: green">✓ ${test.name}</p>`;
+                    } catch (error) {
+                        this.results.failed++;
+                        resultDiv.innerHTML += `
+                            <p style="color: red">✗ ${test.name}</p>
+                            <pre style="background: #f8f8f8; padding: 10px; margin: 5px 0;">${error.message}</pre>
+                        `;
+                    }
+                    this.results.total++;
+                }
+
+                resultDiv.innerHTML += `
+                    <h3>Test Results</h3>
+                    <p>Total: ${this.results.total}</p>
+                    <p style="color: green">Passed: ${this.results.passed}</p>
+                    <p style="color: red">Failed: ${this.results.failed}</p>
+                `;
+            }
+        };
+
+        // Chord Dictionary Tests
+        const ChordDictionaryTests = {
+            init: async function() {
+                // Basic Chord Parsing Tests
+                TestSuite.test('Parse major triad', () => {
+                    const result = parseChord('Cmaj');
+                    TestSuite.assertEqual(result, { root: 'C', quality: 'maj' }, 'Failed to parse Cmaj');
+                });
+
+                TestSuite.test('Parse minor seventh', () => {
+                    const result = parseChord('Dm7');
+                    TestSuite.assertEqual(result, { root: 'D', quality: 'min7' }, 'Failed to parse Dm7');
+                });
+
+                // Chord Symbol Aliases Tests
+                TestSuite.test('Parse major seventh alias (Δ)', () => {
+                    const result = parseChord('CΔ');
+                    TestSuite.assertEqual(result, { root: 'C', quality: 'maj7' }, 'Failed to parse CΔ');
+                });
+
+                TestSuite.test('Parse diminished alias (°)', () => {
+                    const result = parseChord('C°');
+                    TestSuite.assertEqual(result, { root: 'C', quality: 'dim' }, 'Failed to parse C°');
+                });
+
+                // PCS Input Tests
+                TestSuite.test('Parse PCS notation', () => {
+                    const result = findChordByPCS([0, 4, 7]);
+                    TestSuite.assertEqual(result.quality, 'maj', 'Failed to identify major triad from PCS');
+                });
+
+                TestSuite.test('Parse altered PCS notation', () => {
+                    const result = findChordByPCS([0, 4, 6, 10]);
+                    TestSuite.assertEqual(result.quality, '7b5', 'Failed to identify 7b5 from PCS');
+                });
+
+                // Decimal Notation Tests
+                TestSuite.test('Parse decimal notation', () => {
+                    const result = findChordByDecimal(2192); // Major triad
+                    TestSuite.assertEqual(result.quality, 'maj', 'Failed to identify major triad from decimal');
+                });
+
+                // Full Name Tests
+                TestSuite.test('Parse full name', () => {
+                    const result = parseChordInput('C minor seventh');
+                    TestSuite.assertEqual(result.quality, 'min7', 'Failed to parse full name');
+                });
+
+                // Transposition Tests
+                TestSuite.test('Test major triad transposition', () => {
+                    const pcs = chordQualities['maj'];
+                    const transposed = transposePitchClassSet(pcs, 2); // Up a whole step
+                    TestSuite.assertEqual(transposed, [2, 6, 9], 'Failed to transpose major triad');
+                });
+
+                // Run all tests
+                await TestSuite.runTests();
+            }
+        };
+
+        // Add button to run tests
+        function addTestButton() {
+            const button = document.createElement('button');
+            button.innerHTML = 'Run z7 Tests';
+            button.style.margin = '20px';
+            button.onclick = function() {
+                runChordTests();
+            };
+            const container = document.querySelector('.container');
+            if (container) {
+                container.insertBefore(button, container.firstChild);
+            }
+        }
 
         // Initialize chord dictionary and tests on load
         window.addEventListener('load', async function() {
