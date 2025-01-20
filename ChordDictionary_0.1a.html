@@ -255,14 +255,15 @@
 
     <script>
         const noteToPC = {
-            'C': 0, 'B#': 0, 'C#': 1, 'Db': 1,
-            'D': 2, 'D#': 3, 'Eb': 3,
-            'E': 4, 'Fb': 4, 'E#': 5,
-            'F': 5, 'F#': 6, 'Gb': 6,
-            'G': 7, 'G#': 8, 'Ab': 8,
-            'A': 9, 'A#': 10, 'Bb': 10,
-            'B': 11, 'Cb': 11
-        };
+			'C': 0, 'B#': 0, 'C##': 2,
+			'C#': 1, 'Db': 1,
+			'D': 2, 'D#': 3, 'Eb': 3,
+			'E': 4, 'Fb': 4, 'E#': 5,
+			'F': 5, 'F#': 6, 'Gb': 6,
+			'G': 7, 'G#': 8, 'Ab': 8,
+			'A': 9, 'A#': 10, 'Bb': 10,
+			'B': 11, 'Cb': 11, 'B𝄪': 1
+		};
 
 		const noteToPCKeys = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -450,57 +451,25 @@
 		};
 		
 		// Get chord notes in the right order
-		function getChordNotes(root, intervals, quality = '') {
-			// Get root letter and any accidental
-			const rootLetter = root.charAt(0);
-			const rootAccidental = root.slice(1);
-			const isRootSharp = rootAccidental === '♯';
-			const isRootFlat = rootAccidental === '♭';
+		function getChordNotes(root, intervals) {
 			const rootPC = noteToPC[root];
+			const rootLetter = root[0];
 
-			// Handle special cases for augmented triads
-			if (quality === 'aug') {
-				// Third is natural major third
-				const third = getLetterNameForInterval(rootLetter, 4) +
-					(isRootSharp ? '𝄪' : '♯');
-				
-				// Fifth is always sharp relative to perfect fifth
-				const fifth = getLetterNameForInterval(rootLetter, 7) + '♯';
-				
-				return [root, third, fifth];
-			}
-
-			// Handle diminished triads
-			if (quality === 'dim') {
-				return [
-					root,
-					getLetterNameForInterval(rootLetter, 3) + 
-						(isRootSharp ? '♮' : '♭'),
-					getLetterNameForInterval(rootLetter, 6) + 
-						(isRootSharp ? '♮' : '♭')
-				];
-			}
-
-			// Order the intervals first
-			const orderedIntervals = getOrderedIntervals(intervals, 0, quality);
-			
-			// Standard chord spelling
-			return orderedIntervals.map(interval => {
-				if (interval === 0) return root;
-
-				// Calculate target pitch class
+			return intervals.map(interval => {
 				const targetPC = (rootPC + interval) % 12;
+				const letterName = getLetterNameForInterval(rootLetter, interval);
+				const accidental = getAccidental(letterName, targetPC);
 
-				// Get proper letter name based on interval function
-				const targetLetter = getLetterNameForInterval(rootLetter, interval);
+				// Debugging specific chords
+				if (root === 'Eb' && intervals.includes(6)) {
+					console.log('Debug - Root:', root, 'Interval:', interval, 
+								'Letter Name:', letterName, 'Accidental:', accidental,
+								'Target PC:', targetPC);
+				}
 
-				// Get proper accidental based on context
-				const accidental = getAccidental(targetLetter, targetPC, root, quality);
-
-				return targetLetter + accidental;
+				return letterName + accidental;
 			});
 		}
-
 		// Function to find named inversions for a chord quality
 		function findNamedInversions(quality, basePCS) {
 			const inversions = [];
@@ -746,9 +715,9 @@
 
 		// Wrapper for display functions
 		function orderByDegrees(pcSet, root = 0, quality = '') {
-			console.log('orderByDegrees input:', { pcSet, root, quality });
+// 			console.log('orderByDegrees input:', { pcSet, root, quality });
 			const result = orderPitchClasses(pcSet, root, quality);
-			console.log('orderByDegrees output:', result);
+// 			console.log('orderByDegrees output:', result);
 			return result;
 		}
 		// Wrapper for card display
@@ -1225,13 +1194,13 @@
 			const input = document.getElementById('chordInput').value.trim();
 			const resultDiv = document.getElementById('result');
 
-			console.log('convertToPCS input:', input);
+// 			console.log('convertToPCS input:', input);
 			const result = parseChordInput(input);
-			console.log('parseChordInput result:', result);
+// 			console.log('parseChordInput result:', result);
 	
 			if (result) {
 				const { pcs, quality, root, baseDecimal } = result;
-				console.log('About to display:', { pcs, quality, root, baseDecimal });
+// 				console.log('About to display:', { pcs, quality, root, baseDecimal });
 				displayDetailedResult(pcs, quality, root, baseDecimal);
 			} else {
 				resultDiv.innerHTML = 'Invalid input. Please enter a valid chord, PCS, or decimal notation.';
@@ -1295,21 +1264,21 @@
 		
 		// Function to add named inversions to detailed result display
 		function displayDetailedResult(pcs, quality = 'Custom PCS', root = 'C', baseDecimal = null) {
-		   console.log('displayDetailedResult input:', { pcs, quality, root, baseDecimal });
+// 			console.log('displayDetailedResult input:', { pcs, quality, root, baseDecimal });
 		   
 			const resultDiv = document.getElementById('result');
 			const rootPC = noteToPC[root];
-			console.log('rootPC:', rootPC);
+			// console.log('rootPC:', rootPC);
 
 			// Get the base chord quality's PCS and transpose it
 			const basePCS = chordQualities[quality];
-			console.log('basePCS:', basePCS);
+// 			console.log('basePCS:', basePCS);
 			const transposedPCS = basePCS ? transposePitchClassSet(basePCS, rootPC) : pcs;
-			console.log('transposedPCS:', transposedPCS);
+// 			console.log('transposedPCS:', transposedPCS);
 	
 			// Order PCS by degrees from the root
 			const orderedPCS = orderByDegrees(transposedPCS, rootPC, quality);
-		    console.log('orderedPCS:', orderedPCS);
+// 		    console.log('orderedPCS:', orderedPCS);
 	
 			// Calculate display values
 			const binaryPCS = toBinaryPCS(orderedPCS);
@@ -1412,7 +1381,7 @@
 
 		
         function filterChordTypes() {
-        	console.log('Starting filterChordTypes');
+        	// console.log('Starting filterChordTypes');
 			const category = document.getElementById('chordCategory').value;
 			const chordList = document.getElementById('chordList');
 			chordList.innerHTML = '';
@@ -1426,11 +1395,11 @@
 			}
 
 			chordsToShow.forEach(([quality, intervals]) => {
-				console.log('Processing chord:', quality);
-		        console.log('Raw intervals:', intervals);
+				// console.log('Processing chord:', quality);
+// 		        console.log('Raw intervals:', intervals);
 				// Pass the quality through consistently
 			    const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
-				console.log('Ordered PCS:', orderedPCS);
+				// console.log('Ordered PCS:', orderedPCS);
 				const binaryPCS = toBinaryPCS(intervals);
 				const decimalPCS = parseInt(binaryPCS, 2);
 				const notes = getChordNotes('C', orderedPCS, quality);  // Pass quality here too
@@ -1551,7 +1520,7 @@
 		function parseChordInput(input) {
 			// Validate dependencies first
 			if (!input || !chordFullNames || !chordQualities || !noteToPC) {
-				console.log("Missing dependencies:", { chordFullNames, chordQualities, noteToPC });
+				// console.log("Missing dependencies:", { chordFullNames, chordQualities, noteToPC });
 				return null;
 			}
 
@@ -1560,34 +1529,34 @@
 			// Try full name parsing first (e.g., "C minor triad")
 			if (input.includes(' ')) {
 				const rootMatch = input.match(/^([A-G][b#]?)\s/);
-				console.log('Input:', input);
-				console.log('Root match:', rootMatch);
+				// console.log('Input:', input);
+				// console.log('Root match:', rootMatch);
 				
 				if (rootMatch) {
 					const root = rootMatch[1];
 					const namePart = input.slice(rootMatch[0].length).trim().toLowerCase();
-					console.log('Parsing full name:', { 
-						root, 
-						namePart,
-						inputLength: input.length,
-						namePartLength: namePart.length 
-					});
-					console.log('Available full names:', JSON.stringify(chordFullNames, null, 2));
+// 					console.log('Parsing full name:', { 
+// 						root, 
+// 						namePart,
+// 						inputLength: input.length,
+// 						namePartLength: namePart.length 
+// 					});
+// 					console.log('Available full names:', JSON.stringify(chordFullNames, null, 2));
 			
 					// Search for matching quality
 					for (const [quality, fullName] of Object.entries(chordFullNames)) {
 						const lowerFullName = fullName.toLowerCase();
-						console.log('Comparing:', { 
-							quality, 
-							fullName: lowerFullName, 
-							namePart,
-							fullNameLength: lowerFullName.length,
-							namePartLength: namePart.length,
-							areEqual: lowerFullName === namePart,
-							stringComparison: JSON.stringify({lowerFullName, namePart})
-						});
+// 						console.log('Comparing:', { 
+// 							quality, 
+// 							fullName: lowerFullName, 
+// 							namePart,
+// 							fullNameLength: lowerFullName.length,
+// 							namePartLength: namePart.length,
+// 							areEqual: lowerFullName === namePart,
+// 							stringComparison: JSON.stringify({lowerFullName, namePart})
+// 						});
 						if (lowerFullName === namePart) {
-							console.log('Found match:', quality);
+							// console.log('Found match:', quality);
 							const basePCS = chordQualities[quality];
 							if (basePCS) {
 								const rootPC = noteToPC[root];
@@ -1600,7 +1569,7 @@
 							}
 						}
 					}
-					console.log('No match found');
+					// console.log('No match found');
 				}
 			}
 
@@ -1701,71 +1670,31 @@
 		// Get the proper letter name for an interval above a root note
 		function getLetterNameForInterval(rootLetter, interval) {
 			const rootIndex = letterNames.indexOf(rootLetter);
-			let steps;
-			
-			// Standard interval steps
-			switch(interval) {
-				case 0: return rootLetter;  // unison
-				case 1: steps = 1; break;   // minor 2nd
-				case 2: steps = 1; break;   // major 2nd
-				case 3: steps = 2; break;   // minor 3rd
-				case 4: steps = 2; break;   // major 3rd
-				case 5: steps = 3; break;   // perfect 4th
-				case 6: steps = 3; break;   // tritone
-				case 7: steps = 4; break;   // perfect 5th
-				case 8: steps = 5; break;   // minor 6th
-				case 9: steps = 5; break;   // major 6th
-				case 10: steps = 6; break;  // minor 7th
-				case 11: steps = 6; break;  // major 7th
-				default: steps = Math.floor((interval * 7) / 12);
-			}
-			
-			return letterNames[(rootIndex + steps) % 7];
+
+			// Calculate the number of diatonic steps
+			const diatonicSteps = Math.floor((interval * 7) / 12);
+			const targetIndex = (rootIndex + diatonicSteps) % 7;
+
+			return letterNames[targetIndex];
 		}
 
 		// Calculate proper accidental for a target pitch class given a letter name and context
-		function getAccidental(letterName, targetPC, rootLetter = '', quality = '') {
+		function getAccidental(letterName, targetPC) {
 			const naturalPC = naturalPCs[letterName];
 			const diff = (targetPC - naturalPC + 12) % 12;
-			
-			// Handle special cases for augmented chords
-			if (quality === 'aug') {
-				const rootFirstChar = rootLetter.charAt(0);
-				const rootAcc = rootLetter.slice(1);
-				const isRootSharp = rootAcc === '♯';
-				const isRootFlat = rootAcc === '♭';
-				
-				// Get interval position (0 = root, 1 = third, 2 = fifth)
-				const intervalIdx = [rootFirstChar, 
-				                    getLetterNameForInterval(rootFirstChar, 4, 'aug'),
-				                    getLetterNameForInterval(rootFirstChar, 8, 'aug')]
-				                   .indexOf(letterName);
-				
-				if (intervalIdx >= 0) {
-					if (isRootSharp) {
-						// With sharp root: ♯ -> 𝄪 -> 𝄪
-						return intervalIdx === 0 ? '♯' : '𝄪';
-					} else if (isRootFlat) {
-						// With flat root: ♭ -> ♮ -> ♯
-						return ['♭', '', '♯'][intervalIdx];
-					} else {
-						// With natural root: ♮ -> ♯ -> 𝄪 
-						return ['', '♯', '♯'][intervalIdx];
-					}
-				}
-			}
-			
-			// Standard accidental calculation
-			switch(diff) {
-				case 0: return '';           // Natural
-				case 1: return '♯';          // Sharp
-				case 2: return '𝄪';          // Double sharp
-				case 10: return '♭';         // Flat
-				case 11: return '𝄫';         // Double flat
-				default: return '';          // Other cases
+
+			// Map the difference to the appropriate accidental
+			switch (diff) {
+				case 0: return '';    // Natural
+				case 1: return '♯';   // Sharp
+				case 2: return '𝄪';   // Double sharp
+				case 10: return '♭';  // Flat
+				case 11: return '𝄫';  // Double flat
+				default:
+					console.warn(`Unexpected accidental diff for ${letterName}:`, diff);
+					return '?';
 			}
 		}
-		
 
 		// Function to get note names for a transposition
 		function getTranspositionsDisplay(intervals, quality) {
@@ -1930,10 +1859,10 @@
 		
 		// Get ordered intervals for a given PC set
 		function getOrderedIntervals(intervals, root = 0, quality = '') {
-			console.log('getOrderedIntervals input:', { intervals, root, quality });
+			// console.log('getOrderedIntervals input:', { intervals, root, quality });
 			// Use orderPitchClasses logic but return intervals
 			const ordered = orderPitchClasses(intervals, root, quality);
-			console.log('getOrderedIntervals output:', ordered);
+			// console.log('getOrderedIntervals output:', ordered);
 			return ordered.map(pc => (pc - root + 12) % 12);
 		}
 
@@ -1968,14 +1897,14 @@
             try {
                 const response = await fetch('chord_dictionary.json');
                 if (!response.ok) {
-                    console.warn('Could not load chord_dictionary.json, using default dictionary');
+                    // console.warn('Could not load chord_dictionary.json, using default dictionary');
                     return;
                 }
                 const data = await response.json();
                 
                 // Validate data format
                 if (typeof data !== 'object') {
-                    console.warn('Invalid JSON format in chord_dictionary.json, using default dictionary');
+                    // console.warn('Invalid JSON format in chord_dictionary.json, using default dictionary');
                     return;
                 }
 
@@ -2012,7 +1941,7 @@
                     }
                 });
 
-                console.log('Chord dictionary loaded successfully');
+                // console.log('Chord dictionary loaded successfully');
             } catch (error) {
                 console.warn('Error loading chord_dictionary.json, using default dictionary:', error);
             }
@@ -2028,7 +1957,7 @@
             },
 
             test: function(name, fn) {
-                console.log(`Adding test: ${name}`);
+                // console.log(`Adding test: ${name}`);
                 this.tests.push({ name, fn });
             },
 
@@ -2039,7 +1968,7 @@
             },
 
             runTests: async function() {
-                console.log('Running tests...');
+                // console.log('Running tests...');
                 const resultDiv = document.createElement('div');
                 resultDiv.id = 'testResults';
                 resultDiv.style.padding = '20px';
@@ -2074,7 +2003,7 @@
         };
 
         window.runChordTests = async function() {
-            console.log('Starting chord tests...');
+            // console.log('Starting chord tests...');
             
             // Basic Chord Parsing Tests
             TestSuite.test('Parse major triad', () => {
@@ -2089,16 +2018,16 @@
 
             // Full Name Parsing Tests
             TestSuite.test('Parse full name - minor triad', () => {
-                console.log('Testing full name parsing for minor triad...');
+                // console.log('Testing full name parsing for minor triad...');
                 const result = parseChordInput('C minor triad');
-                console.log('Result:', result);
+                // console.log('Result:', result);
                 TestSuite.assertEqual(result.quality, 'min', 'Failed to parse minor triad from full name');
             });
 
             TestSuite.test('Parse full name - major seventh', () => {
-                console.log('Testing full name parsing for major seventh...');
+                // console.log('Testing full name parsing for major seventh...');
                 const result = parseChordInput('D major seventh');
-                console.log('Result:', result);
+                // console.log('Result:', result);
                 TestSuite.assertEqual(result.quality, 'maj7', 'Failed to parse major seventh from full name');
             });
 
@@ -2286,7 +2215,7 @@
 
         // Initialize chord dictionary and tests on load
         window.addEventListener('load', async function() {
-            console.log('Window loaded');
+            // console.log('Window loaded');
             await loadChordDictionary();
             filterChordTypes();
 //             addTestButton();
