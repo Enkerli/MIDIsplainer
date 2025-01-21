@@ -141,6 +141,45 @@
 			align-items: center;
 			margin-bottom: 1rem;
 		}
+		
+		.edit-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .edit-group {
+            margin-bottom: 1rem;
+        }
+        .edit-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .edit-group input, .edit-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .edit-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        .transpositions-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+        .transpositions-table th, .transpositions-table td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        .transpositions-table th {
+            background-color: #f0f0f0;
+        }
 
 		.edit-button, .save-button {
 			padding: 0.5rem 1rem;
@@ -187,38 +226,63 @@
 
         <div class="chord-management-section">
             <h2>Manage Chord Qualities</h2>
-            <div class="tabs">
-                <button onclick="switchTab('add')" class="tab-button active">Add New</button>
-                <button onclick="switchTab('edit')" class="tab-button">Edit Existing</button>
+            <div id="editChordTab" class="tab-content">
+                <div class="input-group">
+                    <select id="editQualitySelect" onchange="loadChordQuality()">
+                        <option value="">Select chord quality to edit</option>
+                    </select>
+                    <div class="edit-section">
+                        <div class="edit-group">
+                            <label for="editQualityFullName">Full Name:</label>
+                            <input type="text" id="editQualityFullName" placeholder="e.g., major seventh flat five">
+                        </div>
+                        <div class="edit-group">
+                            <label for="editQualityForte">Forte Number:</label>
+                            <input type="text" id="editQualityForte" placeholder="e.g., 4-19A">
+                        </div>
+                        <div class="edit-group">
+                            <label for="editQualityPCS">Pitch Class Set:</label>
+                            <input type="text" id="editQualityPCS" placeholder="e.g., 0,4,6,11">
+                        </div>
+                        <div class="edit-group">
+                            <label for="editQualityIntervals">Intervals:</label>
+                            <input type="text" id="editQualityIntervals" placeholder="e.g., R, 3, ♭5, 7">
+                        </div>
+                        <div class="edit-group">
+                            <label for="editQualityNotes">Notes (from C):</label>
+                            <input type="text" id="editQualityNotes" placeholder="e.g., C, E, G♭, B">
+                        </div>
+                        <div class="edit-group">
+                            <label>Transpositions:</label>
+                            <table class="transpositions-table">
+                                <thead>
+                                    <tr>
+                                        <th>Root</th>
+                                        <th>Notes</th>
+                                        <th>PCS</th>
+                                        <th>Decimal</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="editQualityTranspositions">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="edit-group">
+                            <label for="editQualityAliases">Alternate Notations:</label>
+                            <input type="text" id="editQualityAliases" placeholder="Comma-separated aliases">
+                        </div>
+                        <div class="edit-group">
+                            <label for="editQualityScales">Compatible Scales:</label>
+                            <input type="text" id="editQualityScales" placeholder="Comma-separated scales">
+                        </div>
+                        <div class="edit-group">
+                            <label for="editQualityAvoid">Avoid Notes:</label>
+                            <input type="text" id="editQualityAvoid" placeholder="Comma-separated notes">
+                        </div>
+                        <button onclick="updateChordQuality()" class="save-button">Update Chord Quality</button>
+                    </div>
+                </div>
             </div>
-            
-			<div id="addChordTab" class="tab-content">
-				<div class="input-group">
-					<input type="text" id="newQualityName" placeholder="Quality name (e.g., maj7b5)">
-					<input type="text" id="newQualityFullName" placeholder="Full name (e.g., major seventh flat five)">
-					<input type="text" id="newQualityForte" placeholder="Forte number (e.g., 4-19A)">
-					<input type="text" id="newQualityPCS" placeholder="PCS from C (e.g., 0,4,6,11)">
-					<input type="text" id="newQualityAliases" placeholder="Alternate notations (comma-separated)">
-					<input type="text" id="newQualityScales" placeholder="Compatible scales (comma-separated)">
-					<input type="text" id="newQualityAvoid" placeholder="Avoid notes (comma-separated)">
-					<button onclick="addNewChordQuality()">Add Chord Quality</button>
-				</div>
-			</div>
-
-			<div id="editChordTab" class="tab-content" style="display: none;">
-				<div class="input-group">
-					<select id="editQualitySelect" onchange="loadChordQuality()">
-						<option value="">Select chord quality to edit</option>
-					</select>
-					<input type="text" id="editQualityFullName" placeholder="Full name (e.g., major seventh flat five)">
-					<input type="text" id="editQualityForte" placeholder="Forte number (e.g., 4-19A)">
-					<input type="text" id="editQualityPCS" placeholder="PCS from C (e.g., 0,4,6,11)">
-					<input type="text" id="editQualityAliases" placeholder="Alternate notations (comma-separated)">
-					<input type="text" id="editQualityScales" placeholder="Compatible scales (comma-separated)">
-					<input type="text" id="editQualityAvoid" placeholder="Avoid notes (comma-separated)">
-					<button onclick="updateChordQuality()">Update Chord Quality</button>
-				</div>
-			</div>
         </div>
 
 
@@ -879,35 +943,63 @@
         }
 
         function populateChordSelect() {
+            console.log('Populating chord select');
             const select = document.getElementById('editQualitySelect');
             select.innerHTML = '<option value="">Select chord quality to edit</option>';
             
-            Object.keys(chordQualities).sort().forEach(quality => {
+            // Get all qualities and sort them
+            const qualities = Object.keys(chordQualities).sort();
+            
+            // Add each quality as an option
+            qualities.forEach(quality => {
                 const option = document.createElement('option');
                 option.value = quality;
                 option.textContent = quality;
                 select.appendChild(option);
             });
+            
+            console.log(`Added ${qualities.length} chord qualities to select menu`);
         }
 
 		function loadChordQuality() {
-			const quality = document.getElementById('editQualitySelect').value;
-			if (!quality) return;
+            const quality = document.getElementById('editQualitySelect').value;
+            if (!quality) return;
 
-			const pcs = chordQualities[quality];
-			const aliases = chordAliases[quality] || [];
-			const fullName = chordFullNames[quality] || '';
-			const forteNum = chordForteNumbers[quality] || '';
-			const scales = compatibleScales[quality] || [];
-			const avoid = avoidNotes[quality] || [];
-
-			document.getElementById('editQualityPCS').value = pcs.join(',');
-			document.getElementById('editQualityAliases').value = aliases.join(',');
-			document.getElementById('editQualityFullName').value = fullName;
-			document.getElementById('editQualityForte').value = forteNum;
-			document.getElementById('editQualityScales').value = scales.join(',');
-			document.getElementById('editQualityAvoid').value = avoid.join(',');
-		}
+            const pcs = chordQualities[quality];
+            const rootPC = 0; // C as root
+            
+            // Get ordered PCS and calculate all values
+            const orderedPCS = orderByDegrees(pcs, rootPC, quality);
+            const intervals = orderedPCS.map(pc => (pc - rootPC + 12) % 12);
+            const notes = getChordNotes('C', intervals, quality);
+            
+            // Calculate transpositions
+            const transpositions = getAllTranspositionsWithBaseRef(pcs, 'C', null, quality);
+            
+            // Update form fields
+            document.getElementById('editQualityPCS').value = pcs.join(',');
+            document.getElementById('editQualityAliases').value = (chordAliases[quality] || []).join(',');
+            document.getElementById('editQualityFullName').value = chordFullNames[quality] || '';
+            document.getElementById('editQualityForte').value = chordForteNumbers[quality] || '';
+            document.getElementById('editQualityScales').value = (compatibleScales[quality] || []).join(',');
+            document.getElementById('editQualityAvoid').value = (avoidNotes[quality] || []).join(',');
+            
+            // Update new fields
+            document.getElementById('editQualityIntervals').value = intervalToString(intervals, quality);
+            document.getElementById('editQualityNotes').value = notes.join(', ');
+            
+            // Update transpositions table
+            const transpositionsTable = document.getElementById('editQualityTranspositions');
+            transpositionsTable.innerHTML = Object.entries(transpositions)
+                .map(([root, data]) => `
+                    <tr>
+                        <td>${root}</td>
+                        <td>${data.notes.join(', ')}</td>
+                        <td>[${data.pcs.join(', ')}]</td>
+                        <td>${data.decimal}</td>
+                    </tr>
+                `).join('');
+        }
 
 		function enableResultEdit(quality) {
 			document.getElementById('resultView').style.display = 'none';
@@ -1338,6 +1430,25 @@
 			// Populate the fields for the selected quality
 			loadChordQuality();
 		}
+		
+		function populateChordSelect() {
+            console.log('Populating chord select');
+            const select = document.getElementById('editQualitySelect');
+            select.innerHTML = '<option value="">Select chord quality to edit</option>';
+            
+            // Get all qualities and sort them
+            const qualities = Object.keys(chordQualities).sort();
+            
+            // Add each quality as an option
+            qualities.forEach(quality => {
+                const option = document.createElement('option');
+                option.value = quality;
+                option.textContent = quality;
+                select.appendChild(option);
+            });
+            
+            console.log(`Added ${qualities.length} chord qualities to select menu`);
+        }
 
 		// Chord categories for filtering
         const chordCategories = {
@@ -1917,7 +2028,7 @@
                 console.warn('Error loading chord_dictionary.json, using default dictionary:', error);
             }
         }
-
+        
         // Test Framework - Defined before any usage
         window.TestSuite = {
             tests: [],
@@ -2170,25 +2281,13 @@
             }
         };
 
-        // Add button to run tests
-        function addTestButton() {
-            const button = document.createElement('button');
-            button.innerHTML = 'Run z7 Tests';
-            button.style.margin = '20px';
-            button.onclick = function() {
-                runChordTests();
-            };
-            const container = document.querySelector('.container');
-            if (container) {
-                container.insertBefore(button, container.firstChild);
-            }
-        }
 
         // Initialize chord dictionary and tests on load
         window.addEventListener('load', async function() {
             console.log('Window loaded');
             await loadChordDictionary();
             filterChordTypes();
+            populateChordSelect(); // Add this line to populate the select menu
 //             addTestButton();
         });        
     </script>
