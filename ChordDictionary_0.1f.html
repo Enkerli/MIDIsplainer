@@ -924,11 +924,11 @@
 		}
 
         // Add event listener for enter key on chord input
-        document.getElementById('chordInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                convertToPCS();
-            }
-        });
+//         document.getElementById('chordInput').addEventListener('keypress', function(e) {
+//             if (e.key === 'Enter') {
+//                 convertToPCS();
+//             }
+//         });
 
         function switchTab(tabName) {
             // Update button states
@@ -1491,53 +1491,53 @@
         };
 
 		
-        function filterChordTypes() {
-//         	console.log('Starting filterChordTypes');
-			const category = document.getElementById('chordCategory').value;
-			const chordList = document.getElementById('chordList');
-			chordList.innerHTML = '';
-
-			let chordsToShow;
-			if (category === 'all') {
-				chordsToShow = Object.entries(chordQualities);
-			} else {
-				chordsToShow = Object.entries(chordQualities)
-					.filter(([quality]) => chordCategories[category].includes(quality));
-			}
-
-			chordsToShow.forEach(([quality, intervals]) => {
-// 				console.log('Processing chord:', quality);
-// 		        console.log('Raw intervals:', intervals);
-				// Pass the quality through consistently
-			    const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
-// 				console.log('Ordered PCS:', orderedPCS);
-				const binaryPCS = toBinaryPCS(intervals);
-				const decimalPCS = parseInt(binaryPCS, 2);
-				const notes = getChordNotes('C', orderedPCS, quality);  // Pass quality here too
-				const aliases = chordAliases[quality] ? `(${chordAliases[quality].join(', ')})` : '';
-				const inversions = getInversionsList(intervals, quality);
-
-				const chordItem = document.createElement('div');
-				chordItem.className = 'chord-item';
-				chordItem.innerHTML = `
-					<div class="chord-name">C${quality} ${aliases}</div>
-					<div class="chord-fullname">${chordFullNames[quality] || quality}</div>
-					<div class="chord-forte">Forte: ${chordForteNumbers[quality] || 'N/A'}</div>
-					<div class="chord-notes">Notes: [${notes.join(', ')}]</div>
-					<div class="chord-intervals">Intervals: ${intervalToString(intervals, quality)}</div>
-					<div class="chord-scales">Scales: ${compatibleScales[quality]?.join(', ') || 'N/A'}</div>
-					<div class="chord-avoid">Avoid: ${avoidNotes[quality]?.join(', ') || 'N/A'}</div>
-					${inversions}
-					<div class="chord-pcs">PCS: [${orderedPCS.join(', ')}]</div>
-					<div class="chord-binary">Binary: <span class="binary-format">${binaryPCS}</span></div>
-					<div class="chord-decimal">Decimal: ${decimalPCS}</div>
-					<div class="chord-transpositions">
-						${getTranspositionsDisplay(intervals, quality)}
-					</div>
-				`;
-				chordList.appendChild(chordItem);
-			});
-		}
+//         function filterChordTypes() {
+// //         	console.log('Starting filterChordTypes');
+// // 			const category = document.getElementById('chordCategory').value;
+// // 			const chordList = document.getElementById('chordList');
+// // 			chordList.innerHTML = '';
+// 
+// 			let chordsToShow;
+// 			if (category === 'all') {
+// 				chordsToShow = Object.entries(chordQualities);
+// 			} else {
+// 				chordsToShow = Object.entries(chordQualities)
+// 					.filter(([quality]) => chordCategories[category].includes(quality));
+// 			}
+// 
+// 			chordsToShow.forEach(([quality, intervals]) => {
+// // 				console.log('Processing chord:', quality);
+// // 		        console.log('Raw intervals:', intervals);
+// 				// Pass the quality through consistently
+// 			    const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
+// // 				console.log('Ordered PCS:', orderedPCS);
+// 				const binaryPCS = toBinaryPCS(intervals);
+// 				const decimalPCS = parseInt(binaryPCS, 2);
+// 				const notes = getChordNotes('C', orderedPCS, quality);  // Pass quality here too
+// 				const aliases = chordAliases[quality] ? `(${chordAliases[quality].join(', ')})` : '';
+// 				const inversions = getInversionsList(intervals, quality);
+// 
+// 				const chordItem = document.createElement('div');
+// 				chordItem.className = 'chord-item';
+// 				chordItem.innerHTML = `
+// 					<div class="chord-name">C${quality} ${aliases}</div>
+// 					<div class="chord-fullname">${chordFullNames[quality] || quality}</div>
+// 					<div class="chord-forte">Forte: ${chordForteNumbers[quality] || 'N/A'}</div>
+// 					<div class="chord-notes">Notes: [${notes.join(', ')}]</div>
+// 					<div class="chord-intervals">Intervals: ${intervalToString(intervals, quality)}</div>
+// 					<div class="chord-scales">Scales: ${compatibleScales[quality]?.join(', ') || 'N/A'}</div>
+// 					<div class="chord-avoid">Avoid: ${avoidNotes[quality]?.join(', ') || 'N/A'}</div>
+// 					${inversions}
+// 					<div class="chord-pcs">PCS: [${orderedPCS.join(', ')}]</div>
+// 					<div class="chord-binary">Binary: <span class="binary-format">${binaryPCS}</span></div>
+// 					<div class="chord-decimal">Decimal: ${decimalPCS}</div>
+// 					<div class="chord-transpositions">
+// 						${getTranspositionsDisplay(intervals, quality)}
+// 					</div>
+// 				`;
+// 				chordList.appendChild(chordItem);
+// 			});
+// 		}
 
         
         function importChordDictionary() {
@@ -2318,7 +2318,7 @@
         window.addEventListener('load', async function() {
 			console.log('Window loaded');
 			await loadChordDictionary();
-			filterChordTypes();
+// 			filterChordTypes();
 			populateChordSelect();
 		});
     </script>
