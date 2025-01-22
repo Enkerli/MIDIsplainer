@@ -2,15 +2,15 @@
   "4": {
     "pcs": [
       0,
-      3,
+      5,
       10,
-      5
+      3
     ],
     "notes": [
       "C",
-      "E♭",
+      "F",
       "B♭",
-      "F"
+      "E♭"
     ],
     "aliases": [
       "4",
@@ -23,9 +23,9 @@
     "baseDecimal": 2370,
     "intervals": [
       "R",
-      "♭3",
+      "4",
       "♭7",
-      "11"
+      "♭3"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -636,9 +636,7 @@
       "5",
       "6"
     ],
-    "namedInversions": [
-      "(9)min7"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -2177,10 +2175,7 @@
       "11",
       "13"
     ],
-    "namedInversions": [
-      "(5)maj13",
-      "(7)min13"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -4235,9 +4230,7 @@
       "5",
       "♭7"
     ],
-    "namedInversions": [
-      "(3)6"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -4939,9 +4932,7 @@
       "♭7",
       "♭5"
     ],
-    "namedInversions": [
-      "(3)m6"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -5623,361 +5614,6 @@
     "compatibleScales": [],
     "avoidNotes": []
   },
-  "aug7": {
-    "pcs": [
-      0,
-      4,
-      10,
-      8
-    ],
-    "notes": [
-      "C",
-      "E",
-      "B♭",
-      "A♭"
-    ],
-    "aliases": [
-      "7#5",
-      "+7",
-      "7+",
-      "7aug",
-      "aug7",
-      "7b13"
-    ],
-    "fullName": "augmented dominant seventh",
-    "binary": "100010001010",
-    "forteNumber": "4-19B",
-    "decimal": 2186,
-    "baseDecimal": 2186,
-    "intervals": [
-      "R",
-      "3",
-      "♭7",
-      "♭13"
-    ],
-    "namedInversions": [
-      "(0)7#5"
-    ],
-    "transpositions": {
-      "C": {
-        "notes": [
-          "C",
-          "E",
-          "B♭",
-          "A♭"
-        ],
-        "pcs": [
-          0,
-          4,
-          10,
-          8
-        ],
-        "decimal": 2186
-      },
-      "B#": {
-        "notes": [
-          "B#",
-          "D♯",
-          "A♯",
-          "G♯"
-        ],
-        "pcs": [
-          0,
-          4,
-          10,
-          8
-        ],
-        "decimal": 2186
-      },
-      "C#": {
-        "notes": [
-          "C#",
-          "E♯",
-          "B",
-          "A"
-        ],
-        "pcs": [
-          1,
-          5,
-          11,
-          9
-        ],
-        "decimal": 1093
-      },
-      "Db": {
-        "notes": [
-          "Db",
-          "F",
-          "C♭",
-          "B♭"
-        ],
-        "pcs": [
-          1,
-          5,
-          11,
-          9
-        ],
-        "decimal": 1093
-      },
-      "D": {
-        "notes": [
-          "D",
-          "F♯",
-          "C",
-          "B♭"
-        ],
-        "pcs": [
-          2,
-          6,
-          0,
-          10
-        ],
-        "decimal": 2594
-      },
-      "D#": {
-        "notes": [
-          "D#",
-          "F♯",
-          "C♯",
-          "B"
-        ],
-        "pcs": [
-          3,
-          7,
-          1,
-          11
-        ],
-        "decimal": 1297
-      },
-      "Eb": {
-        "notes": [
-          "Eb",
-          "G",
-          "D♭",
-          "C♭"
-        ],
-        "pcs": [
-          3,
-          7,
-          1,
-          11
-        ],
-        "decimal": 1297
-      },
-      "E": {
-        "notes": [
-          "E",
-          "G♯",
-          "D",
-          "C"
-        ],
-        "pcs": [
-          4,
-          8,
-          2,
-          0
-        ],
-        "decimal": 2696
-      },
-      "Fb": {
-        "notes": [
-          "Fb",
-          "A♭",
-          "E♭",
-          "D♭"
-        ],
-        "pcs": [
-          4,
-          8,
-          2,
-          0
-        ],
-        "decimal": 2696
-      },
-      "E#": {
-        "notes": [
-          "E#",
-          "G♯",
-          "D♯",
-          "C♯"
-        ],
-        "pcs": [
-          5,
-          9,
-          3,
-          1
-        ],
-        "decimal": 1348
-      },
-      "F": {
-        "notes": [
-          "F",
-          "A",
-          "E♭",
-          "D♭"
-        ],
-        "pcs": [
-          5,
-          9,
-          3,
-          1
-        ],
-        "decimal": 1348
-      },
-      "F#": {
-        "notes": [
-          "F#",
-          "A♯",
-          "E",
-          "D"
-        ],
-        "pcs": [
-          6,
-          10,
-          4,
-          2
-        ],
-        "decimal": 674
-      },
-      "Gb": {
-        "notes": [
-          "Gb",
-          "B♭",
-          "F♭",
-          "E♭"
-        ],
-        "pcs": [
-          6,
-          10,
-          4,
-          2
-        ],
-        "decimal": 674
-      },
-      "G": {
-        "notes": [
-          "G",
-          "B",
-          "F",
-          "E♭"
-        ],
-        "pcs": [
-          7,
-          11,
-          5,
-          3
-        ],
-        "decimal": 337
-      },
-      "G#": {
-        "notes": [
-          "G#",
-          "B♯",
-          "F♯",
-          "E"
-        ],
-        "pcs": [
-          8,
-          0,
-          6,
-          4
-        ],
-        "decimal": 2216
-      },
-      "Ab": {
-        "notes": [
-          "Ab",
-          "C",
-          "G♭",
-          "F♭"
-        ],
-        "pcs": [
-          8,
-          0,
-          6,
-          4
-        ],
-        "decimal": 2216
-      },
-      "A": {
-        "notes": [
-          "A",
-          "C♯",
-          "G",
-          "F"
-        ],
-        "pcs": [
-          9,
-          1,
-          7,
-          5
-        ],
-        "decimal": 1108
-      },
-      "A#": {
-        "notes": [
-          "A#",
-          "C♯",
-          "G♯",
-          "F♯"
-        ],
-        "pcs": [
-          10,
-          2,
-          8,
-          6
-        ],
-        "decimal": 554
-      },
-      "Bb": {
-        "notes": [
-          "Bb",
-          "D",
-          "A♭",
-          "G♭"
-        ],
-        "pcs": [
-          10,
-          2,
-          8,
-          6
-        ],
-        "decimal": 554
-      },
-      "B": {
-        "notes": [
-          "B",
-          "D♯",
-          "A",
-          "G"
-        ],
-        "pcs": [
-          11,
-          3,
-          9,
-          7
-        ],
-        "decimal": 277
-      },
-      "Cb": {
-        "notes": [
-          "Cb",
-          "E♭",
-          "B♭",
-          "A♭"
-        ],
-        "pcs": [
-          11,
-          3,
-          9,
-          7
-        ],
-        "decimal": 277
-      }
-    },
-    "compatibleScales": [],
-    "avoidNotes": []
-  },
   "augMaj7": {
     "pcs": [
       0,
@@ -6361,9 +5997,7 @@
       "5",
       "6"
     ],
-    "namedInversions": [
-      "(9)m7b5"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -8390,10 +8024,7 @@
       "9",
       "13"
     ],
-    "namedInversions": [
-      "(7)13",
-      "(2)min13"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -8832,10 +8463,7 @@
       "11",
       "13"
     ],
-    "namedInversions": [
-      "(5)13",
-      "(10)maj13"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -9306,9 +8934,7 @@
       "2",
       "5"
     ],
-    "namedInversions": [
-      "(7)sus4"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -9612,9 +9238,7 @@
       "4",
       "5"
     ],
-    "namedInversions": [
-      "(5)sus2"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -10984,23 +10608,29 @@
     "compatibleScales": [],
     "avoidNotes": []
   },
-  "7#5": {
+  "aug7": {
     "pcs": [
       0,
       4,
-      10,
-      8
+      8,
+      10
     ],
     "notes": [
       "C",
       "E",
-      "B♭",
-      "A♭"
+      "G♯",
+      "B♭"
     ],
     "aliases": [
+      "7#5",
+      "+7",
+      "7+",
+      "7aug",
+      "aug7",
+      "7b13",
       "aug7"
     ],
-    "fullName": "dominant seventh sharp five",
+    "fullName": "augmented dominant seventh",
     "binary": "100010001010",
     "forteNumber": "4-24",
     "decimal": 2186,
@@ -11008,12 +10638,10 @@
     "intervals": [
       "R",
       "3",
-      "♭7",
-      "♭13"
+      "♯5",
+      "♭7"
     ],
-    "namedInversions": [
-      "(0)aug7"
-    ],
+    "namedInversions": [],
     "transpositions": {
       "C": {
         "notes": [
@@ -11730,32 +11358,32 @@
   "7#9": {
     "pcs": [
       0,
-      3,
       4,
       7,
-      10
+      10,
+      3
     ],
     "notes": [
       "C",
-      "E♭",
       "E",
       "G",
-      "B♭"
+      "B♭",
+      "D♯"
     ],
     "aliases": [
       "7#9"
     ],
     "fullName": "dominant seventh sharp ninth",
     "binary": "100110010010",
-    "forteNumber": "",
+    "forteNumber": "5-32B",
     "decimal": 2450,
     "baseDecimal": 2450,
     "intervals": [
       "R",
-      "♭3",
       "3",
       "5",
-      "♭7"
+      "♭7",
+      "♯9"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -12133,7 +11761,7 @@
       "E",
       "G",
       "B♭",
-      "G♭"
+      "F♯"
     ],
     "aliases": [
       "7#11",
@@ -12149,7 +11777,7 @@
       "3",
       "5",
       "♭7",
-      "♭5"
+      "♯11"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -12969,7 +12597,8 @@
       "6add9",
       "6/9",
       "69",
-      "M69"
+      "M69",
+      "M6/9"
     ],
     "fullName": "sixth added ninth",
     "binary": "101010010100",
@@ -13757,7 +13386,7 @@
       "G",
       "A",
       "D",
-      "G♭"
+      "F♯"
     ],
     "aliases": [
       "69#11"
@@ -13773,7 +13402,7 @@
       "5",
       "6",
       "9",
-      "♭5"
+      "♯11"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -15463,8 +15092,8 @@
       7,
       11,
       2,
-      9,
-      6
+      6,
+      9
     ],
     "notes": [
       "C",
@@ -25734,26 +25363,24 @@
     "notes": [
       "C",
       "E",
-      "G",
-      "B♭",
       "G♭",
+      "B♭",
       "A♭"
     ],
     "aliases": [
-      "7#11b13",
-      "7b5b13"
+      "7b5b13",
+      "7#11b13"
     ],
-    "fullName": "dominant flat sixth sharp eleventh",
+    "fullName": "dominant flat sixth flat fifth",
     "binary": "100010111010",
-    "forteNumber": "6-21A",
+    "forteNumber": "5-33",
     "decimal": 2234,
     "baseDecimal": 2234,
     "intervals": [
       "R",
       "3",
-      "5",
-      "♭7",
       "♭5",
+      "♭7",
       "♭13"
     ],
     "namedInversions": [],
@@ -26559,19 +26186,19 @@
   "7#9#11": {
     "pcs": [
       0,
-      3,
       4,
       7,
       10,
+      3,
       6
     ],
     "notes": [
       "C",
-      "E♭",
       "E",
       "G",
       "B♭",
-      "G♭"
+      "D♯",
+      "F♯"
     ],
     "aliases": [
       "7#9#11",
@@ -26580,16 +26207,16 @@
     ],
     "fullName": "dominant sharp ninth sharp eleventh",
     "binary": "100110110010",
-    "forteNumber": "",
+    "forteNumber": "6-z49",
     "decimal": 2482,
     "baseDecimal": 2482,
     "intervals": [
       "R",
-      "♭3",
       "3",
       "5",
       "♭7",
-      "♭5"
+      "♯9",
+      "♯11"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -26999,21 +26626,20 @@
   "13#9#11": {
     "pcs": [
       0,
-      3,
       4,
       7,
       10,
-      9,
-      6
+      3,
+      6,
+      9
     ],
     "notes": [
       "C",
-      "E♭",
       "E",
       "G",
       "B♭",
-      "A",
-      "G♭"
+      "D♯",
+      "F♯ A"
     ],
     "aliases": [
       "13#9#11"
@@ -27025,12 +26651,12 @@
     "baseDecimal": 2486,
     "intervals": [
       "R",
-      "♭3",
       "3",
       "5",
       "♭7",
-      "13",
-      "♭5"
+      "♯9",
+      "♯11",
+      "13"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -27482,20 +27108,20 @@
   "7#9#11b13": {
     "pcs": [
       0,
-      3,
       4,
       7,
       10,
+      3,
       6,
       8
     ],
     "notes": [
       "C",
-      "E♭",
       "E",
       "G",
       "B♭",
-      "G♭",
+      "D♯",
+      "F♯",
       "A♭"
     ],
     "aliases": [
@@ -27503,16 +27129,16 @@
     ],
     "fullName": "dominanth flat thirteenth sharp ninth sharp eleventh",
     "binary": "100110111010",
-    "forteNumber": "",
+    "forteNumber": "7-26A",
     "decimal": 2490,
     "baseDecimal": 2490,
     "intervals": [
       "R",
-      "♭3",
       "3",
       "5",
       "♭7",
-      "♭5",
+      "♯9",
+      "♯11",
       "♭13"
     ],
     "namedInversions": [],
@@ -27965,19 +27591,19 @@
   "13#9": {
     "pcs": [
       0,
-      3,
       4,
       7,
       10,
+      3,
       5,
       9
     ],
     "notes": [
       "C",
-      "E♭",
       "E",
       "G",
       "B♭",
+      "D♯",
       "F",
       "A"
     ],
@@ -27991,10 +27617,10 @@
     "baseDecimal": 2518,
     "intervals": [
       "R",
-      "♭3",
       "3",
       "5",
       "♭7",
+      "♯9",
       "11",
       "13"
     ],
@@ -28448,18 +28074,18 @@
   "7#9b13": {
     "pcs": [
       0,
-      3,
       4,
       7,
       10,
+      3,
       8
     ],
     "notes": [
       "C",
-      "E♭",
       "E",
       "G",
       "B♭",
+      "D♯",
       "A♭"
     ],
     "aliases": [
@@ -28467,15 +28093,15 @@
     ],
     "fullName": "dominant sharp ninth flat thirteenth",
     "binary": "100110011010",
-    "forteNumber": "",
+    "forteNumber": "6-31B",
     "decimal": 2458,
     "baseDecimal": 2458,
     "intervals": [
       "R",
-      "♭3",
       "3",
       "5",
       "♭7",
+      "♯9",
       "♭13"
     ],
     "namedInversions": [],
@@ -29330,8 +28956,8 @@
       7,
       10,
       2,
-      9,
-      6
+      6,
+      9
     ],
     "notes": [
       "C",
@@ -29339,8 +28965,8 @@
       "G",
       "B♭",
       "D",
-      "A",
-      "F♯"
+      "F♯",
+      "A"
     ],
     "aliases": [
       "13#11",
@@ -29359,8 +28985,8 @@
       "5",
       "♭7",
       "9",
-      "13",
-      "♯4"
+      "♯11",
+      "13"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -30739,18 +30365,18 @@
       4,
       7,
       10,
-      9,
       1,
-      6
+      6,
+      9
     ],
     "notes": [
       "C",
       "E",
       "G",
       "B♭",
-      "A",
-      "C♯",
-      "G♭"
+      "D♭",
+      "F♯",
+      "A"
     ],
     "aliases": [
       "13b9#11"
@@ -30765,9 +30391,9 @@
       "3",
       "5",
       "♭7",
-      "13",
       "♭9",
-      "♭5"
+      "♯11",
+      "13"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -31707,18 +31333,18 @@
       4,
       7,
       10,
+      1,
       5,
-      9,
-      1
+      9
     ],
     "notes": [
       "C",
       "E",
       "G",
       "B♭",
+      "D♭",
       "F",
-      "A",
-      "C♯"
+      "A"
     ],
     "aliases": [
       "13b9"
@@ -31733,9 +31359,9 @@
       "3",
       "5",
       "♭7",
+      "♭9",
       "11",
-      "13",
-      "♭9"
+      "13"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -33063,17 +32689,17 @@
   "7#5#9": {
     "pcs": [
       0,
-      3,
       4,
+      8,
       10,
-      8
+      3
     ],
     "notes": [
       "C",
-      "E♭",
       "E",
+      "G♯",
       "B♭",
-      "A♭"
+      "D♯"
     ],
     "aliases": [
       "7#5#9",
@@ -33082,15 +32708,15 @@
     ],
     "fullName": "altered dominant",
     "binary": "100110001010",
-    "forteNumber": "",
+    "forteNumber": "5-30B",
     "decimal": 2442,
     "baseDecimal": 2442,
     "intervals": [
       "R",
-      "♭3",
       "3",
+      "♯5",
       "♭7",
-      "♭13"
+      "♯9"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -34293,16 +33919,16 @@
     "pcs": [
       0,
       4,
+      8,
       10,
-      1,
-      8
+      1
     ],
     "notes": [
       "C",
       "E",
+      "G♯",
       "B♭",
-      "C♯",
-      "A♭"
+      "D♭"
     ],
     "aliases": [
       "7#5b9",
@@ -34310,15 +33936,15 @@
     ],
     "fullName": "dominant augmented flat ninth",
     "binary": "110010001010",
-    "forteNumber": "",
+    "forteNumber": "5-26A",
     "decimal": 3210,
     "baseDecimal": 3210,
     "intervals": [
       "R",
       "3",
+      "♯5",
       "♭7",
-      "♭9",
-      "♭13"
+      "♭9"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -34687,34 +34313,34 @@
     "pcs": [
       0,
       4,
+      8,
       10,
       1,
-      6,
-      8
+      6
     ],
     "notes": [
       "C",
       "E",
+      "G♯",
       "B♭",
-      "C♯",
-      "G♭",
-      "A♭"
+      "D♭",
+      "F♯"
     ],
     "aliases": [
       "7#5b9#11"
     ],
     "fullName": "dominant augmented flat ninth sharp eleventh",
     "binary": "110010101010",
-    "forteNumber": "",
+    "forteNumber": "6-34B",
     "decimal": 3242,
     "baseDecimal": 3242,
     "intervals": [
       "R",
       "3",
+      "♯5",
       "♭7",
       "♭9",
-      "♭5",
-      "♭13"
+      "♯11"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -35125,20 +34751,20 @@
     "pcs": [
       0,
       4,
+      6,
       10,
       2,
       5,
-      9,
-      6
+      9
     ],
     "notes": [
       "C",
       "E",
+      "G♭",
       "B♭",
       "D",
       "F",
-      "A",
-      "G♭"
+      "A"
     ],
     "aliases": [
       "13b5"
@@ -35151,11 +34777,11 @@
     "intervals": [
       "R",
       "3",
+      "♭5",
       "♭7",
       "9",
       "11",
-      "13",
-      "♭5"
+      "13"
     ],
     "namedInversions": [],
     "transpositions": {
@@ -40499,28 +40125,28 @@
     "pcs": [
       0,
       5,
-      10,
-      8
+      8,
+      10
     ],
     "notes": [
       "C",
       "F",
-      "B♭",
-      "A♭"
+      "G♯",
+      "B♭"
     ],
     "aliases": [
       "7#5sus4"
     ],
     "fullName": "dominant seventh sharp fifth suspended fourth",
     "binary": "100001001010",
-    "forteNumber": "",
+    "forteNumber": "4-22B",
     "decimal": 2122,
     "baseDecimal": 2122,
     "intervals": [
       "R",
       "4",
-      "♭7",
-      "♭13"
+      "♯5",
+      "♭7"
     ],
     "namedInversions": [],
     "transpositions": {
