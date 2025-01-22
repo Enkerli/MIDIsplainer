@@ -749,9 +749,9 @@
 
 		// Wrapper for display functions
 		function orderByDegrees(pcSet, root = 0, quality = '') {
-			console.log('orderByDegrees input:', { pcSet, root, quality });
+// 			console.log('orderByDegrees input:', { pcSet, root, quality });
 			const result = orderPitchClasses(pcSet, root, quality);
-			console.log('orderByDegrees output:', result);
+// 			console.log('orderByDegrees output:', result);
 			return result;
 		}
 		// Wrapper for card display
@@ -961,45 +961,42 @@
             console.log(`Added ${qualities.length} chord qualities to select menu`);
         }
 
-		function loadChordQuality() {
-            const quality = document.getElementById('editQualitySelect').value;
-            if (!quality) return;
+        function loadChordQuality() {
+			const quality = document.getElementById('editQualitySelect').value;
+			if (!quality) return;
 
-            const pcs = chordQualities[quality];
-            const rootPC = 0; // C as root
-            
-            // Get ordered PCS and calculate all values
-            const orderedPCS = orderByDegrees(pcs, rootPC, quality);
-            const intervals = orderedPCS.map(pc => (pc - rootPC + 12) % 12);
-            const notes = getChordNotes('C', intervals, quality);
-            
-            // Calculate transpositions
-            const transpositions = getAllTranspositionsWithBaseRef(pcs, 'C', null, quality);
-            
-            // Update form fields
-            document.getElementById('editQualityPCS').value = pcs.join(',');
-            document.getElementById('editQualityAliases').value = (chordAliases[quality] || []).join(',');
-            document.getElementById('editQualityFullName').value = chordFullNames[quality] || '';
-            document.getElementById('editQualityForte').value = chordForteNumbers[quality] || '';
-            document.getElementById('editQualityScales').value = (compatibleScales[quality] || []).join(',');
-            document.getElementById('editQualityAvoid').value = (avoidNotes[quality] || []).join(',');
-            
-            // Update new fields
-            document.getElementById('editQualityIntervals').value = intervalToString(intervals, quality);
-            document.getElementById('editQualityNotes').value = notes.join(', ');
-            
-            // Update transpositions table
-            const transpositionsTable = document.getElementById('editQualityTranspositions');
-            transpositionsTable.innerHTML = Object.entries(transpositions)
-                .map(([root, data]) => `
-                    <tr>
-                        <td>${root}</td>
-                        <td>${data.notes.join(', ')}</td>
-                        <td>[${data.pcs.join(', ')}]</td>
-                        <td>${data.decimal}</td>
-                    </tr>
-                `).join('');
-        }
+			console.log('Loading quality:', quality);
+			console.log('Manual data:', window.manualChordData?.[quality]);
+
+			const pcs = chordQualities[quality];
+			const rootPC = 0; // C as root
+	
+			// Calculate default values
+			const orderedPCS = orderByDegrees(pcs, rootPC, quality);
+			const defaultIntervals = intervalToString(orderedPCS.map(pc => (pc - rootPC + 12) % 12), quality);
+			const defaultNotes = getChordNotes('C', orderedPCS.map(pc => (pc - rootPC + 12) % 12), quality);
+	
+			// Get manual edits if they exist
+			const manualData = window.manualChordData?.[quality] || {};
+	
+			// Update all fields
+			document.getElementById('editQualityPCS').value = pcs.join(',');
+			document.getElementById('editQualityAliases').value = (chordAliases[quality] || []).join(',');
+			document.getElementById('editQualityFullName').value = chordFullNames[quality] || '';
+			document.getElementById('editQualityForte').value = chordForteNumbers[quality] || '';
+			document.getElementById('editQualityScales').value = (compatibleScales[quality] || []).join(',');
+			document.getElementById('editQualityAvoid').value = (avoidNotes[quality] || []).join(',');
+	
+			// Use manual values if available, otherwise defaults
+			document.getElementById('editQualityIntervals').value = manualData.intervals || defaultIntervals;
+			document.getElementById('editQualityNotes').value = manualData.notes || defaultNotes.join(', ');
+
+			console.log('Loaded values:', {
+				pcs: pcs.join(','),
+				intervals: document.getElementById('editQualityIntervals').value,
+				notes: document.getElementById('editQualityNotes').value
+			});
+		}
 
 		function enableResultEdit(quality) {
 			document.getElementById('resultView').style.display = 'none';
@@ -1072,19 +1069,28 @@
 				return;
 			}
 
+			console.log('Starting update for quality:', quality);
+
 			const pcsInput = document.getElementById('editQualityPCS').value.trim();
 			const aliasesInput = document.getElementById('editQualityAliases').value.trim();
 			const fullNameInput = document.getElementById('editQualityFullName').value.trim();
 			const forteInput = document.getElementById('editQualityForte').value.trim();
 			const scalesInput = document.getElementById('editQualityScales').value.trim();
 			const avoidInput = document.getElementById('editQualityAvoid').value.trim();
+			const intervalsInput = document.getElementById('editQualityIntervals').value.trim();
+			const notesInput = document.getElementById('editQualityNotes').value.trim();
 
-			// Update dictionaries
-			if (forteInput) {
-				chordForteNumbers[quality] = forteInput;
-			} else {
-				delete chordForteNumbers[quality];
-			}
+			console.log('Current form values:', {
+				quality,
+				pcs: pcsInput,
+				intervals: intervalsInput,
+				notes: notesInput,
+				forte: forteInput,
+				aliases: aliasesInput,
+				fullName: fullNameInput,
+				scales: scalesInput,
+				avoid: avoidInput
+			});
 
 			// Parse PCS input
 			const pcs = pcsInput.split(',').map(n => parseInt(n.trim()));
@@ -1093,35 +1099,38 @@
 				return;
 			}
 
-			// Parse aliases
+			// Parse other inputs
 			const aliases = aliasesInput ? aliasesInput.split(',').map(a => a.trim()) : [];
-
-			// Parse scales and avoid notes
 			const scales = scalesInput ? scalesInput.split(',').map(s => s.trim()) : [];
 			const avoid = avoidInput ? avoidInput.split(',').map(n => n.trim()) : [];
 
+			// Store all manual edits in a single object
+			window.manualChordData = window.manualChordData || {};
+			window.manualChordData[quality] = {
+				intervals: intervalsInput,
+				notes: notesInput
+			};
+
+			console.log('Stored manual data:', window.manualChordData[quality]);
+
 			// Update dictionaries
 			chordQualities[quality] = pcs;
-			if (aliases.length > 0) {
-				chordAliases[quality] = aliases;
-			} else {
-				delete chordAliases[quality];
-			}
-			if (fullNameInput) {
-				chordFullNames[quality] = fullNameInput;
-			} else {
-				delete chordFullNames[quality];
-			}
-			if (scales.length > 0) {
-				compatibleScales[quality] = scales;
-			} else {
-				delete compatibleScales[quality];
-			}
-			if (avoid.length > 0) {
-				avoidNotes[quality] = avoid;
-			} else {
-				delete avoidNotes[quality];
-			}
+			if (aliases.length > 0) chordAliases[quality] = aliases;
+			else delete chordAliases[quality];
+	
+			if (fullNameInput) chordFullNames[quality] = fullNameInput;
+			else delete chordFullNames[quality];
+	
+			if (forteInput) chordForteNumbers[quality] = forteInput;
+			else delete chordForteNumbers[quality];
+	
+			if (scales.length > 0) compatibleScales[quality] = scales;
+			else delete compatibleScales[quality];
+	
+			if (avoid.length > 0) avoidNotes[quality] = avoid;
+			else delete avoidNotes[quality];
+
+			console.log('Updated dictionaries for quality:', quality);
 
 			// Update display
 			filterChordTypes();
@@ -1187,32 +1196,48 @@
 		}
 
 		function exportChordDictionary() {
+			console.log('Starting export');
+			console.log('Manual chord data:', window.manualChordData);
+	
 			const dictionary = {};
 
 			Object.entries(chordQualities).forEach(([quality, pcs]) => {
+				console.log(`Processing ${quality} for export`);
+		
 				const orderedPCS = orderByDegrees(pcs, 0, quality);
 				const binaryPCS = toBinaryPCS(orderedPCS);
 				const decimalPCS = parseInt(binaryPCS, 2);
+				const manualData = window.manualChordData?.[quality] || {};
+
+				console.log(`Manual data for ${quality}:`, manualData);
+
+				// Get base values
 				const baseNotes = getChordNotes('C', orderedPCS, quality);
-				
-				// Get all transpositions using the refined function
-				const transpositions = getAllTranspositionsWithBaseRef(pcs, 'C', decimalPCS, quality);
+				const baseIntervals = intervalToString(orderedPCS, quality);
 		
+				// Use manual edits if available
+				const finalNotes = manualData.notes ? manualData.notes.split(',').map(n => n.trim()) : baseNotes;
+				const finalIntervals = manualData.intervals ? manualData.intervals.split(',').map(i => i.trim()) : baseIntervals.split(', ');
+
+				const transpositions = getAllTranspositionsWithBaseRef(pcs, 'C', decimalPCS, quality);
+
 				dictionary[quality] = {
 					pcs: orderedPCS,
-					notes: baseNotes,
+					notes: finalNotes,
 					aliases: chordAliases[quality] || [],
 					fullName: chordFullNames[quality] || quality,
 					binary: binaryPCS,
 					forteNumber: chordForteNumbers[quality] || '',
 					decimal: decimalPCS,
 					baseDecimal: decimalPCS,
-					intervals: intervalToString(orderedPCS, quality),
+					intervals: finalIntervals,
 					namedInversions: namedInversions[quality] || [],
 					transpositions: transpositions,
 					compatibleScales: compatibleScales[quality] || [],
 					avoidNotes: avoidNotes[quality] || []
 				};
+
+				console.log(`Exported data for ${quality}:`, dictionary[quality]);
 			});
 
 			// Create and trigger download
@@ -1256,13 +1281,13 @@
 			const input = document.getElementById('chordInput').value.trim();
 			const resultDiv = document.getElementById('result');
 
-			console.log('convertToPCS input:', input);
+			// console.log('convertToPCS input:', input);
 			const result = parseChordInput(input);
-			console.log('parseChordInput result:', result);
+			// console.log('parseChordInput result:', result);
 	
 			if (result) {
 				const { pcs, quality, root, baseDecimal } = result;
-				console.log('About to display:', { pcs, quality, root, baseDecimal });
+				// console.log('About to display:', { pcs, quality, root, baseDecimal });
 				displayDetailedResult(pcs, quality, root, baseDecimal);
 			} else {
 				resultDiv.innerHTML = 'Invalid input. Please enter a valid chord, PCS, or decimal notation.';
@@ -1326,21 +1351,21 @@
 		
 		// Function to add named inversions to detailed result display
 		function displayDetailedResult(pcs, quality = 'Custom PCS', root = 'C', baseDecimal = null) {
-		   console.log('displayDetailedResult input:', { pcs, quality, root, baseDecimal });
+		   // console.log('displayDetailedResult input:', { pcs, quality, root, baseDecimal });
 		   
 			const resultDiv = document.getElementById('result');
 			const rootPC = noteToPC[root];
-			console.log('rootPC:', rootPC);
+			// console.log('rootPC:', rootPC);
 
 			// Get the base chord quality's PCS and transpose it
 			const basePCS = chordQualities[quality];
-			console.log('basePCS:', basePCS);
+			// console.log('basePCS:', basePCS);
 			const transposedPCS = basePCS ? transposePitchClassSet(basePCS, rootPC) : pcs;
-			console.log('transposedPCS:', transposedPCS);
+			// console.log('transposedPCS:', transposedPCS);
 	
 			// Order PCS by degrees from the root
 			const orderedPCS = orderByDegrees(transposedPCS, rootPC, quality);
-		    console.log('orderedPCS:', orderedPCS);
+		    // console.log('orderedPCS:', orderedPCS);
 	
 			// Calculate display values
 			const binaryPCS = toBinaryPCS(orderedPCS);
@@ -1462,7 +1487,7 @@
 
 		
         function filterChordTypes() {
-        	console.log('Starting filterChordTypes');
+//         	console.log('Starting filterChordTypes');
 			const category = document.getElementById('chordCategory').value;
 			const chordList = document.getElementById('chordList');
 			chordList.innerHTML = '';
@@ -1476,11 +1501,11 @@
 			}
 
 			chordsToShow.forEach(([quality, intervals]) => {
-				console.log('Processing chord:', quality);
-		        console.log('Raw intervals:', intervals);
+// 				console.log('Processing chord:', quality);
+// 		        console.log('Raw intervals:', intervals);
 				// Pass the quality through consistently
 			    const orderedPCS = orderByDegreesFromRoot(intervals, 0, quality);
-				console.log('Ordered PCS:', orderedPCS);
+// 				console.log('Ordered PCS:', orderedPCS);
 				const binaryPCS = toBinaryPCS(intervals);
 				const decimalPCS = parseInt(binaryPCS, 2);
 				const notes = getChordNotes('C', orderedPCS, quality);  // Pass quality here too
@@ -1751,10 +1776,10 @@
 
 		// Get chord notes in the right order
 		function getChordNotes(root, intervals, quality = '') {
-			console.log('getChordNotes input:', { root, intervals, quality });
+// 			console.log('getChordNotes input:', { root, intervals, quality });
 			// Order the intervals first
 			const orderedIntervals = getOrderedIntervals(intervals, 0, quality);
-			console.log('getChordNotes orderedIntervals:', orderedIntervals);
+// 			console.log('getChordNotes orderedIntervals:', orderedIntervals);
 
 			// Root letter and standard letter sequence
 			const rootLetter = root.charAt(0);
@@ -1792,7 +1817,7 @@
 				}
 			});
 	
-			console.log('getChordNotes output:', result);
+			// console.log('getChordNotes output:', result);
 			return result;
 		}
 
@@ -1959,10 +1984,10 @@
 		
 		// Get ordered intervals for a given PC set
 		function getOrderedIntervals(intervals, root = 0, quality = '') {
-			console.log('getOrderedIntervals input:', { intervals, root, quality });
+// 			console.log('getOrderedIntervals input:', { intervals, root, quality });
 			// Use orderPitchClasses logic but return intervals
 			const ordered = orderPitchClasses(intervals, root, quality);
-			console.log('getOrderedIntervals output:', ordered);
+// 			console.log('getOrderedIntervals output:', ordered);
 			return ordered.map(pc => (pc - root + 12) % 12);
 		}
 
@@ -1979,14 +2004,14 @@
             try {
                 const response = await fetch('chord_dictionary.json');
                 if (!response.ok) {
-                    console.warn('Could not load chord_dictionary.json, using default dictionary');
+                    // console.warn('Could not load chord_dictionary.json, using default dictionary');
                     return;
                 }
                 const data = await response.json();
                 
                 // Validate data format
                 if (typeof data !== 'object') {
-                    console.warn('Invalid JSON format in chord_dictionary.json, using default dictionary');
+                    // console.warn('Invalid JSON format in chord_dictionary.json, using default dictionary');
                     return;
                 }
 
@@ -2023,9 +2048,9 @@
                     }
                 });
 
-                console.log('Chord dictionary loaded successfully');
+                // console.log('Chord dictionary loaded successfully');
             } catch (error) {
-                console.warn('Error loading chord_dictionary.json, using default dictionary:', error);
+                // console.warn('Error loading chord_dictionary.json, using default dictionary:', error);
             }
         }
         
@@ -2039,7 +2064,7 @@
             },
 
             test: function(name, fn) {
-                console.log(`Adding test: ${name}`);
+                // console.log(`Adding test: ${name}`);
                 this.tests.push({ name, fn });
             },
 
@@ -2050,7 +2075,7 @@
             },
 
             runTests: async function() {
-                console.log('Running tests...');
+                // console.log('Running tests...');
                 const resultDiv = document.createElement('div');
                 resultDiv.id = 'testResults';
                 resultDiv.style.padding = '20px';
@@ -2085,7 +2110,7 @@
         };
 
         window.runChordTests = async function() {
-            console.log('Starting chord tests...');
+            // console.log('Starting chord tests...');
             
             // Basic Chord Parsing Tests
             TestSuite.test('Parse major triad', () => {
@@ -2100,16 +2125,16 @@
 
             // Full Name Parsing Tests
             TestSuite.test('Parse full name - minor triad', () => {
-                console.log('Testing full name parsing for minor triad...');
+                // console.log('Testing full name parsing for minor triad...');
                 const result = parseChordInput('C minor triad');
-                console.log('Result:', result);
+                // console.log('Result:', result);
                 TestSuite.assertEqual(result.quality, 'min', 'Failed to parse minor triad from full name');
             });
 
             TestSuite.test('Parse full name - major seventh', () => {
-                console.log('Testing full name parsing for major seventh...');
+                // console.log('Testing full name parsing for major seventh...');
                 const result = parseChordInput('D major seventh');
-                console.log('Result:', result);
+                // console.log('Result:', result);
                 TestSuite.assertEqual(result.quality, 'maj7', 'Failed to parse major seventh from full name');
             });
 
@@ -2284,12 +2309,11 @@
 
         // Initialize chord dictionary and tests on load
         window.addEventListener('load', async function() {
-            console.log('Window loaded');
-            await loadChordDictionary();
-            filterChordTypes();
-            populateChordSelect(); // Add this line to populate the select menu
-//             addTestButton();
-        });        
+			console.log('Window loaded');
+			await loadChordDictionary();
+			filterChordTypes();
+			populateChordSelect();
+		});
     </script>
 </body>
 </html>

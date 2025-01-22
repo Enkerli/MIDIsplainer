@@ -21,7 +21,12 @@
     "forteNumber": "4-23",
     "decimal": 2370,
     "baseDecimal": 2370,
-    "intervals": "R, ♭3, ♭7, 11",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭7",
+      "11"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -360,7 +365,10 @@
     "forteNumber": "2-5",
     "decimal": 2064,
     "baseDecimal": 2064,
-    "intervals": "R, 5",
+    "intervals": [
+      "R",
+      "5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -622,7 +630,12 @@
     "forteNumber": "4-26",
     "decimal": 2196,
     "baseDecimal": 2196,
-    "intervals": "R, 3, 5, 6",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "6"
+    ],
     "namedInversions": [
       "(9)min7"
     ],
@@ -968,7 +981,12 @@
     "forteNumber": "4-27B",
     "decimal": 2194,
     "baseDecimal": 2194,
-    "intervals": "R, 3, 5, ♭7",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -1313,7 +1331,13 @@
     "forteNumber": "5-27A",
     "decimal": 2706,
     "baseDecimal": 2706,
-    "intervals": "R, 3, 5, ♭7, 9",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -1695,14 +1719,22 @@
       "F"
     ],
     "aliases": [
-      "11"
+      "11",
+      "dom11"
     ],
     "fullName": "dominant eleventh",
     "binary": "101011010010",
     "forteNumber": "6-33B",
     "decimal": 2770,
     "baseDecimal": 2770,
-    "intervals": "R, 3, 5, ♭7, 9, 11",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "9",
+      "11"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -2128,14 +2160,23 @@
       "A"
     ],
     "aliases": [
-      "13"
+      "13",
+      "dom13"
     ],
     "fullName": "dominant thirteenth",
     "binary": "101011010110",
     "forteNumber": "7-35",
     "decimal": 2774,
     "baseDecimal": 2774,
-    "intervals": "R, 3, 5, ♭7, 9, 11, 13",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "9",
+      "11",
+      "13"
+    ],
     "namedInversions": [
       "(5)maj13",
       "(7)min13"
@@ -2608,7 +2649,11 @@
     "forteNumber": "3-11B",
     "decimal": 2192,
     "baseDecimal": 2192,
-    "intervals": "R, 3, 5",
+    "intervals": [
+      "R",
+      "3",
+      "5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -2909,7 +2954,11 @@
     "forteNumber": "3-11A",
     "decimal": 2320,
     "baseDecimal": 2320,
-    "intervals": "R, ♭3, 5",
+    "intervals": [
+      "R",
+      "♭3",
+      "5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -3210,7 +3259,11 @@
     "forteNumber": "3-10",
     "decimal": 2336,
     "baseDecimal": 2336,
-    "intervals": "R, ♭3, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -3512,7 +3565,11 @@
     "forteNumber": "3-12",
     "decimal": 2184,
     "baseDecimal": 2184,
-    "intervals": "R, 3, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -3821,7 +3878,12 @@
     "forteNumber": "4-20",
     "decimal": 2193,
     "baseDecimal": 2193,
-    "intervals": "R, 3, 5, 7",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "7"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -4167,7 +4229,12 @@
     "forteNumber": "4-26",
     "decimal": 2322,
     "baseDecimal": 2322,
-    "intervals": "R, ♭3, 5, ♭7",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "♭7"
+    ],
     "namedInversions": [
       "(3)6"
     ],
@@ -4514,7 +4581,12 @@
     "forteNumber": "4-28",
     "decimal": 2340,
     "baseDecimal": 2340,
-    "intervals": "R, ♭3, 13, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "13",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -4861,7 +4933,12 @@
     "forteNumber": "4-27A",
     "decimal": 2338,
     "baseDecimal": 2338,
-    "intervals": "R, ♭3, ♭7, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭7",
+      "♭5"
+    ],
     "namedInversions": [
       "(3)m6"
     ],
@@ -5219,7 +5296,12 @@
     "forteNumber": "4-19A",
     "decimal": 2321,
     "baseDecimal": 2321,
-    "intervals": "R, ♭3, 5, 7",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "7"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -5567,7 +5649,12 @@
     "forteNumber": "4-19B",
     "decimal": 2186,
     "baseDecimal": 2186,
-    "intervals": "R, 3, ♭7, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "♭13"
+    ],
     "namedInversions": [
       "(0)7#5"
     ],
@@ -5919,7 +6006,12 @@
     "forteNumber": "4-24",
     "decimal": 2185,
     "baseDecimal": 2185,
-    "intervals": "R, 3, 7, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -6263,7 +6355,12 @@
     "forteNumber": "",
     "decimal": 2324,
     "baseDecimal": 2324,
-    "intervals": "R, ♭3, 5, 6",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "6"
+    ],
     "namedInversions": [
       "(9)m7b5"
     ],
@@ -6614,7 +6711,13 @@
     "forteNumber": "5-27B",
     "decimal": 2705,
     "baseDecimal": 2705,
-    "intervals": "R, 3, 5, 7, 9",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "7",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -7002,7 +7105,13 @@
     "forteNumber": "5-27A",
     "decimal": 2834,
     "baseDecimal": 2834,
-    "intervals": "R, ♭3, 5, ♭7, 9",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "♭7",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -7393,7 +7502,14 @@
     "forteNumber": "",
     "decimal": 2769,
     "baseDecimal": 2769,
-    "intervals": "R, 3, 5, 7, 9, 11",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "7",
+      "9",
+      "11"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -7825,7 +7941,14 @@
     "forteNumber": "",
     "decimal": 2898,
     "baseDecimal": 2898,
-    "intervals": "R, ♭3, 5, ♭7, 9, 11",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "♭7",
+      "9",
+      "11"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -8259,7 +8382,14 @@
     "forteNumber": "",
     "decimal": 2709,
     "baseDecimal": 2709,
-    "intervals": "R, 3, 5, 7, 9, 13",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "7",
+      "9",
+      "13"
+    ],
     "namedInversions": [
       "(7)13",
       "(2)min13"
@@ -8693,7 +8823,15 @@
     "forteNumber": "",
     "decimal": 2902,
     "baseDecimal": 2902,
-    "intervals": "R, ♭3, 5, ♭7, 9, 11, 13",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "♭7",
+      "9",
+      "11",
+      "13"
+    ],
     "namedInversions": [
       "(5)13",
       "(10)maj13"
@@ -9163,7 +9301,11 @@
     "forteNumber": "",
     "decimal": 2576,
     "baseDecimal": 2576,
-    "intervals": "R, 2, 5",
+    "intervals": [
+      "R",
+      "2",
+      "5"
+    ],
     "namedInversions": [
       "(7)sus4"
     ],
@@ -9465,7 +9607,11 @@
     "forteNumber": "",
     "decimal": 2128,
     "baseDecimal": 2128,
-    "intervals": "R, 4, 5",
+    "intervals": [
+      "R",
+      "4",
+      "5"
+    ],
     "namedInversions": [
       "(5)sus2"
     ],
@@ -9769,7 +9915,12 @@
     "forteNumber": "",
     "decimal": 2130,
     "baseDecimal": 2130,
-    "intervals": "R, 4, 5, ♭7",
+    "intervals": [
+      "R",
+      "4",
+      "5",
+      "♭7"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -10115,7 +10266,13 @@
     "forteNumber": "",
     "decimal": 2642,
     "baseDecimal": 2642,
-    "intervals": "R, 4, 5, ♭7, 9",
+    "intervals": [
+      "R",
+      "4",
+      "5",
+      "♭7",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -10500,7 +10657,12 @@
     "forteNumber": "",
     "decimal": 2210,
     "baseDecimal": 2210,
-    "intervals": "R, 3, ♭7, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -10843,7 +11005,12 @@
     "forteNumber": "4-24",
     "decimal": 2186,
     "baseDecimal": 2186,
-    "intervals": "R, 3, ♭7, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "♭13"
+    ],
     "namedInversions": [
       "(0)aug7"
     ],
@@ -11190,7 +11357,13 @@
     "forteNumber": "",
     "decimal": 3218,
     "baseDecimal": 3218,
-    "intervals": "R, 3, 5, ♭7, ♭9",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "♭9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -11577,7 +11750,13 @@
     "forteNumber": "",
     "decimal": 2450,
     "baseDecimal": 2450,
-    "intervals": "R, ♭3, 3, 5, ♭7",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "5",
+      "♭7"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -11965,7 +12144,13 @@
     "forteNumber": "5-28A",
     "decimal": 2226,
     "baseDecimal": 2226,
-    "intervals": "R, 3, 5, ♭7, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -12352,7 +12537,14 @@
     "forteNumber": "",
     "decimal": 2714,
     "baseDecimal": 2714,
-    "intervals": "R, 3, 5, ♭7, 9, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -12784,7 +12976,13 @@
     "forteNumber": "5-35",
     "decimal": 2708,
     "baseDecimal": 2708,
-    "intervals": "R, 3, 5, 6, 9",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "6",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -13174,7 +13372,13 @@
     "forteNumber": "",
     "decimal": 2228,
     "baseDecimal": 2228,
-    "intervals": "R, 3, 5, 6, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "6",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -13563,7 +13767,14 @@
     "forteNumber": "6-33B",
     "decimal": 2740,
     "baseDecimal": 2740,
-    "intervals": "R, 3, 5, 6, 9, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "6",
+      "9",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -13997,7 +14208,13 @@
     "forteNumber": "",
     "decimal": 2225,
     "baseDecimal": 2225,
-    "intervals": "R, 3, 5, 7, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "7",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -14388,7 +14605,14 @@
     "forteNumber": "",
     "decimal": 2737,
     "baseDecimal": 2737,
-    "intervals": "R, 3, 5, 7, 9, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "7",
+      "9",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -14819,7 +15043,14 @@
     "forteNumber": "",
     "decimal": 2481,
     "baseDecimal": 2481,
-    "intervals": "R, ♭3, 3, 5, 7, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "5",
+      "7",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -15255,7 +15486,15 @@
     "forteNumber": "",
     "decimal": 2741,
     "baseDecimal": 2741,
-    "intervals": "R, 3, 5, 7, 9, 13, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "7",
+      "9",
+      "13",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -15726,7 +15965,13 @@
     "forteNumber": "",
     "decimal": 3217,
     "baseDecimal": 3217,
-    "intervals": "R, 3, 5, 7, ♭9",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "7",
+      "♭9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -16114,7 +16359,12 @@
     "forteNumber": "",
     "decimal": 2704,
     "baseDecimal": 2704,
-    "intervals": "R, 3, 5, 9",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -16457,7 +16707,12 @@
     "forteNumber": "",
     "decimal": 3216,
     "baseDecimal": 3216,
-    "intervals": "R, 3, 5, ♭9",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -16798,7 +17053,11 @@
     "forteNumber": "",
     "decimal": 2208,
     "baseDecimal": 2208,
-    "intervals": "R, 3, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -17099,7 +17358,12 @@
     "forteNumber": "",
     "decimal": 2209,
     "baseDecimal": 2209,
-    "intervals": "R, 3, 7, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "7",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -17444,7 +17708,13 @@
     "forteNumber": "",
     "decimal": 2721,
     "baseDecimal": 2721,
-    "intervals": "R, 3, 7, 9, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "7",
+      "9",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -17831,7 +18101,12 @@
     "forteNumber": "",
     "decimal": 2328,
     "baseDecimal": 2328,
-    "intervals": "R, ♭3, 5, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -18177,7 +18452,13 @@
     "forteNumber": "",
     "decimal": 2836,
     "baseDecimal": 2836,
-    "intervals": "R, ♭3, 5, 6, 9",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "6",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -18566,7 +18847,13 @@
     "forteNumber": "",
     "decimal": 3346,
     "baseDecimal": 3346,
-    "intervals": "R, ♭3, 5, ♭7, ♭9",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "♭7",
+      "♭9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -18955,7 +19242,13 @@
     "forteNumber": "",
     "decimal": 2833,
     "baseDecimal": 2833,
-    "intervals": "R, ♭3, 5, 7, 9",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "7",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -19345,7 +19638,14 @@
     "forteNumber": "",
     "decimal": 2838,
     "baseDecimal": 2838,
-    "intervals": "R, ♭3, 5, ♭7, 9, 13",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "♭7",
+      "9",
+      "13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -19775,7 +20075,13 @@
     "forteNumber": "",
     "decimal": 2386,
     "baseDecimal": 2386,
-    "intervals": "R, ♭3, 5, ♭7, 11",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "♭7",
+      "11"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -20160,7 +20466,12 @@
     "forteNumber": "",
     "decimal": 2384,
     "baseDecimal": 2384,
-    "intervals": "R, ♭3, 5, 11",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "11"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -20505,7 +20816,13 @@
     "forteNumber": "",
     "decimal": 2329,
     "baseDecimal": 2329,
-    "intervals": "R, ♭3, 5, 7, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -20894,7 +21211,14 @@
     "forteNumber": "",
     "decimal": 2841,
     "baseDecimal": 2841,
-    "intervals": "R, ♭3, 5, 7, 9, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "7",
+      "9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -21321,7 +21645,12 @@
     "forteNumber": "",
     "decimal": 2832,
     "baseDecimal": 2832,
-    "intervals": "R, ♭3, 5, 9",
+    "intervals": [
+      "R",
+      "♭3",
+      "5",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -21664,7 +21993,12 @@
     "forteNumber": "",
     "decimal": 2313,
     "baseDecimal": 2313,
-    "intervals": "R, ♭3, 7, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -22007,7 +22341,12 @@
     "forteNumber": "",
     "decimal": 2314,
     "baseDecimal": 2314,
-    "intervals": "R, ♭3, ♭7, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -22352,7 +22691,13 @@
     "forteNumber": "",
     "decimal": 2826,
     "baseDecimal": 2826,
-    "intervals": "R, ♭3, ♭7, 9, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭7",
+      "9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -22741,7 +23086,14 @@
     "forteNumber": "",
     "decimal": 2890,
     "baseDecimal": 2890,
-    "intervals": "R, ♭3, ♭7, 9, 11, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭7",
+      "9",
+      "11",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -23168,7 +23520,12 @@
     "forteNumber": "",
     "decimal": 3336,
     "baseDecimal": 3336,
-    "intervals": "R, ♭3, ♭9, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -23513,7 +23870,13 @@
     "forteNumber": "",
     "decimal": 2850,
     "baseDecimal": 2850,
-    "intervals": "R, ♭3, ♭7, 9, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭7",
+      "9",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -23900,7 +24263,13 @@
     "forteNumber": "",
     "decimal": 2341,
     "baseDecimal": 2341,
-    "intervals": "R, ♭3, 7, 13, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "7",
+      "13",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -24285,7 +24654,12 @@
     "forteNumber": "",
     "decimal": 2337,
     "baseDecimal": 2337,
-    "intervals": "R, ♭3, 7, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "7",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -24628,7 +25002,12 @@
     "forteNumber": "",
     "decimal": 3202,
     "baseDecimal": 3202,
-    "intervals": "R, 3, ♭7, ♭9",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "♭9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -24973,7 +25352,13 @@
     "forteNumber": "",
     "decimal": 2202,
     "baseDecimal": 2202,
-    "intervals": "R, 3, 5, ♭7, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -25363,7 +25748,14 @@
     "forteNumber": "6-21A",
     "decimal": 2234,
     "baseDecimal": 2234,
-    "intervals": "R, 3, 5, ♭7, ♭5, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "♭5",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -25794,7 +26186,13 @@
     "forteNumber": "",
     "decimal": 2198,
     "baseDecimal": 2198,
-    "intervals": "R, 3, 5, 6, ♭7",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "6",
+      "♭7"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -26185,7 +26583,14 @@
     "forteNumber": "",
     "decimal": 2482,
     "baseDecimal": 2482,
-    "intervals": "R, ♭3, 3, 5, ♭7, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "5",
+      "♭7",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -26618,7 +27023,15 @@
     "forteNumber": "7-31A",
     "decimal": 2486,
     "baseDecimal": 2486,
-    "intervals": "R, ♭3, 3, 5, ♭7, 13, ♭5",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "5",
+      "♭7",
+      "13",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -27093,7 +27506,15 @@
     "forteNumber": "",
     "decimal": 2490,
     "baseDecimal": 2490,
-    "intervals": "R, ♭3, 3, 5, ♭7, ♭5, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "5",
+      "♭7",
+      "♭5",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -27568,7 +27989,15 @@
     "forteNumber": "7-29A",
     "decimal": 2518,
     "baseDecimal": 2518,
-    "intervals": "R, ♭3, 3, 5, ♭7, 11, 13",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "5",
+      "♭7",
+      "11",
+      "13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -28041,7 +28470,14 @@
     "forteNumber": "",
     "decimal": 2458,
     "baseDecimal": 2458,
-    "intervals": "R, ♭3, 3, 5, ♭7, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "5",
+      "♭7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -28474,7 +28910,14 @@
     "forteNumber": "",
     "decimal": 2738,
     "baseDecimal": 2738,
-    "intervals": "R, 3, 5, ♭7, 9, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "9",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -28897,19 +29340,28 @@
       "B♭",
       "D",
       "A",
-      "G♭"
+      "F♯"
     ],
     "aliases": [
       "13#11",
       "13+4",
-      "13#4"
+      "13#4",
+      "dom13#11"
     ],
     "fullName": "dominant thirteenth sharp eleventh",
     "binary": "101010110110",
     "forteNumber": "7-34",
     "decimal": 2742,
     "baseDecimal": 2742,
-    "intervals": "R, 3, 5, ♭7, 9, 13, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "9",
+      "13",
+      "♯4"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -29385,7 +29837,15 @@
     "forteNumber": "",
     "decimal": 2746,
     "baseDecimal": 2746,
-    "intervals": "R, 3, 5, ♭7, 9, ♭5, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "9",
+      "♭5",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -29860,7 +30320,14 @@
     "forteNumber": "",
     "decimal": 3250,
     "baseDecimal": 3250,
-    "intervals": "R, 3, 5, ♭7, ♭9, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "♭9",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -30293,7 +30760,15 @@
     "forteNumber": "7-31B",
     "decimal": 3254,
     "baseDecimal": 3254,
-    "intervals": "R, 3, 5, ♭7, 13, ♭9, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "13",
+      "♭9",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -30770,7 +31245,15 @@
     "forteNumber": "",
     "decimal": 3258,
     "baseDecimal": 3258,
-    "intervals": "R, 3, 5, ♭7, ♭9, ♭5, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "♭9",
+      "♭5",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -31245,7 +31728,15 @@
     "forteNumber": "7-32B",
     "decimal": 3286,
     "baseDecimal": 3286,
-    "intervals": "R, 3, 5, ♭7, 11, 13, ♭9",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "11",
+      "13",
+      "♭9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -31718,7 +32209,14 @@
     "forteNumber": "",
     "decimal": 3226,
     "baseDecimal": 3226,
-    "intervals": "R, 3, 5, ♭7, ♭9, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "5",
+      "♭7",
+      "♭9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -32149,7 +32647,14 @@
     "forteNumber": "",
     "decimal": 3474,
     "baseDecimal": 3474,
-    "intervals": "R, ♭3, 3, 5, ♭7, ♭9",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "5",
+      "♭7",
+      "♭9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -32580,7 +33085,13 @@
     "forteNumber": "",
     "decimal": 2442,
     "baseDecimal": 2442,
-    "intervals": "R, ♭3, 3, ♭7, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "3",
+      "♭7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -32970,7 +33481,13 @@
     "forteNumber": "",
     "decimal": 2698,
     "baseDecimal": 2698,
-    "intervals": "R, 3, ♭7, 9, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -33359,7 +33876,14 @@
     "forteNumber": "",
     "decimal": 2730,
     "baseDecimal": 2730,
-    "intervals": "R, 3, ♭7, 9, ♭5, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "9",
+      "♭5",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -33789,7 +34313,13 @@
     "forteNumber": "",
     "decimal": 3210,
     "baseDecimal": 3210,
-    "intervals": "R, 3, ♭7, ♭9, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "♭9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -34178,7 +34708,14 @@
     "forteNumber": "",
     "decimal": 3242,
     "baseDecimal": 3242,
-    "intervals": "R, 3, ♭7, ♭9, ♭5, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "♭9",
+      "♭5",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -34611,7 +35148,15 @@
     "forteNumber": "7-30B",
     "decimal": 2790,
     "baseDecimal": 2790,
-    "intervals": "R, 3, ♭7, 9, 11, 13, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "9",
+      "11",
+      "13",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -35082,7 +35627,13 @@
     "forteNumber": "",
     "decimal": 2722,
     "baseDecimal": 2722,
-    "intervals": "R, 3, ♭7, 9, ♭5",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "9",
+      "♭5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -35465,7 +36016,11 @@
     "forteNumber": "",
     "decimal": 2178,
     "baseDecimal": 2178,
-    "intervals": "R, 3, ♭7",
+    "intervals": [
+      "R",
+      "3",
+      "♭7"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -35766,7 +36321,12 @@
     "forteNumber": "",
     "decimal": 2690,
     "baseDecimal": 2690,
-    "intervals": "R, 3, ♭7, 9",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -36113,7 +36673,14 @@
     "forteNumber": "6-z26",
     "decimal": 2758,
     "baseDecimal": 2758,
-    "intervals": "R, 3, ♭7, 9, 11, 13",
+    "intervals": [
+      "R",
+      "3",
+      "♭7",
+      "9",
+      "11",
+      "13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -36539,7 +37106,11 @@
     "forteNumber": "",
     "decimal": 2576,
     "baseDecimal": 2576,
-    "intervals": "R, 2, 5",
+    "intervals": [
+      "R",
+      "2",
+      "5"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -36846,7 +37417,13 @@
     "forteNumber": "",
     "decimal": 3154,
     "baseDecimal": 3154,
-    "intervals": "R, 11, 5, ♭7, ♭9",
+    "intervals": [
+      "R",
+      "11",
+      "5",
+      "♭7",
+      "♭9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -37236,7 +37813,14 @@
     "forteNumber": "6-32",
     "decimal": 2646,
     "baseDecimal": 2646,
-    "intervals": "R, 4, 5, ♭7, 9, 13",
+    "intervals": [
+      "R",
+      "4",
+      "5",
+      "♭7",
+      "9",
+      "13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -37668,7 +38252,14 @@
     "forteNumber": "",
     "decimal": 3162,
     "baseDecimal": 3162,
-    "intervals": "R, 4, 5, ♭7, ♭9, ♭13",
+    "intervals": [
+      "R",
+      "4",
+      "5",
+      "♭7",
+      "♭9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -38095,7 +38686,12 @@
     "forteNumber": "",
     "decimal": 2129,
     "baseDecimal": 2129,
-    "intervals": "R, 4, 5, 7",
+    "intervals": [
+      "R",
+      "4",
+      "5",
+      "7"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -38440,7 +39036,13 @@
     "forteNumber": "",
     "decimal": 2641,
     "baseDecimal": 2641,
-    "intervals": "R, 4, 5, 7, 9",
+    "intervals": [
+      "R",
+      "4",
+      "5",
+      "7",
+      "9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -38825,7 +39427,12 @@
     "forteNumber": "",
     "decimal": 2121,
     "baseDecimal": 2121,
-    "intervals": "R, 4, 7, ♭13",
+    "intervals": [
+      "R",
+      "4",
+      "7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -39170,7 +39777,13 @@
     "forteNumber": "",
     "decimal": 2633,
     "baseDecimal": 2633,
-    "intervals": "R, 4, 7, 9, ♭13",
+    "intervals": [
+      "R",
+      "4",
+      "7",
+      "9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -39555,7 +40168,12 @@
     "forteNumber": "",
     "decimal": 2136,
     "baseDecimal": 2136,
-    "intervals": "R, 11, 5, ♭13",
+    "intervals": [
+      "R",
+      "11",
+      "5",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -39898,7 +40516,12 @@
     "forteNumber": "",
     "decimal": 2122,
     "baseDecimal": 2122,
-    "intervals": "R, 4, ♭7, ♭13",
+    "intervals": [
+      "R",
+      "4",
+      "♭7",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -40241,7 +40864,11 @@
     "forteNumber": "",
     "decimal": 2312,
     "baseDecimal": 2312,
-    "intervals": "R, ♭3, ♭13",
+    "intervals": [
+      "R",
+      "♭3",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -40546,7 +41173,13 @@
     "forteNumber": "",
     "decimal": 2697,
     "baseDecimal": 2697,
-    "intervals": "R, 3, 7, 9, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "7",
+      "9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -40932,7 +41565,12 @@
     "forteNumber": "",
     "decimal": 2696,
     "baseDecimal": 2696,
-    "intervals": "R, 3, 9, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "9",
+      "♭13"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
@@ -41263,19 +41901,25 @@
     ],
     "notes": [
       "C",
-      "E♭",
       "E",
-      "A♭"
+      "G♯",
+      "D♯"
     ],
     "aliases": [
-      "+add#9"
+      "+add#9",
+      "augadd#9"
     ],
     "fullName": "augmented added sharp ninth",
     "binary": "100110001000",
     "forteNumber": "4-19B",
     "decimal": 2440,
     "baseDecimal": 2440,
-    "intervals": "R, ♭3, 3, ♭13",
+    "intervals": [
+      "R",
+      "3",
+      "♯5",
+      "♯9"
+    ],
     "namedInversions": [],
     "transpositions": {
       "C": {
