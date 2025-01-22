@@ -335,7 +335,7 @@
     "notes": [
       "C",
       "E",
-      "A♭"
+      "G♯"
     ],
     "aliases": [
       "+",
@@ -351,7 +351,7 @@
     "intervals": [
       "R",
       "3",
-      "♭13"
+      "♯5"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -434,14 +434,14 @@
     "pcs": [
       0,
       3,
-      9,
-      6
+      6,
+      9
     ],
     "notes": [
       "C",
       "E♭",
-      "A",
-      "G♭"
+      "G♭",
+      "A"
     ],
     "aliases": [
       "dim7",
@@ -456,8 +456,8 @@
     "intervals": [
       "R",
       "♭3",
-      "13",
-      "♭5"
+      "♭5",
+      "𝄫7"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -546,14 +546,14 @@
     "pcs": [
       0,
       4,
-      11,
-      8
+      8,
+      11
     ],
     "notes": [
       "C",
       "E",
-      "B",
-      "A♭"
+      "G♯",
+      "B"
     ],
     "aliases": [
       "M7b6",
@@ -563,18 +563,21 @@
       "+maj7",
       "^7#5",
       "∆#5",
-      "+M7"
+      "+M7",
+      "augM7",
+      "+∆",
+      "+∆7"
     ],
     "fullName": "augmented major seventh",
     "binary": "100010001001",
-    "forteNumber": "4-24",
+    "forteNumber": "4-19B",
     "decimal": 2185,
     "baseDecimal": 2185,
     "intervals": [
       "R",
       "3",
-      "7",
-      "♭13"
+      "♯5",
+      "7"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -1218,7 +1221,7 @@
       "E",
       "G",
       "A",
-      "G♭"
+      "F♯"
     ],
     "aliases": [
       "M6#11",
@@ -1228,7 +1231,7 @@
     ],
     "fullName": "sixth sharp eleventh",
     "binary": "100010110100",
-    "forteNumber": "",
+    "forteNumber": "5-25A",
     "decimal": 2228,
     "baseDecimal": 2228,
     "intervals": [
@@ -1236,7 +1239,7 @@
       "3",
       "5",
       "6",
-      "♭5"
+      "♯11"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -1410,8 +1413,8 @@
       "G",
       "B",
       "D",
-      "A",
-      "G♭"
+      "F♯",
+      "A"
     ],
     "aliases": [
       "M13#11",
@@ -1421,7 +1424,7 @@
     ],
     "fullName": "major thirteenth sharp eleventh",
     "binary": "101010110101",
-    "forteNumber": "",
+    "forteNumber": "7-35",
     "decimal": 2741,
     "baseDecimal": 2741,
     "intervals": [
@@ -1430,8 +1433,8 @@
       "5",
       "7",
       "9",
-      "13",
-      "♭5"
+      "♯11",
+      "13"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -1450,14 +1453,15 @@
       "E",
       "G",
       "B",
-      "C♯"
+      "D♭"
     ],
     "aliases": [
-      "M7b9"
+      "M7b9",
+      "∆b9"
     ],
     "fullName": "major seventh flat ninth",
     "binary": "110010010001",
-    "forteNumber": "",
+    "forteNumber": "5-z38A",
     "decimal": 3217,
     "baseDecimal": 3217,
     "intervals": [
@@ -1488,11 +1492,14 @@
       "Madd9",
       "2",
       "add9",
-      "add2"
+      "add2",
+      "majadd9",
+      "maj2",
+      "majadd2"
     ],
     "fullName": "major added ninth",
     "binary": "101010010000",
-    "forteNumber": "",
+    "forteNumber": "4-22A",
     "decimal": 2704,
     "baseDecimal": 2704,
     "intervals": [
@@ -1516,14 +1523,15 @@
       "C",
       "E",
       "G",
-      "C♯"
+      "D♭"
     ],
     "aliases": [
-      "Maddb9"
+      "Maddb9",
+      "majaddb9"
     ],
     "fullName": "major added flat ninth",
     "binary": "110010010000",
-    "forteNumber": "",
+    "forteNumber": "4-18A",
     "decimal": 3216,
     "baseDecimal": 3216,
     "intervals": [
@@ -1548,11 +1556,14 @@
       "G♭"
     ],
     "aliases": [
-      "Mb5"
+      "Mb5",
+      "majb5",
+      "majdim",
+      "maj°"
     ],
     "fullName": "major diminished",
     "binary": "100010100000",
-    "forteNumber": "",
+    "forteNumber": "3-8B",
     "decimal": 2208,
     "baseDecimal": 2208,
     "intervals": [
@@ -1568,28 +1579,30 @@
     "pcs": [
       0,
       4,
-      11,
-      6
+      6,
+      11
     ],
     "notes": [
       "C",
       "E",
-      "B",
-      "G♭"
+      "G♭",
+      "B"
     ],
     "aliases": [
-      "M7b5"
+      "M7b5",
+      "maj7b5",
+      "∆b5"
     ],
     "fullName": "major seventh diminished",
     "binary": "100010100001",
-    "forteNumber": "",
+    "forteNumber": "4-16A",
     "decimal": 2209,
     "baseDecimal": 2209,
     "intervals": [
       "R",
       "3",
-      "7",
-      "♭5"
+      "♭5",
+      "7"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -1599,31 +1612,35 @@
     "pcs": [
       0,
       4,
+      6,
       11,
-      2,
-      6
+      2
     ],
     "notes": [
       "C",
       "E",
+      "G♭",
       "B",
-      "D",
-      "G♭"
+      "D"
     ],
     "aliases": [
-      "M9b5"
+      "M9b5",
+      "maj9dim",
+      "∆9dim",
+      "maj9b5",
+      "∆9b5"
     ],
     "fullName": "major ninth diminished",
     "binary": "101010100001",
-    "forteNumber": "",
+    "forteNumber": "5-24A",
     "decimal": 2721,
     "baseDecimal": 2721,
     "intervals": [
       "R",
       "3",
+      "♭5",
       "7",
-      "9",
-      "♭5"
+      "9"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -2249,14 +2266,14 @@
       "C",
       "E",
       "B♭",
-      "C♯"
+      "D♭"
     ],
     "aliases": [
       "alt7"
     ],
     "fullName": "altered",
     "binary": "110010000010",
-    "forteNumber": "",
+    "forteNumber": "4-12A",
     "decimal": 3202,
     "baseDecimal": 3202,
     "intervals": [
@@ -3326,23 +3343,25 @@
       "F",
       "G",
       "B♭",
-      "C♯"
+      "D♭"
     ],
     "aliases": [
       "b9sus",
       "phryg",
       "7b9sus",
       "7b9sus4",
-      "11b9"
+      "11b9",
+      "7sus4b9",
+      "7susb9"
     ],
     "fullName": "suspended fourth flat ninth",
     "binary": "110001010010",
-    "forteNumber": "",
+    "forteNumber": "5-29B",
     "decimal": 3154,
     "baseDecimal": 3154,
     "intervals": [
       "R",
-      "11",
+      "4",
       "5",
       "♭7",
       "♭9"
@@ -3441,11 +3460,12 @@
       "B"
     ],
     "aliases": [
-      "M7sus4"
+      "M7sus4",
+      "∆sus4"
     ],
     "fullName": "major seventh suspended fourth",
     "binary": "100001010001",
-    "forteNumber": "",
+    "forteNumber": "4-16B",
     "decimal": 2129,
     "baseDecimal": 2129,
     "intervals": [
@@ -3474,11 +3494,15 @@
       "D"
     ],
     "aliases": [
-      "M9sus4"
+      "M9sus4",
+      "∆9sus",
+      "maj9sus",
+      "∆9sus4",
+      "maj9sus4"
     ],
     "fullName": "major ninth suspended fourth",
     "binary": "101001010001",
-    "forteNumber": "",
+    "forteNumber": "5-29A",
     "decimal": 2641,
     "baseDecimal": 2641,
     "intervals": [
@@ -3502,22 +3526,24 @@
     "notes": [
       "C",
       "F",
-      "B",
-      "A♭"
+      "G♯",
+      "B"
     ],
     "aliases": [
-      "M7#5sus4"
+      "M7#5sus4",
+      "maj7+sus4",
+      "∆+sus4"
     ],
     "fullName": "major seventh augmented suspended fourth",
     "binary": "100001001001",
-    "forteNumber": "",
+    "forteNumber": "4-18B",
     "decimal": 2121,
     "baseDecimal": 2121,
     "intervals": [
       "R",
       "4",
-      "7",
-      "♭13"
+      "♯5",
+      "7"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -3527,31 +3553,34 @@
     "pcs": [
       0,
       5,
+      8,
       11,
-      2,
-      8
+      2
     ],
     "notes": [
       "C",
       "F",
+      "G♯",
       "B",
-      "D",
-      "A♭"
+      "D"
     ],
     "aliases": [
-      "M9#5sus4"
+      "M9#5sus4",
+      "∆9augsus4",
+      "∆9+sus4",
+      "maj9+sus4"
     ],
     "fullName": "major ninth augmented suspended fourth",
     "binary": "101001001001",
-    "forteNumber": "",
+    "forteNumber": "5-31A",
     "decimal": 2633,
     "baseDecimal": 2633,
     "intervals": [
       "R",
       "4",
+      "♯5",
       "7",
-      "9",
-      "♭13"
+      "9"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -3690,29 +3719,30 @@
     "pcs": [
       0,
       4,
-      2,
-      8
+      8,
+      2
     ],
     "notes": [
       "C",
       "E",
-      "D",
-      "A♭"
+      "G♯",
+      "D"
     ],
     "aliases": [
       "M#5add9",
-      "+add9"
+      "+add9",
+      "augadd9"
     ],
     "fullName": "augmented added ninth",
     "binary": "101010001000",
-    "forteNumber": "",
+    "forteNumber": "4-24",
     "decimal": 2696,
     "baseDecimal": 2696,
     "intervals": [
       "R",
       "3",
-      "9",
-      "♭13"
+      "♯5",
+      "9"
     ],
     "namedInversions": [],
     "compatibleScales": [],
