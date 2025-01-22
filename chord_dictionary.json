@@ -25806,11 +25806,12 @@
     "aliases": [
       "7add6",
       "67",
-      "7add13"
+      "7add13",
+      "7/6"
     ],
     "fullName": "dominant added thirteenth",
     "binary": "100010010110",
-    "forteNumber": "",
+    "forteNumber": "5-25B",
     "decimal": 2198,
     "baseDecimal": 2198,
     "intervals": [
