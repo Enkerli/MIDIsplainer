@@ -1169,7 +1169,7 @@
       "B♭",
       "A♭"
     ],
-    "aliases": [],
+    "aliases": ["7b6"],
     "fullName": "dominant seventh flat thirteen",
     "binary": "100010011010",
     "forteNumber": "5-26B",
@@ -1808,48 +1808,6 @@
     "compatibleScales": [],
     "avoidNotes": []
   },
-  "m13": {
-    "pcs": [
-      0,
-      3,
-      7,
-      10,
-      2,
-      5,
-      9
-    ],
-    "notes": [
-      "C",
-      "E♭",
-      "G",
-      "B♭",
-      "D",
-      "F",
-      "A"
-    ],
-    "aliases": [
-      "m13",
-      "-13",
-      "min13"
-    ],
-    "fullName": "minor thirteenth",
-    "binary": "101101010110",
-    "forteNumber": "7-35",
-    "decimal": 2902,
-    "baseDecimal": 2902,
-    "intervals": [
-      "R",
-      "♭3",
-      "5",
-      "♭7",
-      "9",
-      "11",
-      "13"
-    ],
-    "namedInversions": [],
-    "compatibleScales": [],
-    "avoidNotes": []
-  },
   "m7add11": {
     "pcs": [
       0,
@@ -2327,40 +2285,6 @@
       "3",
       "♭7",
       "♭9"
-    ],
-    "namedInversions": [],
-    "compatibleScales": [],
-    "avoidNotes": []
-  },
-  "7b6": {
-    "pcs": [
-      0,
-      4,
-      7,
-      10,
-      8
-    ],
-    "notes": [
-      "C",
-      "E",
-      "G",
-      "B♭",
-      "A♭"
-    ],
-    "aliases": [
-      "7b6"
-    ],
-    "fullName": "dominant flat sixth",
-    "binary": "100010011010",
-    "forteNumber": "5-26B",
-    "decimal": 2202,
-    "baseDecimal": 2202,
-    "intervals": [
-      "R",
-      "3",
-      "5",
-      "♭7",
-      "♭13"
     ],
     "namedInversions": [],
     "compatibleScales": [],
