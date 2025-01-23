@@ -681,7 +681,7 @@
     ],
     "fullName": "minor ninth",
     "binary": "101100010010",
-    "forteNumber": "5-27A",
+    "forteNumber": "5-27B",
     "decimal": 2834,
     "baseDecimal": 2834,
     "intervals": [
@@ -758,7 +758,7 @@
     ],
     "fullName": "minor eleventh",
     "binary": "101101010010",
-    "forteNumber": "",
+    "forteNumber": "6-32",
     "decimal": 2898,
     "baseDecimal": 2898,
     "intervals": [
@@ -837,10 +837,13 @@
       "F",
       "A"
     ],
-    "aliases": [],
+    "aliases": [
+      "m13",
+      "-13"
+    ],
     "fullName": "minor thirteenth",
     "binary": "101101010110",
-    "forteNumber": "",
+    "forteNumber": "7-35",
     "decimal": 2902,
     "baseDecimal": 2902,
     "intervals": [
@@ -872,7 +875,7 @@
     ],
     "fullName": "suspended second",
     "binary": "101000010000",
-    "forteNumber": "",
+    "forteNumber": "3-9",
     "decimal": 2576,
     "baseDecimal": 2576,
     "intervals": [
@@ -901,7 +904,7 @@
     ],
     "fullName": "suspended fourth",
     "binary": "100001010000",
-    "forteNumber": "",
+    "forteNumber": "3-9",
     "decimal": 2128,
     "baseDecimal": 2128,
     "intervals": [
@@ -2237,31 +2240,31 @@
     "pcs": [
       0,
       3,
-      11,
+      6,
       9,
-      6
+      11
     ],
     "notes": [
       "C",
       "E♭",
-      "B",
-      "A",
-      "G♭"
+      "G♭",
+      "B𝄫",
+      "B"
     ],
     "aliases": [
       "o7M7"
     ],
     "fullName": "diminished seventh Major seventh",
     "binary": "100100100101",
-    "forteNumber": "",
+    "forteNumber": "5-31B",
     "decimal": 2341,
     "baseDecimal": 2341,
     "intervals": [
       "R",
       "♭3",
-      "7",
-      "13",
-      "♭5"
+      "♭5",
+      "𝄫7",
+      "7"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -2271,28 +2274,28 @@
     "pcs": [
       0,
       3,
-      11,
-      6
+      6,
+      11
     ],
     "notes": [
       "C",
       "E♭",
-      "B",
-      "G♭"
+      "G♭",
+      "B"
     ],
     "aliases": [
       "oM7"
     ],
     "fullName": "diminished/Major seventh",
     "binary": "100100100001",
-    "forteNumber": "",
+    "forteNumber": "4-18A",
     "decimal": 2337,
     "baseDecimal": 2337,
     "intervals": [
       "R",
       "♭3",
-      "7",
-      "♭5"
+      "♭5",
+      "7"
     ],
     "namedInversions": [],
     "compatibleScales": [],
@@ -3348,11 +3351,13 @@
     "pcs": [
       0,
       2,
+      5,
       7
     ],
     "notes": [
       "C",
       "D",
+      "F",
       "G"
     ],
     "aliases": [
@@ -3360,13 +3365,14 @@
       "sus4add9"
     ],
     "fullName": "suspended second fourth",
-    "binary": "101000010000",
-    "forteNumber": "",
-    "decimal": 2576,
-    "baseDecimal": 2576,
+    "binary": "101001010000",
+    "forteNumber": "4-23",
+    "decimal": 2640,
+    "baseDecimal": 2640,
     "intervals": [
       "R",
       "2",
+      "4",
       "5"
     ],
     "namedInversions": [],
