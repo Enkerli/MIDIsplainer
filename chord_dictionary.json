@@ -1997,17 +1997,17 @@
       "B"
     ],
     "aliases": [
-      "mb6M7"
+      "mb6M7",
+      "mM7#5"
     ],
     "fullName": "minor flat sixth major seventh",
     "binary": "100100001001",
-    "forteNumber": "5-21A",
+    "forteNumber": "4-17",
     "decimal": 2313,
     "baseDecimal": 2313,
     "intervals": [
       "R",
       "♭3",
-      "5",
       "♭6",
       "7"
     ],
