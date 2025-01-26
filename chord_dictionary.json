@@ -2002,10 +2002,10 @@
       "mM7#5"
     ],
     "fullName": "minor flat sixth major seventh",
-    "binary": "100100001001",
+    "binary": "100100011001",
     "forteNumber": "5-21A",
-    "decimal": 2313,
-    "baseDecimal": 2313,
+    "decimal": 2329,
+    "baseDecimal": 2329,
     "intervals": [
       "R",
       "♭3",
