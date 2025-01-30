@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chord Dictionary Transposer</title>
+    <title>Chord Dictionary</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -87,6 +87,25 @@
             </div>
         </div>
     </div>
+	<div class="checkbox-container">
+		<label><input type="checkbox" class="export-field" value="intervals" checked> Intervals</label>
+		<label><input type="checkbox" class="export-field" value="fullName" checked> Full Name</label>
+		<label><input type="checkbox" class="export-field" value="aliases" checked> Aliases</label>
+		<label><input type="checkbox" class="export-field" value="forteNumber" checked> Forte Number</label>
+		<label><input type="checkbox" class="export-field" value="namedInversions" checked> Named Inversions</label>
+		<label><input type="checkbox" class="export-field" value="avoidNotes" checked> Avoid Notes</label>
+		<label><input type="checkbox" class="export-field" value="compatibleScales" checked> Compatible Scales</label>
+		<label><input type="checkbox" class="export-field" value="transpositions" id="transpositions-checkbox" checked> Transpositions</label>
+	</div>
+
+	<div id="transposition-options" class="checkbox-container" style="margin-left: 20px; display: block;">
+		<label><input type="checkbox" class="transposition-field" value="notes" checked> Notes</label>
+		<label><input type="checkbox" class="transposition-field" value="pcs" checked> Pitch Classes</label>
+		<label><input type="checkbox" class="transposition-field" value="binary" checked> Binary</label>
+		<label><input type="checkbox" class="transposition-field" value="decimal" checked> Decimal</label>
+	</div>
+
+	<button onclick="exportChordDictionary()">Export JSON</button>
 
     <script>
         const intervalToPc = {
@@ -94,6 +113,26 @@
             '♭5': 6, '5': 7, '♯5': 8, '♭6': 8, '6': 9, '♭7': 10, '7': 11,
             '𝄫7': 9, '♭9': 1, '9': 2, '♯9': 3, '11': 5, '♯11': 6, '♭13': 8, '13': 9
         };
+		const qualitySelect = document.getElementById('qualitySelect');
+		const rootSelect = document.getElementById('rootSelect');
+		const resultDiv = document.getElementById('result');
+
+		let chordData = {};
+
+		// Load chord dictionary
+		fetch('chord_dictionary.json')
+			.then(response => response.json())
+			.then(data => {
+				chordData = data;
+				// Populate quality select
+				Object.keys(data).sort().forEach(quality => {
+					const option = document.createElement('option');
+					option.value = quality;
+					option.textContent = quality;
+					qualitySelect.appendChild(option);
+				});
+			})
+			.catch(error => console.error('Error loading chord data:', error));
 
         function getPC(note) {
             // Handle double accidentals
@@ -143,452 +182,274 @@
             return targetLetter;
         }
 
-        function transposeChord(root, quality, chordData) {
-            if (!chordData[quality]) return null;
-            const chord = chordData[quality];
-
-            // If root is C, use the exact notes from JSON
-            if (root === 'C') {
-                return {
-                    ...chord,
-                    notes: chord.notes,
-                    pcs: chord.pcs,
-                    binary: chord.binary,
-                    decimal: chord.decimal
-                };
-            }
-
-            // Otherwise transpose from C
-            const transposedNotes = chord.notes.map(cNote => transposeNote(root, cNote));
-            const pcs = transposedNotes.map(note => getPC(note));
-            
-            // Generate binary from PCs
-            const binary = Array(12).fill('0');
-            pcs.forEach(pc => binary[pc] = '1');
-            const binaryStr = binary.join('');
-            
-            return {
-                ...chord,
-                notes: transposedNotes,
-                pcs,
-                binary: binaryStr,
-                decimal: parseInt(binaryStr, 2)
-            };
-        }
-
-        let chordData = {};
-        const qualitySelect = document.getElementById('qualitySelect');
-        const rootSelect = document.getElementById('rootSelect');
-        const resultDiv = document.getElementById('result');
-
-        // Load chord dictionary
-        fetch('chord_dictionary.json')
-            .then(response => response.json())
-            .then(data => {
-                chordData = data;
-                // Populate quality select
-                Object.keys(data).sort().forEach(quality => {
-                    const option = document.createElement('option');
-                    option.value = quality;
-                    option.textContent = quality;
-                    qualitySelect.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Error loading chord data:', error));
-
-        function updateChordDisplay() {
-            const root = rootSelect.value;
-            const quality = qualitySelect.value;
-            
-            if (!quality) {
-                resultDiv.style.display = 'none';
-                return;
-            }
-
-            const chord = transposeChord(root, quality, chordData);
-            if (!chord) return;
-
-            document.getElementById('chordTitle').textContent = `${root}${quality}`;
-            document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
-            document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
-            document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
-            document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
-            document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
-            document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
-            document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
-            document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
-
-            resultDiv.style.display = 'block';
-        }
-
-        rootSelect.addEventListener('change', updateChordDisplay);
-        qualitySelect.addEventListener('change', updateChordDisplay);
-    
-function exportChordDictionary() {
-    const jsonBlob = new Blob([JSON.stringify(chordData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(jsonBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "chord_dictionary_export.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-
-function exportChordDictionary() {
-    const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
-        .map(checkbox => checkbox.value);
-
-    const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-    let exportData = {};
-
-    Object.keys(chordData).forEach(quality => {
-        let chord = chordData[quality];
-        let exportedChord = {};
-
-        selectedFields.forEach(field => {
-            if (field !== "transpositions") {
-                exportedChord[field] = chord[field];
-            }
-        });
-
-        if (selectedFields.includes("transpositions")) {
-            exportedChord.transpositions = {};
-            roots.forEach(root => {
-                let transposed = transposeChord(root, quality, chordData);
-                exportedChord.transpositions[root] = {
-                    notes: transposed.notes,
-                    pcs: transposed.pcs,
-                    binary: transposed.binary,
-                    decimal: transposed.decimal
-                };
-            });
-        }
-
-        exportData[quality] = exportedChord;
-    });
-
-    const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(jsonBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "chord_dictionary_export.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-</script>
-
-<div class="checkbox-container">
-    <label><input type="checkbox" class="export-field" value="intervals" checked> Intervals</label>
-    <label><input type="checkbox" class="export-field" value="fullName" checked> Full Name</label>
-    <label><input type="checkbox" class="export-field" value="aliases" checked> Aliases</label>
-    <label><input type="checkbox" class="export-field" value="forteNumber" checked> Forte Number</label>
-    <label><input type="checkbox" class="export-field" value="namedInversions" checked> Named Inversions</label>
-    <label><input type="checkbox" class="export-field" value="avoidNotes" checked> Avoid Notes</label>
-    <label><input type="checkbox" class="export-field" value="compatibleScales" checked> Compatible Scales</label>
-    <label><input type="checkbox" class="export-field" value="transpositions" checked> Transpositions</label>
-</div>
-
-<button onclick="exportChordDictionary()">Export JSON</button>
-
-
-<div class="checkbox-container">
-    <label><input type="checkbox" class="export-field" value="intervals" checked> Intervals</label>
-    <label><input type="checkbox" class="export-field" value="fullName" checked> Full Name</label>
-    <label><input type="checkbox" class="export-field" value="aliases" checked> Aliases</label>
-    <label><input type="checkbox" class="export-field" value="forteNumber" checked> Forte Number</label>
-    <label><input type="checkbox" class="export-field" value="namedInversions" checked> Named Inversions</label>
-    <label><input type="checkbox" class="export-field" value="avoidNotes" checked> Avoid Notes</label>
-    <label><input type="checkbox" class="export-field" value="compatibleScales" checked> Compatible Scales</label>
-    <label><input type="checkbox" class="export-field" value="transpositions" id="transpositions-checkbox" checked> Transpositions</label>
-</div>
-
-<div id="transposition-options" class="checkbox-container" style="margin-left: 20px; display: block;">
-    <label><input type="checkbox" class="transposition-field" value="notes" checked> Notes</label>
-    <label><input type="checkbox" class="transposition-field" value="pcs" checked> Pitch Classes</label>
-    <label><input type="checkbox" class="transposition-field" value="binary" checked> Binary</label>
-    <label><input type="checkbox" class="transposition-field" value="decimal" checked> Decimal</label>
-</div>
-
-<button onclick="exportChordDictionary()">Export JSON</button>
-
-<script>
-document.getElementById('transpositions-checkbox').addEventListener('change', function() {
-    document.getElementById('transposition-options').style.display = this.checked ? 'block' : 'none';
-});
-
-function exportChordDictionary() {
-    const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
-        .map(checkbox => checkbox.value);
-
-    const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
-        .map(checkbox => checkbox.value);
-
-    const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-    let exportData = {};
-
-    Object.keys(chordData).forEach(quality => {
-        let chord = chordData[quality];
-        let exportedChord = {};
-
-        selectedFields.forEach(field => {
-            if (field !== "transpositions") {
-                exportedChord[field] = chord[field];
-            }
-        });
-
-        if (selectedFields.includes("transpositions")) {
-            exportedChord.transpositions = {};
-            roots.forEach(root => {
-                let transposed = transposeChord(root, quality, chordData);
-                exportedChord.transpositions[root] = {};
-
-                transpositionFields.forEach(tField => {
-                    exportedChord.transpositions[root][tField] = transposed[tField];
-                });
-            });
-        }
-
-        exportData[quality] = exportedChord;
-    });
-
-    const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(jsonBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "chord_dictionary_export.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-</script>
-
-
-<div class="card">
-    <div class="title">Named Inversions</div>
-    <div id="namedInversionsList" class="content"></div>
-</div>
-
-<script>
-function findNamedInversions() {
-    let decimalMap = {};
-    let namedInversionsMap = {};
-
-    const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-
-    Object.keys(chordData).forEach(quality => {
-        roots.forEach(root => {
-            let transposed = transposeChord(root, quality, chordData);
-            if (!transposed) return;
-
-            let decimal = transposed.decimal;
-            let chordName = root + quality;
-
-            if (!decimalMap[decimal]) {
-                decimalMap[decimal] = [];
-            }
-            decimalMap[decimal].push(chordName);
-        });
-    });
-
-    // Populate named inversions and update UI
-    let namedInversionsHTML = "";
-    Object.keys(decimalMap).forEach(decimal => {
-        if (decimalMap[decimal].length > 1) {
-            let chords = decimalMap[decimal];
-            namedInversionsHTML += `<p><strong>Decimal ${decimal}:</strong> ${chords.join(", ")}</p>`;
-
-            chords.forEach(chord => {
-                namedInversionsMap[chord] = chords.filter(c => c !== chord);
-            });
-        }
-    });
-
-    document.getElementById("namedInversionsList").innerHTML = namedInversionsHTML;
-
-    return namedInversionsMap;
-}
-
-// Update named inversions before export
-function exportChordDictionary() {
-    let namedInversionsMap = findNamedInversions();
-    
-    const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
-        .map(checkbox => checkbox.value);
-
-    const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
-        .map(checkbox => checkbox.value);
-
-    const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-    let exportData = {};
-
-    Object.keys(chordData).forEach(quality => {
-        let chord = chordData[quality];
-        let exportedChord = {};
-
-        selectedFields.forEach(field => {
-            if (field !== "transpositions") {
-                exportedChord[field] = chord[field];
-            }
-        });
-
-        if (selectedFields.includes("transpositions")) {
-            exportedChord.transpositions = {};
-            roots.forEach(root => {
-                let transposed = transposeChord(root, quality, chordData);
-                exportedChord.transpositions[root] = {};
-
-                transpositionFields.forEach(tField => {
-                    exportedChord.transpositions[root][tField] = transposed[tField];
-                });
-            });
-        }
-
-        let chordName = "C" + quality;  // The standard representation in the dictionary
-        if (namedInversionsMap[chordName]) {
-            exportedChord.namedInversions = namedInversionsMap[chordName];
-        }
-
-        exportData[quality] = exportedChord;
-    });
-
-    const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(jsonBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "chord_dictionary_export.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-// Populate named inversions on page load
-document.addEventListener("DOMContentLoaded", function() {
-    findNamedInversions();
-});
-</script>
-
-
-<div class="card">
-    <div class="title">Named Inversions</div>
-    <div id="namedInversionsList" class="content"></div>
-</div>
-
-<script>
-function findNamedInversions() {
-    let decimalMap = {};
-    let namedInversionsMap = {};
-
-    const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-    const semitoneMap = {
-        "C": 0, "C♯": 1, "D": 2, "D♯": 3, "E": 4, "F": 5, "F♯": 6, 
-        "G": 7, "G♯": 8, "A": 9, "A♯": 10, "B": 11
-    };
-
-    Object.keys(chordData).forEach(quality => {
-        roots.forEach(root => {
-            let transposed = transposeChord(root, quality, chordData);
-            if (!transposed) return;
-
-            let decimal = transposed.decimal;
-            let chordIdentifier = root + " " + quality;
-
-            if (!decimalMap[decimal]) {
-                decimalMap[decimal] = [];
-            }
-            decimalMap[decimal].push({ root: root, quality: quality });
-        });
-    });
-
-    // Populate named inversions and update UI
-    let namedInversionsHTML = "";
-    Object.keys(decimalMap).forEach(decimal => {
-        if (decimalMap[decimal].length > 1) {
-            let chords = decimalMap[decimal];
-            namedInversionsHTML += `<p><strong>Decimal ${decimal}:</strong> ${chords.map(c => c.root + " " + c.quality).join(", ")}</p>`;
-
-            chords.forEach(chord => {
-                let chordQuality = chord.quality;
-                if (!namedInversionsMap[chordQuality]) {
-                    namedInversionsMap[chordQuality] = [];
-                }
-
-                chords.forEach(otherChord => {
-                    if (otherChord.quality !== chord.quality || otherChord.root !== chord.root) {
-                        let interval = (semitoneMap[otherChord.root] - semitoneMap[chord.root] + 12) % 12;
-                        let inversionEntry = `(${interval})${otherChord.quality}`;
-                        if (!namedInversionsMap[chordQuality].includes(inversionEntry)) {
-                            namedInversionsMap[chordQuality].push(inversionEntry);
-                        }
-                    }
-                });
-            });
-        }
-    });
-
-    document.getElementById("namedInversionsList").innerHTML = namedInversionsHTML;
-
-    return namedInversionsMap;
-}
-
-// Update named inversions before export
-function exportChordDictionary() {
-    let namedInversionsMap = findNamedInversions();
-    
-    const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
-        .map(checkbox => checkbox.value);
-
-    const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
-        .map(checkbox => checkbox.value);
-
-    const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-    let exportData = {};
-
-    Object.keys(chordData).forEach(quality => {
-        let chord = chordData[quality];
-        let exportedChord = {};
-
-        selectedFields.forEach(field => {
-            if (field !== "transpositions") {
-                exportedChord[field] = chord[field];
-            }
-        });
-
-        if (selectedFields.includes("transpositions")) {
-            exportedChord.transpositions = {};
-            roots.forEach(root => {
-                let transposed = transposeChord(root, quality, chordData);
-                exportedChord.transpositions[root] = {};
-
-                transpositionFields.forEach(tField => {
-                    exportedChord.transpositions[root][tField] = transposed[tField];
-                });
-            });
-        }
-
-        if (namedInversionsMap[quality]) {
-            exportedChord.namedInversions = namedInversionsMap[quality];
-        }
-
-        exportData[quality] = exportedChord;
-    });
-
-    const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(jsonBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "chord_dictionary_export.json";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
-
-// Populate named inversions on page load
-document.addEventListener("DOMContentLoaded", function() {
-    findNamedInversions();
-});
+		function transposeChord(root, quality, chordData) {
+				if (!chordData[quality]) return null;
+				const chord = chordData[quality];
+
+				// If root is C, use the exact notes from JSON
+				if (root === 'C') {
+					return {
+						...chord,
+						notes: chord.notes,
+						pcs: chord.pcs,
+						binary: chord.binary,
+						decimal: chord.decimal
+					};
+				}
+
+				// Otherwise transpose from C
+				const transposedNotes = chord.notes.map(cNote => transposeNote(root, cNote));
+				const pcs = transposedNotes.map(note => getPC(note));
+			
+				// Generate binary from PCs
+				const binary = Array(12).fill('0');
+				pcs.forEach(pc => binary[pc] = '1');
+				const binaryStr = binary.join('');
+			
+				return {
+					...chord,
+					notes: transposedNotes,
+					pcs,
+					binary: binaryStr,
+					decimal: parseInt(binaryStr, 2)
+				};
+			}
+
+		function updateChordDisplay() {
+			const root = rootSelect.value;
+			const quality = qualitySelect.value;
+		
+			if (!quality) {
+				resultDiv.style.display = 'none';
+				return;
+			}
+
+			const chord = transposeChord(root, quality, chordData);
+			if (!chord) return;
+
+			document.getElementById('chordTitle').textContent = `${root}${quality}`;
+			document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
+			document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
+			document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
+			document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
+			document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
+			document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
+			document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
+			document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
+
+			resultDiv.style.display = 'block';
+		}
+
+		rootSelect.addEventListener('change', updateChordDisplay);
+		qualitySelect.addEventListener('change', updateChordDisplay);
+
+		function exportChordDictionary() {
+			const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
+				.map(checkbox => checkbox.value);
+
+			const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
+				.map(checkbox => checkbox.value);
+
+			const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+			let exportData = {};
+
+			Object.keys(chordData).forEach(quality => {
+				let chord = chordData[quality];
+				let exportedChord = {};
+
+				selectedFields.forEach(field => {
+					if (field !== "transpositions") {
+						exportedChord[field] = chord[field];
+					}
+				});
+
+				if (selectedFields.includes("transpositions")) {
+					exportedChord.transpositions = {};
+					roots.forEach(root => {
+						let transposed = transposeChord(root, quality, chordData);
+						exportedChord.transpositions[root] = {};
+
+						transpositionFields.forEach(tField => {
+							exportedChord.transpositions[root][tField] = transposed[tField];
+						});
+					});
+				}
+
+				exportData[quality] = exportedChord;
+			});
+
+			const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+			const url = URL.createObjectURL(jsonBlob);
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = "chord_dictionary_export.json";
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+
+		// Update named inversions before export
+		function exportChordDictionary() {
+			let namedInversionsMap = findNamedInversions();
+	
+			const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
+				.map(checkbox => checkbox.value);
+
+			const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
+				.map(checkbox => checkbox.value);
+
+			const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+			let exportData = {};
+
+			Object.keys(chordData).forEach(quality => {
+				let chord = chordData[quality];
+				let exportedChord = {};
+
+				selectedFields.forEach(field => {
+					if (field !== "transpositions") {
+						exportedChord[field] = chord[field];
+					}
+				});
+
+				if (selectedFields.includes("transpositions")) {
+					exportedChord.transpositions = {};
+					roots.forEach(root => {
+						let transposed = transposeChord(root, quality, chordData);
+						exportedChord.transpositions[root] = {};
+
+						transpositionFields.forEach(tField => {
+							exportedChord.transpositions[root][tField] = transposed[tField];
+						});
+					});
+				}
+
+				let chordName = "C" + quality;  // The standard representation in the dictionary
+				if (namedInversionsMap[chordName]) {
+					exportedChord.namedInversions = namedInversionsMap[chordName];
+				}
+
+				exportData[quality] = exportedChord;
+			});
+
+			const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+			const url = URL.createObjectURL(jsonBlob);
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = "chord_dictionary_export.json";
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+
+		function findNamedInversions() {
+			let decimalMap = {};
+			let namedInversionsMap = {};
+
+			const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+			const semitoneMap = {
+				"C": 0, "C♯": 1, "D": 2, "D♯": 3, "E": 4, "F": 5, "F♯": 6, 
+				"G": 7, "G♯": 8, "A": 9, "A♯": 10, "B": 11
+			};
+
+			Object.keys(chordData).forEach(quality => {
+				roots.forEach(root => {
+					let transposed = transposeChord(root, quality, chordData);
+					if (!transposed) return;
+
+					let decimal = transposed.decimal;
+					let chordIdentifier = root + " " + quality;
+
+					if (!decimalMap[decimal]) {
+						decimalMap[decimal] = [];
+					}
+					decimalMap[decimal].push({ root: root, quality: quality });
+				});
+			});
+
+			// Populate named inversions and update UI
+			let namedInversionsHTML = "";
+			Object.keys(decimalMap).forEach(decimal => {
+				if (decimalMap[decimal].length > 1) {
+					let chords = decimalMap[decimal];
+
+					chords.forEach(chord => {
+						let chordQuality = chord.quality;
+						if (!namedInversionsMap[chordQuality]) {
+							namedInversionsMap[chordQuality] = [];
+						}
+
+						chords.forEach(otherChord => {
+							if (otherChord.quality !== chord.quality || otherChord.root !== chord.root) {
+								let interval = (semitoneMap[otherChord.root] - semitoneMap[chord.root] + 12) % 12;
+								let inversionEntry = `(${interval})${otherChord.quality}`;
+								if (!namedInversionsMap[chordQuality].includes(inversionEntry)) {
+									namedInversionsMap[chordQuality].push(inversionEntry);
+								}
+							}
+						});
+					});
+				}
+			});
+
+			return namedInversionsMap;
+		}
+
+		// Update named inversions before export
+		function exportChordDictionary() {
+			let namedInversionsMap = findNamedInversions();
+	
+			const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
+				.map(checkbox => checkbox.value);
+
+			const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
+				.map(checkbox => checkbox.value);
+
+			const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+			let exportData = {};
+
+			Object.keys(chordData).forEach(quality => {
+				let chord = chordData[quality];
+				let exportedChord = {};
+
+				selectedFields.forEach(field => {
+					if (field !== "transpositions") {
+						exportedChord[field] = chord[field];
+					}
+				});
+
+				if (selectedFields.includes("transpositions")) {
+					exportedChord.transpositions = {};
+					roots.forEach(root => {
+						let transposed = transposeChord(root, quality, chordData);
+						exportedChord.transpositions[root] = {};
+
+						transpositionFields.forEach(tField => {
+							exportedChord.transpositions[root][tField] = transposed[tField];
+						});
+					});
+				}
+
+				if (namedInversionsMap[quality]) {
+					exportedChord.namedInversions = namedInversionsMap[quality];
+				}
+
+				exportData[quality] = exportedChord;
+			});
+
+			const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
+			const url = URL.createObjectURL(jsonBlob);
+			const link = document.createElement("a");
+			link.href = url;
+			link.download = "chord_dictionary_export.json";
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}
+
+		document.getElementById('transpositions-checkbox').addEventListener('change', function() {
+			document.getElementById('transposition-options').style.display = this.checked ? 'block' : 'none';
+		});
+
 </script>
 
 </body>
