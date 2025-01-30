@@ -1982,41 +1982,6 @@
     "compatibleScales": [],
     "avoidNotes": []
   },
-  "mb6M7": {
-    "pcs": [
-      0,
-      3,
-      7,
-      8,
-      11
-    ],
-    "notes": [
-      "C",
-      "E♭",
-      "G",
-      "A♭",
-      "B"
-    ],
-    "aliases": [
-      "mb6M7",
-      "mM7#5"
-    ],
-    "fullName": "minor flat sixth major seventh",
-    "binary": "100100011001",
-    "forteNumber": "5-21A",
-    "decimal": 2329,
-    "baseDecimal": 2329,
-    "intervals": [
-      "R",
-      "♭3",
-      "5",
-      "♭6",
-      "7"
-    ],
-    "namedInversions": [],
-    "compatibleScales": [],
-    "avoidNotes": []
-  },
   "m7#5": {
     "pcs": [
       0,
