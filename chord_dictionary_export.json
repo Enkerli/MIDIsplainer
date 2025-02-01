@@ -12,10 +12,7 @@
       "quartal"
     ],
     "forteNumber": "4-23",
-    "namedInversions": [
-      "(5)7sus4",
-      "(10)sus24"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -388,9 +385,7 @@
       "M6"
     ],
     "forteNumber": "4-26",
-    "namedInversions": [
-      "(9)min7"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -1049,10 +1044,7 @@
       "dom11"
     ],
     "forteNumber": "6-33B",
-    "namedInversions": [
-      "(10)69#11",
-      "(2)m11A"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -1314,11 +1306,7 @@
       "dom13"
     ],
     "forteNumber": "7-35",
-    "namedInversions": [
-      "(5)maj13",
-      "(7)min13",
-      "(10)M13#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -1603,9 +1591,7 @@
       "Maj"
     ],
     "forteNumber": "3-11B",
-    "namedInversions": [
-      "(4)m#5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -2167,10 +2153,7 @@
       "^#5"
     ],
     "forteNumber": "3-12",
-    "namedInversions": [
-      "(4)aug",
-      "(8)aug"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -2364,9 +2347,7 @@
       "^7"
     ],
     "forteNumber": "4-20",
-    "namedInversions": [
-      "(4)mb6"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -2579,9 +2560,7 @@
       "-7"
     ],
     "forteNumber": "4-26",
-    "namedInversions": [
-      "(3)6"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -2793,11 +2772,7 @@
       "o7"
     ],
     "forteNumber": "4-28",
-    "namedInversions": [
-      "(3)dim7",
-      "(6)dim7",
-      "(9)dim7"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -2806,7 +2781,7 @@
           "C",
           "E♭",
           "G♭",
-          "A"
+          "B𝄫"
         ],
         "pcs": [
           0,
@@ -2822,7 +2797,7 @@
           "C♯",
           "E",
           "G",
-          "A♯"
+          "B♭"
         ],
         "pcs": [
           1,
@@ -2838,7 +2813,7 @@
           "D",
           "F",
           "A♭",
-          "B"
+          "C♭"
         ],
         "pcs": [
           2,
@@ -2854,7 +2829,7 @@
           "D♯",
           "F♯",
           "A",
-          "B♯"
+          "C"
         ],
         "pcs": [
           3,
@@ -2870,7 +2845,7 @@
           "E",
           "G",
           "B♭",
-          "C♯"
+          "D♭"
         ],
         "pcs": [
           4,
@@ -2886,7 +2861,7 @@
           "F",
           "A♭",
           "C♭",
-          "D"
+          "E𝄫"
         ],
         "pcs": [
           5,
@@ -2902,7 +2877,7 @@
           "F♯",
           "A",
           "C",
-          "D♯"
+          "E♭"
         ],
         "pcs": [
           6,
@@ -2918,7 +2893,7 @@
           "G",
           "B♭",
           "D♭",
-          "E"
+          "F♭"
         ],
         "pcs": [
           7,
@@ -2934,7 +2909,7 @@
           "G♯",
           "B",
           "D",
-          "E♯"
+          "F"
         ],
         "pcs": [
           8,
@@ -2950,7 +2925,7 @@
           "A",
           "C",
           "E♭",
-          "F♯"
+          "G♭"
         ],
         "pcs": [
           9,
@@ -2966,7 +2941,7 @@
           "A♯",
           "C♯",
           "E",
-          "F𝄪"
+          "G"
         ],
         "pcs": [
           10,
@@ -2982,7 +2957,7 @@
           "B",
           "D",
           "F",
-          "G♯"
+          "A♭"
         ],
         "pcs": [
           11,
@@ -3015,9 +2990,7 @@
       "min7b5"
     ],
     "forteNumber": "4-27A",
-    "namedInversions": [
-      "(3)m6"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -3460,9 +3433,7 @@
       "+∆7"
     ],
     "forteNumber": "4-19B",
-    "namedInversions": [
-      "(8)+add#9"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -3674,9 +3645,7 @@
       "mM6"
     ],
     "forteNumber": "4-27A",
-    "namedInversions": [
-      "(9)m7b5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -4628,9 +4597,7 @@
       "-11"
     ],
     "forteNumber": "6-32",
-    "namedInversions": [
-      "(5)13sus4"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -4896,11 +4863,7 @@
       "∆13"
     ],
     "forteNumber": "7-35",
-    "namedInversions": [
-      "(7)13",
-      "(2)min13",
-      "(5)M13#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -5186,11 +5149,7 @@
       "-13"
     ],
     "forteNumber": "7-35",
-    "namedInversions": [
-      "(5)13",
-      "(10)maj13",
-      "(3)M13#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -5471,9 +5430,7 @@
       "sus2"
     ],
     "forteNumber": "3-9",
-    "namedInversions": [
-      "(7)sus4"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -5659,9 +5616,7 @@
       "sus"
     ],
     "forteNumber": "3-9",
-    "namedInversions": [
-      "(5)sus2"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -5848,10 +5803,7 @@
       "7sus"
     ],
     "forteNumber": "4-23",
-    "namedInversions": [
-      "(7)4",
-      "(5)sus24"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -6063,10 +6015,7 @@
       "9sus"
     ],
     "forteNumber": "5-35",
-    "namedInversions": [
-      "(10)6add9",
-      "(7)m7add11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -6300,9 +6249,7 @@
       "7b5"
     ],
     "forteNumber": "4-25",
-    "namedInversions": [
-      "(6)7b5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -6518,9 +6465,7 @@
       "aug7"
     ],
     "forteNumber": "4-24",
-    "namedInversions": [
-      "(8)M#5add9"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -6731,9 +6676,7 @@
       "7b9"
     ],
     "forteNumber": "5-31B",
-    "namedInversions": [
-      "(1)o7M7"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -7439,9 +7382,7 @@
       "7b6"
     ],
     "forteNumber": "5-26B",
-    "namedInversions": [
-      "(8)maj9#5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -7680,10 +7621,7 @@
       "M6/9"
     ],
     "forteNumber": "5-35",
-    "namedInversions": [
-      "(2)9sus4",
-      "(9)m7add11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -8157,10 +8095,7 @@
       "69#11"
     ],
     "forteNumber": "6-33B",
-    "namedInversions": [
-      "(2)11",
-      "(4)m11A"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -8663,9 +8598,7 @@
       "∆#11"
     ],
     "forteNumber": "6-z26",
-    "namedInversions": [
-      "(2)13no5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -8925,9 +8858,7 @@
       "maj7#9#11"
     ],
     "forteNumber": "6-z19B",
-    "namedInversions": [
-      "(4)mMaj9b6"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -9191,11 +9122,7 @@
       "M13#4"
     ],
     "forteNumber": "7-35",
-    "namedInversions": [
-      "(2)13",
-      "(7)maj13",
-      "(9)min13"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -9719,9 +9646,7 @@
       "majadd2"
     ],
     "forteNumber": "4-22A",
-    "namedInversions": [
-      "(4)m7#5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -9932,10 +9857,7 @@
       "majaddb9"
     ],
     "forteNumber": "4-18A",
-    "namedInversions": [
-      "(1)o7M7",
-      "(1)oM7"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -10786,9 +10708,7 @@
       "-b6"
     ],
     "forteNumber": "4-20",
-    "namedInversions": [
-      "(8)maj7"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -11004,9 +10924,7 @@
       "m6add9"
     ],
     "forteNumber": "5-29B",
-    "namedInversions": [
-      "(2)b9sus"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -11243,9 +11161,7 @@
       "-7b9"
     ],
     "forteNumber": "5-25B",
-    "namedInversions": [
-      "(3)7add6"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -11719,10 +11635,7 @@
       "m7add4"
     ],
     "forteNumber": "5-35",
-    "namedInversions": [
-      "(5)9sus4",
-      "(3)6add9"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -11959,9 +11872,7 @@
       "minadd11"
     ],
     "forteNumber": "4-22B",
-    "namedInversions": [
-      "(7)7#5sus4"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -12408,9 +12319,7 @@
       "mMaj9b6"
     ],
     "forteNumber": "6-z19B",
-    "namedInversions": [
-      "(8)maj7#9#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -12671,9 +12580,7 @@
       "minadd2"
     ],
     "forteNumber": "4-14A",
-    "namedInversions": [
-      "(7)7b13sus"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -12886,9 +12793,7 @@
       "augm7"
     ],
     "forteNumber": "4-22A",
-    "namedInversions": [
-      "(8)Madd9"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -13340,10 +13245,7 @@
       "m11aug"
     ],
     "forteNumber": "6-33B",
-    "namedInversions": [
-      "(10)11",
-      "(8)69#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -13838,9 +13740,7 @@
       "ø9"
     ],
     "forteNumber": "5-26A",
-    "namedInversions": [
-      "(2)7#5b9"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -14075,11 +13975,7 @@
       "o7M7"
     ],
     "forteNumber": "5-31B",
-    "namedInversions": [
-      "(11)Maddb9",
-      "(0)oM7",
-      "(11)7b9"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -14106,198 +14002,198 @@
           "C♯",
           "E",
           "G",
-          "B♯",
+          "B♭",
           "B♯"
         ],
         "pcs": [
           1,
           4,
           7,
-          0,
+          10,
           0
         ],
-        "binary": "110010010000",
-        "decimal": 3216
+        "binary": "110010010010",
+        "decimal": 3218
       },
       "D": {
         "notes": [
           "D",
           "F",
           "A♭",
-          "C♯",
+          "C♭",
           "C♯"
         ],
         "pcs": [
           2,
           5,
           8,
-          1,
+          11,
           1
         ],
-        "binary": "011001001000",
-        "decimal": 1608
+        "binary": "011001001001",
+        "decimal": 1609
       },
       "D♯": {
         "notes": [
           "D♯",
           "F♯",
           "A",
-          "C𝄪",
+          "C",
           "C𝄪"
         ],
         "pcs": [
           3,
           6,
           9,
-          2,
+          0,
           2
         ],
-        "binary": "001100100100",
-        "decimal": 804
+        "binary": "101100100100",
+        "decimal": 2852
       },
       "E": {
         "notes": [
           "E",
           "G",
           "B♭",
-          "D♯",
+          "D♭",
           "D♯"
         ],
         "pcs": [
           4,
           7,
           10,
-          3,
+          1,
           3
         ],
-        "binary": "000110010010",
-        "decimal": 402
+        "binary": "010110010010",
+        "decimal": 1426
       },
       "F": {
         "notes": [
           "F",
           "A♭",
           "C♭",
-          "E",
+          "E𝄫",
           "E"
         ],
         "pcs": [
           5,
           8,
           11,
-          4,
+          2,
           4
         ],
-        "binary": "000011001001",
-        "decimal": 201
+        "binary": "001011001001",
+        "decimal": 713
       },
       "F♯": {
         "notes": [
           "F♯",
           "A",
           "C",
-          "E♯",
+          "E♭",
           "E♯"
         ],
         "pcs": [
           6,
           9,
           0,
-          5,
+          3,
           5
         ],
-        "binary": "100001100100",
-        "decimal": 2148
+        "binary": "100101100100",
+        "decimal": 2404
       },
       "G": {
         "notes": [
           "G",
           "B♭",
           "D♭",
-          "F♯",
+          "F♭",
           "F♯"
         ],
         "pcs": [
           7,
           10,
           1,
-          6,
+          4,
           6
         ],
-        "binary": "010000110010",
-        "decimal": 1074
+        "binary": "010010110010",
+        "decimal": 1202
       },
       "G♯": {
         "notes": [
           "G♯",
           "B",
           "D",
-          "F𝄪",
+          "F",
           "F𝄪"
         ],
         "pcs": [
           8,
           11,
           2,
-          7,
+          5,
           7
         ],
-        "binary": "001000011001",
-        "decimal": 537
+        "binary": "001001011001",
+        "decimal": 601
       },
       "A": {
         "notes": [
           "A",
           "C",
           "E♭",
-          "G♯",
+          "G♭",
           "G♯"
         ],
         "pcs": [
           9,
           0,
           3,
-          8,
+          6,
           8
         ],
-        "binary": "100100001100",
-        "decimal": 2316
+        "binary": "100100101100",
+        "decimal": 2348
       },
       "A♯": {
         "notes": [
           "A♯",
           "C♯",
           "E",
-          "G𝄪",
+          "G",
           "G𝄪"
         ],
         "pcs": [
           10,
           1,
           4,
-          9,
+          7,
           9
         ],
-        "binary": "010010000110",
-        "decimal": 1158
+        "binary": "010010010110",
+        "decimal": 1174
       },
       "B": {
         "notes": [
           "B",
           "D",
           "F",
-          "A♯",
+          "A♭",
           "A♯"
         ],
         "pcs": [
           11,
           2,
           5,
-          10,
+          8,
           10
         ],
-        "binary": "001001000011",
-        "decimal": 579
+        "binary": "001001001011",
+        "decimal": 587
       }
     }
   },
@@ -14313,10 +14209,7 @@
       "oM7"
     ],
     "forteNumber": "4-18A",
-    "namedInversions": [
-      "(11)Maddb9",
-      "(0)o7M7"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -15001,9 +14894,7 @@
       "7/6"
     ],
     "forteNumber": "5-25B",
-    "namedInversions": [
-      "(9)m7b9"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -16618,9 +16509,7 @@
       "9#4"
     ],
     "forteNumber": "6-34B",
-    "namedInversions": [
-      "(6)7#5b9#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -17456,9 +17345,7 @@
       "7b9b5"
     ],
     "forteNumber": "6-30B",
-    "namedInversions": [
-      "(6)7b9#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -19334,9 +19221,7 @@
       "9b13"
     ],
     "forteNumber": "5-33",
-    "namedInversions": [
-      "(10)9b5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -19574,13 +19459,7 @@
       "9+#11"
     ],
     "forteNumber": "6-35",
-    "namedInversions": [
-      "(2)9#5#11",
-      "(4)9#5#11",
-      "(6)9#5#11",
-      "(8)9#5#11",
-      "(10)9#5#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -19840,9 +19719,7 @@
       "7b9#5"
     ],
     "forteNumber": "5-26A",
-    "namedInversions": [
-      "(10)m9b5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -20078,9 +19955,7 @@
       "7#5b9#11"
     ],
     "forteNumber": "6-34B",
-    "namedInversions": [
-      "(6)9#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -20625,9 +20500,7 @@
       "9dim"
     ],
     "forteNumber": "5-33",
-    "namedInversions": [
-      "(2)9#5"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -21258,9 +21131,7 @@
       "13no5"
     ],
     "forteNumber": "6-z26",
-    "namedInversions": [
-      "(10)maj9#11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -21519,10 +21390,7 @@
       "sus4add9"
     ],
     "forteNumber": "4-23",
-    "namedInversions": [
-      "(2)4",
-      "(7)7sus4"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -21739,9 +21607,7 @@
       "7susb9"
     ],
     "forteNumber": "5-29B",
-    "namedInversions": [
-      "(10)m69"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -21978,9 +21844,7 @@
       "13sus"
     ],
     "forteNumber": "6-32",
-    "namedInversions": [
-      "(7)min11"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -23400,9 +23264,7 @@
       "7b13sus4"
     ],
     "forteNumber": "4-14A",
-    "namedInversions": [
-      "(5)madd9"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -23612,9 +23474,7 @@
       "7#5sus4"
     ],
     "forteNumber": "4-22B",
-    "namedInversions": [
-      "(5)madd4"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -23826,9 +23686,7 @@
       "maug"
     ],
     "forteNumber": "3-11B",
-    "namedInversions": [
-      "(8)maj"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -24018,9 +23876,7 @@
       "M9#5"
     ],
     "forteNumber": "5-26B",
-    "namedInversions": [
-      "(4)7b13"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -24256,9 +24112,7 @@
       "augadd9"
     ],
     "forteNumber": "4-24",
-    "namedInversions": [
-      "(4)aug7"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
@@ -24469,9 +24323,7 @@
       "augadd#9"
     ],
     "forteNumber": "4-19B",
-    "namedInversions": [
-      "(4)augMaj7"
-    ],
+    "namedInversions": [],
     "avoidNotes": [],
     "compatibleScales": [],
     "transpositions": {
