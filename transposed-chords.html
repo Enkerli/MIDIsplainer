@@ -309,14 +309,33 @@
 	
 			// Add new inversions if any exist
 			if (specificInversions.length > 0) {
-				const inversionsElement = document.createElement('p');
-				inversionsElement.id = 'inversions';
+				// Separate alternative spellings (interval 0) from true inversions
+				const altSpellings = specificInversions.filter(inv => inv.interval === 0);
+				const trueInversions = specificInversions.filter(inv => inv.interval !== 0);
 		
-				// Create a line for each inversion
-				const inversionLines = specificInversions.map(formatInversion);
-				inversionsElement.innerHTML = `Named Inversions:<br>${inversionLines.join('<br>')}`;
+				// Create container for all inversion-related info
+				const inversionsContainer = document.createElement('div');
+				inversionsContainer.id = 'inversions';
 		
-				document.getElementById('result').querySelector('.content').appendChild(inversionsElement);
+				// Add alternative spellings if they exist
+				if (altSpellings.length > 0) {
+					const altElement = document.createElement('p');
+					const altLines = altSpellings.map(alt => 
+						`${alt.chord}, [${alt.notes.join(', ')}]`
+					);
+					altElement.innerHTML = `Alternative spellings:<br>${altLines.join('<br>')}`;
+					inversionsContainer.appendChild(altElement);
+				}
+		
+				// Add true inversions if they exist
+				if (trueInversions.length > 0) {
+					const invElement = document.createElement('p');
+					const inversionLines = trueInversions.map(formatInversion);
+					invElement.innerHTML = `Named Inversions:<br>${inversionLines.join('<br>')}`;
+					inversionsContainer.appendChild(invElement);
+				}
+		
+				document.getElementById('result').querySelector('.content').appendChild(inversionsContainer);
 			}
 
 			resultDiv.style.display = 'block';
@@ -459,10 +478,25 @@
 							pcs: transposed.pcs.sort((a, b) => a - b)
 						};
 
-						// Add specific inversions only if they exist
+						// Add specific inversions and alternative spellings if they exist
 						const specificInversions = findSpecificInversions(root, quality, roots, chordData);
 						if (specificInversions.length > 0) {
-							exportedChord.transpositions[root].namedInversions = specificInversions;
+							const altSpellings = specificInversions
+								.filter(inv => inv.interval === 0)
+								.map(alt => ({
+									chord: alt.chord,
+									notes: alt.notes
+								}));
+					
+							const trueInversions = specificInversions.filter(inv => inv.interval !== 0);
+					
+							if (altSpellings.length > 0) {
+								exportedChord.transpositions[root].alternativeSpellings = altSpellings;
+							}
+					
+							if (trueInversions.length > 0) {
+								exportedChord.transpositions[root].namedInversions = trueInversions;
+							}
 						}
 					});
 				}
@@ -486,10 +520,14 @@
 
 
 
+	
+
 
 
 
 		
+
+
 
 
 
