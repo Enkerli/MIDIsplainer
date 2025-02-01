@@ -72,6 +72,7 @@
             <option value="">Select quality...</option>
         </select>
     </div>
+
     <div id="result" class="card" style="display: none">
         <div class="title" id="chordTitle"></div>
         <div class="content">
@@ -87,25 +88,62 @@
             </div>
         </div>
     </div>
-	<div class="checkbox-container">
-		<label><input type="checkbox" class="export-field" value="intervals" checked> Intervals</label>
-		<label><input type="checkbox" class="export-field" value="fullName" checked> Full Name</label>
-		<label><input type="checkbox" class="export-field" value="aliases" checked> Aliases</label>
-		<label><input type="checkbox" class="export-field" value="forteNumber" checked> Forte Number</label>
-		<label><input type="checkbox" class="export-field" value="namedInversions" checked> Named Inversions</label>
-		<label><input type="checkbox" class="export-field" value="avoidNotes" checked> Avoid Notes</label>
-		<label><input type="checkbox" class="export-field" value="compatibleScales" checked> Compatible Scales</label>
-		<label><input type="checkbox" class="export-field" value="transpositions" id="transpositions-checkbox" checked> Transpositions</label>
+
+
+
+	<!-- Replace the existing checkbox-container divs with this -->
+	<div class="controls-section" style="margin: 20px 0;">
+		<h3>Export Options</h3>
+		<div class="checkbox-container">
+			<h4>Include Fields:</h4>
+			<label><input type="checkbox" class="export-field" value="intervals" checked> Intervals</label>
+			<label><input type="checkbox" class="export-field" value="fullName" checked> Full Name</label>
+			<label><input type="checkbox" class="export-field" value="aliases" checked> Aliases</label>
+			<label><input type="checkbox" class="export-field" value="forteNumber" checked> Forte Number</label>
+			<label><input type="checkbox" class="export-field" value="namedInversions" checked> Named Inversions</label>
+			<label><input type="checkbox" class="export-field" value="avoidNotes" checked> Avoid Notes</label>
+			<label><input type="checkbox" class="export-field" value="compatibleScales" checked> Compatible Scales</label>
+			<label><input type="checkbox" class="export-field" value="transpositions" id="transpositions-checkbox" checked> Transpositions</label>
+		</div>
+	
+		<div id="transposition-options" class="checkbox-container" style="margin-left: 20px; display: block;">
+			<h4>Transposition Fields:</h4>
+			<label><input type="checkbox" class="transposition-field" value="notes" checked> Notes</label>
+			<label><input type="checkbox" class="transposition-field" value="pcs" checked> Pitch Classes</label>
+			<label><input type="checkbox" class="transposition-field" value="binary" checked> Binary</label>
+			<label><input type="checkbox" class="transposition-field" value="decimal" checked> Decimal</label>
+			<label><input type="checkbox" class="transposition-field" value="namedInversions" checked> Specific Inversions</label>
+		</div>
 	</div>
 
-    <div id="transposition-options" class="checkbox-container" style="margin-left: 20px; display: block;">
-        <label><input type="checkbox" class="transposition-field" value="notes" checked> Notes</label>
-        <label><input type="checkbox" class="transposition-field" value="pcs" checked> Pitch Classes</label>
-        <label><input type="checkbox" class="transposition-field" value="binary" checked> Binary</label>
-        <label><input type="checkbox" class="transposition-field" value="decimal" checked> Decimal</label>
-    </div>
+	<button onclick="exportChordDictionary()">Export JSON</button>
 
-    <button onclick="exportChordDictionary()">Export JSON</button>
+	<style>
+		.controls-section {
+			background: #f5f5f5;
+			padding: 15px;
+			border-radius: 8px;
+			margin-bottom: 20px;
+		}
+	
+		.checkbox-container {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-top: 5px;
+		}
+	
+		.checkbox-container label {
+			display: flex;
+			align-items: center;
+			gap: 5px;
+		}
+	
+		h4 {
+			width: 100%;
+			margin: 5px 0;
+		}
+	</style>
 
     <script>
         // Interval definitions for both pitch class and letter steps
@@ -236,30 +274,50 @@
             })
             .catch(error => console.error('Error loading chord data:', error));
 
-        function updateChordDisplay() {
-            const root = rootSelect.value;
-            const quality = qualitySelect.value;
-            
-            if (!quality) {
-                resultDiv.style.display = 'none';
-                return;
-            }
+        // Update the display function to show inversions
+		function updateChordDisplay() {
+			const root = rootSelect.value;
+			const quality = qualitySelect.value;
+	
+			if (!quality) {
+				resultDiv.style.display = 'none';
+				return;
+			}
 
-            const chord = transposeChord(root, quality, chordData);
-            if (!chord) return;
+			const chord = transposeChord(root, quality, chordData);
+			if (!chord) return;
 
-            document.getElementById('chordTitle').textContent = `${root}${quality}`;
-            document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
-            document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
-            document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
-            document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
-            document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
-            document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
-            document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
-            document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
+			const specificInversions = findSpecificInversions(root, quality, 
+				['C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯', 'A♭', 'A', 'A♯', 'B♭', 'B'],
+				chordData);
 
-            resultDiv.style.display = 'block';
-        }
+			document.getElementById('chordTitle').textContent = `${root}${quality}`;
+			document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
+			document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
+			document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
+			document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
+			document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
+			document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
+			document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
+			document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
+	
+			// Remove any existing inversions element
+			const existingInversions = document.getElementById('inversions');
+			if (existingInversions) {
+				existingInversions.remove();
+			}
+	
+			// Add new inversions if any exist
+			if (specificInversions.length > 0) {
+				const inversionsElement = document.createElement('p');
+				inversionsElement.id = 'inversions';
+				inversionsElement.textContent = `Named Inversions: ${specificInversions.join(', ')}`;
+				document.getElementById('result').querySelector('.content').appendChild(inversionsElement);
+			}
+
+			resultDiv.style.display = 'block';
+		}
+
 
         rootSelect.addEventListener('change', updateChordDisplay);
         qualitySelect.addEventListener('change', updateChordDisplay);
@@ -314,8 +372,48 @@
 
             return namedInversionsMap;
         }
+        
+        // Helper function to compare sets
+		function setsEqual(set1, set2) {
+			if (set1.size !== set2.size) return false;
+			for (const item of set1) {
+				if (!set2.has(item)) return false;
+			}
+			return true;
+		}
+		
+		// Add function to find specific inversions for a transposed chord
+		function findSpecificInversions(root, quality, roots, chordData) {
+			const inversions = [];
+			const currentChord = transposeChord(root, quality, chordData);
+			if (!currentChord) return inversions;
 
-		// Update named inversions before export
+			const currentPCs = new Set(currentChord.pcs);
+	
+			roots.forEach(otherRoot => {
+				Object.keys(chordData).forEach(otherQuality => {
+					if (root === otherRoot && quality === otherQuality) return;
+			
+					const otherChord = transposeChord(otherRoot, otherQuality, chordData);
+					if (!otherChord) return;
+
+					const otherPCs = new Set(otherChord.pcs);
+			
+					// Check if pitch class sets are equal
+					if (setsEqual(currentPCs, otherPCs)) {
+						// Calculate interval between roots
+						const interval = (getPC(otherRoot) - getPC(root) + 12) % 12;
+						inversions.push(`${otherRoot}${otherQuality} (${interval})`);
+					}
+				});
+			});
+
+			return inversions;
+		}
+
+
+
+		// Update the roots array in the export function
 		function exportChordDictionary() {
 			let namedInversionsMap = findNamedInversions();
 	
@@ -325,7 +423,7 @@
 			const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
 				.map(checkbox => checkbox.value);
 
-			const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+			const roots = ['C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯', 'A♭', 'A', 'A♯', 'B♭', 'B'];
 			let exportData = {};
 
 			Object.keys(chordData).forEach(quality => {
@@ -342,17 +440,25 @@
 					exportedChord.transpositions = {};
 					roots.forEach(root => {
 						let transposed = transposeChord(root, quality, chordData);
+						if (!transposed) return;
+				
 						exportedChord.transpositions[root] = {};
-
+				
 						transpositionFields.forEach(tField => {
 							exportedChord.transpositions[root][tField] = transposed[tField];
 						});
+
+						// Add specific inversions for this transposed chord
+						const specificInversions = findSpecificInversions(root, quality, roots, chordData);
+						if (specificInversions.length > 0) {
+							exportedChord.transpositions[root].namedInversions = specificInversions;
+						}
 					});
 				}
 
-				let chordName = "C" + quality;  // The standard representation in the dictionary
-				if (namedInversionsMap[chordName]) {
-					exportedChord.namedInversions = namedInversionsMap[chordName];
+				// Add generic inversions at the chord quality level
+				if (namedInversionsMap[quality]) {
+					exportedChord.namedInversions = namedInversionsMap[quality];
 				}
 
 				exportData[quality] = exportedChord;
@@ -367,10 +473,12 @@
 			link.click();
 			document.body.removeChild(link);
 		}
+
 		
 		
 		
-		
+
+
 
 
 
