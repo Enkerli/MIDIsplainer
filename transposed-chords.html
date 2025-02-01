@@ -98,225 +98,222 @@
 		<label><input type="checkbox" class="export-field" value="transpositions" id="transpositions-checkbox" checked> Transpositions</label>
 	</div>
 
-	<div id="transposition-options" class="checkbox-container" style="margin-left: 20px; display: block;">
-		<label><input type="checkbox" class="transposition-field" value="notes" checked> Notes</label>
-		<label><input type="checkbox" class="transposition-field" value="pcs" checked> Pitch Classes</label>
-		<label><input type="checkbox" class="transposition-field" value="binary" checked> Binary</label>
-		<label><input type="checkbox" class="transposition-field" value="decimal" checked> Decimal</label>
-	</div>
+    <div id="transposition-options" class="checkbox-container" style="margin-left: 20px; display: block;">
+        <label><input type="checkbox" class="transposition-field" value="notes" checked> Notes</label>
+        <label><input type="checkbox" class="transposition-field" value="pcs" checked> Pitch Classes</label>
+        <label><input type="checkbox" class="transposition-field" value="binary" checked> Binary</label>
+        <label><input type="checkbox" class="transposition-field" value="decimal" checked> Decimal</label>
+    </div>
 
-	<button onclick="exportChordDictionary()">Export JSON</button>
+    <button onclick="exportChordDictionary()">Export JSON</button>
 
     <script>
-        const intervalToPc = {
-            'R': 0, '♭2': 1, '2': 2, '♭3': 3, '3': 4, '4': 5, '♯4': 6,
-            '♭5': 6, '5': 7, '♯5': 8, '♭6': 8, '6': 9, '♭7': 10, '7': 11,
-            '𝄫7': 9, '♭9': 1, '9': 2, '♯9': 3, '11': 5, '♯11': 6, '♭13': 8, '13': 9
+        // Interval definitions for both pitch class and letter steps
+        const intervalMap = {
+            'R':    { letters: 0, semitones: 0 },
+            '♭2':   { letters: 1, semitones: 1 },
+            '2':    { letters: 1, semitones: 2 },
+            '♭3':   { letters: 2, semitones: 3 },
+            '3':    { letters: 2, semitones: 4 },
+            '4':    { letters: 3, semitones: 5 },
+            '♯4':   { letters: 3, semitones: 6 },
+            '♭5':   { letters: 4, semitones: 6 },
+            '5':    { letters: 4, semitones: 7 },
+            '♯5':   { letters: 4, semitones: 8 },
+            '♭6':   { letters: 5, semitones: 8 },
+            '6':    { letters: 5, semitones: 9 },
+            '𝄫7':   { letters: 6, semitones: 9 },
+            '♭7':   { letters: 6, semitones: 10 },
+            '7':    { letters: 6, semitones: 11 },
+            '♭9':   { letters: 1, semitones: 1 },
+            '9':    { letters: 1, semitones: 2 },
+            '♯9':   { letters: 1, semitones: 3 },
+            '11':   { letters: 3, semitones: 5 },
+            '♯11':  { letters: 3, semitones: 6 },
+            '♭13':  { letters: 5, semitones: 8 },
+            '13':   { letters: 5, semitones: 9 }
         };
-		const qualitySelect = document.getElementById('qualitySelect');
-		const rootSelect = document.getElementById('rootSelect');
-		const resultDiv = document.getElementById('result');
 
-		let chordData = {};
-
-		// Load chord dictionary
-		fetch('chord_dictionary.json')
-			.then(response => response.json())
-			.then(data => {
-				chordData = data;
-				// Populate quality select
-				Object.keys(data).sort().forEach(quality => {
-					const option = document.createElement('option');
-					option.value = quality;
-					option.textContent = quality;
-					qualitySelect.appendChild(option);
-				});
-			})
-			.catch(error => console.error('Error loading chord data:', error));
+        const qualitySelect = document.getElementById('qualitySelect');
+        const rootSelect = document.getElementById('rootSelect');
+        const resultDiv = document.getElementById('result');
+        
+        let chordData = {};
 
         function getPC(note) {
-			// Handle double accidentals
-			if (note.includes('𝄪') || note.includes('♯♯')) {
-				const baseLetter = note[0];
-				const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[baseLetter];
-				return (basePC + 2) % 12;
-			}
-			if (note.includes('𝄫') || note.includes('♭♭')) {
-				const baseLetter = note[0];
-				const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[baseLetter];
-				return (basePC - 2 + 12) % 12;
-			}
+            const letterPCs = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 };
+            const baseLetter = note[0];
+            const basePC = letterPCs[baseLetter];
+            
+            if (note.includes('𝄫')) return (basePC - 2 + 12) % 12;
+            if (note.includes('𝄪')) return (basePC + 2) % 12;
+            if (note.includes('♭♭')) return (basePC - 2 + 12) % 12;
+            if (note.includes('♯')) return (basePC + 1) % 12;
+            if (note.includes('♭')) return (basePC - 1 + 12) % 12;
+            return basePC;
+        }
 
-			// Handle single accidentals
-			const letter = note[0];
-			const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[letter];
-	
-			if (note.includes('♯')) return (basePC + 1) % 12;
-			if (note.includes('♭')) return (basePC - 1 + 12) % 12;
-			return basePC;
-		}
-        
-        function transposeNote(root, cNote) {
-			if (root === 'C') return cNote;
+        function buildNoteFromInterval(root, interval) {
+            const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+            const letterPCs = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 };
+            
+            // Get root letter index
+            const rootIndex = letters.indexOf(root[0]);
+            
+            // Calculate target letter using interval's letter steps
+            const targetLetterIndex = (rootIndex + interval.letters) % 7;
+            const targetLetter = letters[targetLetterIndex];
+            
+            // Calculate target PC using root's PC plus interval's semitones
+            const rootPC = getPC(root);
+            const targetPC = (rootPC + interval.semitones) % 12;
+            
+            // Calculate needed alteration
+            const naturalPC = letterPCs[targetLetter];
+            const alteration = (targetPC - naturalPC + 12) % 12;
+            
+            // Return the note with appropriate accidental
+            if (alteration === 0) return targetLetter;
+            if (alteration === 1) return targetLetter + '♯';
+            if (alteration === 2) return targetLetter + '𝄪';
+            if (alteration === 10) return targetLetter + '𝄫';
+            if (alteration === 11) return targetLetter + '♭';
+            
+            console.warn('Unexpected alteration:', alteration);
+            return targetLetter;
+        }
 
-			const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-	
-			// Special handling for double-flat seventh
-			if (cNote.includes('𝄫')) {
-				const rootLetterIndex = letters.indexOf(root[0]);
-				// For diminished seventh, get the seventh scale degree
-				let targetLetterIndex = (rootLetterIndex + 6) % 7;  // Up six letters for seventh
-				const targetLetter = letters[targetLetterIndex];
-		
-				// For o7M7 chords, we need a double flat
-				if (cNote === 'B𝄫' && root.includes('♭')) {
-					return targetLetter + '𝄫';
-				}
-				// For regular dim7 chords and non-flat-root o7M7 chords
-				return targetLetter + '♭';
-			}
+        function transposeChord(root, quality, chordData) {
+            if (!chordData[quality]) return null;
+            const chord = chordData[quality];
 
-			const interval = getPC(cNote);
-			const rootPC = getPC(root);
-			const targetPC = (interval + rootPC) % 12;
+            // If root is C, use the exact notes from JSON
+            if (root === 'C') {
+                return {
+                    ...chord,
+                    notes: chord.notes,
+                    pcs: chord.pcs,
+                    binary: chord.binary,
+                    decimal: chord.decimal
+                };
+            }
 
-			// Get letter name based on root letter
-			const rootLetterIndex = letters.indexOf(root[0]);
-			const cNoteLetterIndex = letters.indexOf(cNote[0]);
-			// This needs to match the C-based interval structure
-			const letterOffset = (cNoteLetterIndex - letters.indexOf('C') + 7) % 7;
-			const targetLetterIndex = (rootLetterIndex + letterOffset) % 7;
-			const targetLetter = letters[targetLetterIndex];
+            // Build each note from intervals
+            const transposedNotes = chord.intervals.map(intervalName => {
+                const interval = intervalMap[intervalName];
+                return buildNoteFromInterval(root, interval);
+            });
 
-			// Calculate required accidentals
-			const naturalPC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[targetLetter];
-			const needed = (targetPC - naturalPC + 12) % 12;
+            // Calculate pitch classes
+            const pcs = transposedNotes.map(note => getPC(note));
 
-			// Map the pitch class difference to the appropriate accidental
-			switch (needed) {
-				case 0:  // No accidental needed
-					return targetLetter;
-				case 1:  // Sharp
-					return targetLetter + '♯';
-				case 2:  // Double sharp
-					return targetLetter + '𝄪';
-				case 3:  // Triple sharp
-					return targetLetter + '♯𝄪';
-				case 10: // Double flat
-					return targetLetter + '♭♭';
-				case 11: // Flat
-					return targetLetter + '♭';
-				default:
-					console.warn('Unexpected accidental:', needed, 'for note:', targetLetter);
-					return targetLetter;
-			}
-		}
-        
-		function transposeChord(root, quality, chordData) {
-			if (!chordData[quality]) return null;
-			const chord = chordData[quality];
+            // Generate binary from PCs
+            const binary = Array(12).fill('0');
+            pcs.forEach(pc => binary[pc] = '1');
+            const binaryStr = binary.join('');
 
-			// If root is C, use the exact notes from JSON
-			if (root === 'C') {
-				return {
-					...chord,
-					notes: chord.notes,
-					pcs: chord.pcs,
-					binary: chord.binary,
-					decimal: chord.decimal
-				};
-			}
+            return {
+                ...chord,
+                notes: transposedNotes,
+                pcs,
+                binary: binaryStr,
+                decimal: parseInt(binaryStr, 2)
+            };
+        }
 
-			// Otherwise transpose from C
-			const transposedNotes = chord.notes.map(cNote => transposeNote(root, cNote, quality));
-			const pcs = transposedNotes.map(note => getPC(note));
+        // Load chord dictionary
+        fetch('chord_dictionary.json')
+            .then(response => response.json())
+            .then(data => {
+                chordData = data;
+                // Populate quality select
+                Object.keys(data).sort().forEach(quality => {
+                    const option = document.createElement('option');
+                    option.value = quality;
+                    option.textContent = quality;
+                    qualitySelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading chord data:', error));
 
-			// Generate binary from PCs
-			const binary = Array(12).fill('0');
-			pcs.forEach(pc => binary[pc] = '1');
-			const binaryStr = binary.join('');
+        function updateChordDisplay() {
+            const root = rootSelect.value;
+            const quality = qualitySelect.value;
+            
+            if (!quality) {
+                resultDiv.style.display = 'none';
+                return;
+            }
 
-			return {
-				...chord,
-				notes: transposedNotes,
-				pcs,
-				binary: binaryStr,
-				decimal: parseInt(binaryStr, 2)
-			};
-		}
+            const chord = transposeChord(root, quality, chordData);
+            if (!chord) return;
 
-		function updateChordDisplay() {
-			const root = rootSelect.value;
-			const quality = qualitySelect.value;
-		
-			if (!quality) {
-				resultDiv.style.display = 'none';
-				return;
-			}
+            document.getElementById('chordTitle').textContent = `${root}${quality}`;
+            document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
+            document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
+            document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
+            document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
+            document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
+            document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
+            document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
+            document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
 
-			const chord = transposeChord(root, quality, chordData);
-			if (!chord) return;
+            resultDiv.style.display = 'block';
+        }
 
-			document.getElementById('chordTitle').textContent = `${root}${quality}`;
-			document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
-			document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
-			document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
-			document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
-			document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
-			document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
-			document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
-			document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
+        rootSelect.addEventListener('change', updateChordDisplay);
+        qualitySelect.addEventListener('change', updateChordDisplay);
 
-			resultDiv.style.display = 'block';
-		}
+        function findNamedInversions() {
+            let decimalMap = {};
+            let namedInversionsMap = {};
 
-		rootSelect.addEventListener('change', updateChordDisplay);
-		qualitySelect.addEventListener('change', updateChordDisplay);
+            const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+            const semitoneMap = {
+                "C": 0, "C♯": 1, "D": 2, "D♯": 3, "E": 4, "F": 5, "F♯": 6, 
+                "G": 7, "G♯": 8, "A": 9, "A♯": 10, "B": 11
+            };
 
-		function exportChordDictionary() {
-			const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
-				.map(checkbox => checkbox.value);
+            Object.keys(chordData).forEach(quality => {
+                roots.forEach(root => {
+                    let transposed = transposeChord(root, quality, chordData);
+                    if (!transposed) return;
 
-			const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
-				.map(checkbox => checkbox.value);
+                    let decimal = transposed.decimal;
+                    let chordIdentifier = root + " " + quality;
 
-			const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-			let exportData = {};
+                    if (!decimalMap[decimal]) {
+                        decimalMap[decimal] = [];
+                    }
+                    decimalMap[decimal].push({ root: root, quality: quality });
+                });
+            });
 
-			Object.keys(chordData).forEach(quality => {
-				let chord = chordData[quality];
-				let exportedChord = {};
+            Object.keys(decimalMap).forEach(decimal => {
+                if (decimalMap[decimal].length > 1) {
+                    let chords = decimalMap[decimal];
 
-				selectedFields.forEach(field => {
-					if (field !== "transpositions") {
-						exportedChord[field] = chord[field];
-					}
-				});
+                    chords.forEach(chord => {
+                        let chordQuality = chord.quality;
+                        if (!namedInversionsMap[chordQuality]) {
+                            namedInversionsMap[chordQuality] = [];
+                        }
 
-				if (selectedFields.includes("transpositions")) {
-					exportedChord.transpositions = {};
-					roots.forEach(root => {
-						let transposed = transposeChord(root, quality, chordData);
-						exportedChord.transpositions[root] = {};
+                        chords.forEach(otherChord => {
+                            if (otherChord.quality !== chord.quality || otherChord.root !== chord.root) {
+                                let interval = (semitoneMap[otherChord.root] - semitoneMap[chord.root] + 12) % 12;
+                                let inversionEntry = `(${interval})${otherChord.quality}`;
+                                if (!namedInversionsMap[chordQuality].includes(inversionEntry)) {
+                                    namedInversionsMap[chordQuality].push(inversionEntry);
+                                }
+                            }
+                        });
+                    });
+                }
+            });
 
-						transpositionFields.forEach(tField => {
-							exportedChord.transpositions[root][tField] = transposed[tField];
-						});
-					});
-				}
-
-				exportData[quality] = exportedChord;
-			});
-
-			const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-			const url = URL.createObjectURL(jsonBlob);
-			const link = document.createElement("a");
-			link.href = url;
-			link.download = "chord_dictionary_export.json";
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-		}
+            return namedInversionsMap;
+        }
 
 		// Update named inversions before export
 		function exportChordDictionary() {
@@ -370,111 +367,16 @@
 			link.click();
 			document.body.removeChild(link);
 		}
+		
+		
+		
+		
 
-		function findNamedInversions() {
-			let decimalMap = {};
-			let namedInversionsMap = {};
 
-			const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-			const semitoneMap = {
-				"C": 0, "C♯": 1, "D": 2, "D♯": 3, "E": 4, "F": 5, "F♯": 6, 
-				"G": 7, "G♯": 8, "A": 9, "A♯": 10, "B": 11
-			};
 
-			Object.keys(chordData).forEach(quality => {
-				roots.forEach(root => {
-					let transposed = transposeChord(root, quality, chordData);
-					if (!transposed) return;
 
-					let decimal = transposed.decimal;
-					let chordIdentifier = root + " " + quality;
 
-					if (!decimalMap[decimal]) {
-						decimalMap[decimal] = [];
-					}
-					decimalMap[decimal].push({ root: root, quality: quality });
-				});
-			});
-
-			// Populate named inversions and update UI
-			let namedInversionsHTML = "";
-			Object.keys(decimalMap).forEach(decimal => {
-				if (decimalMap[decimal].length > 1) {
-					let chords = decimalMap[decimal];
-
-					chords.forEach(chord => {
-						let chordQuality = chord.quality;
-						if (!namedInversionsMap[chordQuality]) {
-							namedInversionsMap[chordQuality] = [];
-						}
-
-						chords.forEach(otherChord => {
-							if (otherChord.quality !== chord.quality || otherChord.root !== chord.root) {
-								let interval = (semitoneMap[otherChord.root] - semitoneMap[chord.root] + 12) % 12;
-								let inversionEntry = `(${interval})${otherChord.quality}`;
-								if (!namedInversionsMap[chordQuality].includes(inversionEntry)) {
-									namedInversionsMap[chordQuality].push(inversionEntry);
-								}
-							}
-						});
-					});
-				}
-			});
-
-			return namedInversionsMap;
-		}
-
-		// Update named inversions before export
-		function exportChordDictionary() {
-			let namedInversionsMap = findNamedInversions();
-	
-			const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
-				.map(checkbox => checkbox.value);
-
-			const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
-				.map(checkbox => checkbox.value);
-
-			const roots = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
-			let exportData = {};
-
-			Object.keys(chordData).forEach(quality => {
-				let chord = chordData[quality];
-				let exportedChord = {};
-
-				selectedFields.forEach(field => {
-					if (field !== "transpositions") {
-						exportedChord[field] = chord[field];
-					}
-				});
-
-				if (selectedFields.includes("transpositions")) {
-					exportedChord.transpositions = {};
-					roots.forEach(root => {
-						let transposed = transposeChord(root, quality, chordData);
-						exportedChord.transpositions[root] = {};
-
-						transpositionFields.forEach(tField => {
-							exportedChord.transpositions[root][tField] = transposed[tField];
-						});
-					});
-				}
-
-				if (namedInversionsMap[quality]) {
-					exportedChord.namedInversions = namedInversionsMap[quality];
-				}
-
-				exportData[quality] = exportedChord;
-			});
-
-			const jsonBlob = new Blob([JSON.stringify(exportData, null, 2)], { type: "application/json" });
-			const url = URL.createObjectURL(jsonBlob);
-			const link = document.createElement("a");
-			link.href = url;
-			link.download = "chord_dictionary_export.json";
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-		}
+				
 
 		document.getElementById('transpositions-checkbox').addEventListener('change', function() {
 			document.getElementById('transposition-options').style.display = this.checked ? 'block' : 'none';
