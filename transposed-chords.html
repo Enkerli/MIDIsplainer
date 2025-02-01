@@ -274,7 +274,7 @@
             })
             .catch(error => console.error('Error loading chord data:', error));
 
-        // Update the display function to show inversions
+        // Update display function
 		function updateChordDisplay() {
 			const root = rootSelect.value;
 			const quality = qualitySelect.value;
@@ -311,7 +311,11 @@
 			if (specificInversions.length > 0) {
 				const inversionsElement = document.createElement('p');
 				inversionsElement.id = 'inversions';
-				inversionsElement.textContent = `Named Inversions: ${specificInversions.join(', ')}`;
+		
+				// Create a line for each inversion
+				const inversionLines = specificInversions.map(formatInversion);
+				inversionsElement.innerHTML = `Named Inversions:<br>${inversionLines.join('<br>')}`;
+		
 				document.getElementById('result').querySelector('.content').appendChild(inversionsElement);
 			}
 
@@ -382,7 +386,7 @@
 			return true;
 		}
 		
-		// Add function to find specific inversions for a transposed chord
+		// Find specific inversions with full details
 		function findSpecificInversions(root, quality, roots, chordData) {
 			const inversions = [];
 			const currentChord = transposeChord(root, quality, chordData);
@@ -403,24 +407,31 @@
 					if (setsEqual(currentPCs, otherPCs)) {
 						// Calculate interval between roots
 						const interval = (getPC(otherRoot) - getPC(root) + 12) % 12;
-						inversions.push(`${otherRoot}${otherQuality} (${interval})`);
+				
+						inversions.push({
+							interval,
+							chord: `${otherRoot}${otherQuality}`,
+							intervals: otherChord.intervals,
+							notes: otherChord.notes,
+							pcs: otherChord.notes.map(note => getPC(note))
+						});
 					}
 				});
 			});
 
-			return inversions;
+			// Sort by interval
+			return inversions.sort((a, b) => a.interval - b.interval);
 		}
 
+		
+		// Format inversion for display
+		function formatInversion(inv) {
+			return `(${inv.interval}), ${inv.chord}, [${inv.intervals.join(', ')}], [${inv.notes.join(', ')}], [${inv.pcs.join(', ')}]`;
+		}
 
-
-		// Update the roots array in the export function
+		// Update export function
 		function exportChordDictionary() {
-			let namedInversionsMap = findNamedInversions();
-	
 			const selectedFields = Array.from(document.querySelectorAll('.export-field:checked'))
-				.map(checkbox => checkbox.value);
-
-			const transpositionFields = Array.from(document.querySelectorAll('.transposition-field:checked'))
 				.map(checkbox => checkbox.value);
 
 			const roots = ['C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯', 'A♭', 'A', 'A♯', 'B♭', 'B'];
@@ -442,23 +453,18 @@
 						let transposed = transposeChord(root, quality, chordData);
 						if (!transposed) return;
 				
-						exportedChord.transpositions[root] = {};
-				
-						transpositionFields.forEach(tField => {
-							exportedChord.transpositions[root][tField] = transposed[tField];
-						});
+						exportedChord.transpositions[root] = {
+							intervals: transposed.intervals,
+							notes: transposed.notes,
+							pcs: transposed.pcs.sort((a, b) => a - b)
+						};
 
-						// Add specific inversions for this transposed chord
+						// Add specific inversions only if they exist
 						const specificInversions = findSpecificInversions(root, quality, roots, chordData);
 						if (specificInversions.length > 0) {
 							exportedChord.transpositions[root].namedInversions = specificInversions;
 						}
 					});
-				}
-
-				// Add generic inversions at the chord quality level
-				if (namedInversionsMap[quality]) {
-					exportedChord.namedInversions = namedInversionsMap[quality];
 				}
 
 				exportData[quality] = exportedChord;
@@ -480,6 +486,10 @@
 
 
 
+
+
+
+		
 
 
 
