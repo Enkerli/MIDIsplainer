@@ -155,32 +155,54 @@
             if (note.includes('♭')) return (basePC - 1 + 12) % 12;
             return basePC;
         }
-
+        
         function transposeNote(root, cNote) {
-            if (root === 'C') return cNote;
+			if (root === 'C') return cNote;
 
-            const interval = getPC(cNote);
-            const rootPC = getPC(root);
-            const targetPC = (interval + rootPC) % 12;
+			// Special handling for double-flat seventh
+			if (cNote.includes('𝄫')) {
+				const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+				const rootLetterIndex = letters.indexOf(root[0]);
+				// For diminished seventh, we want the seventh letter name
+				const targetLetterIndex = (rootLetterIndex + 6) % 7;  // +6 for seventh
+				const targetLetter = letters[targetLetterIndex];
+				return targetLetter + '♭';  // Always flat for diminished seventh
+			}
 
-            // Get letter name based on root letter
-            const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-            const rootLetterIndex = letters.indexOf(root[0]);
-            const cNoteLetterIndex = letters.indexOf(cNote[0]);
-            const targetLetterIndex = (rootLetterIndex + cNoteLetterIndex) % 7;
-            const targetLetter = letters[targetLetterIndex];
+			const interval = getPC(cNote);
+			const rootPC = getPC(root);
+			const targetPC = (interval + rootPC) % 12;
 
-            // Calculate required accidentals
-            const naturalPC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[targetLetter];
-            const needed = (targetPC - naturalPC + 12) % 12;
+			// Get letter name based on root letter
+			const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+			const rootLetterIndex = letters.indexOf(root[0]);
+			const cNoteLetterIndex = letters.indexOf(cNote[0]);
+			const targetLetterIndex = (rootLetterIndex + cNoteLetterIndex) % 7;
+			const targetLetter = letters[targetLetterIndex];
 
-            if (needed === 0) return targetLetter;
-            if (needed === 1) return targetLetter + '♯';
-            if (needed === 2) return targetLetter + '𝄪';
-            if (needed === 11) return targetLetter + '♭';
-            if (needed === 10) return targetLetter + '♭♭';
-            return targetLetter;
-        }
+			// Calculate required accidentals
+			const naturalPC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[targetLetter];
+			const needed = (targetPC - naturalPC + 12) % 12;
+
+			// Map the pitch class difference to the appropriate accidental
+			switch (needed) {
+				case 0:  // No accidental needed
+					return targetLetter;
+				case 1:  // Sharp
+					return targetLetter + '♯';
+				case 2:  // Double sharp
+					return targetLetter + '𝄪';
+				case 3:  // Triple sharp
+					return targetLetter + '♯𝄪';
+				case 10: // Double flat
+					return targetLetter + '♭♭';
+				case 11: // Flat
+					return targetLetter + '♭';
+				default:
+					console.warn('Unexpected accidental:', needed, 'for note:', targetLetter);
+					return targetLetter;
+			}
+		}
 
 		function transposeChord(root, quality, chordData) {
 				if (!chordData[quality]) return null;
