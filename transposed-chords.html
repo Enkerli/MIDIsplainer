@@ -135,38 +135,45 @@
 			.catch(error => console.error('Error loading chord data:', error));
 
         function getPC(note) {
-            // Handle double accidentals
-            if (note.includes('𝄪') || note.includes('♯♯')) {
-                const baseLetter = note[0];
-                const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[baseLetter];
-                return (basePC + 2) % 12;
-            }
-            if (note.includes('♭♭')) {
-                const baseLetter = note[0];
-                const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[baseLetter];
-                return (basePC - 2 + 12) % 12;
-            }
+			// Handle double accidentals
+			if (note.includes('𝄪') || note.includes('♯♯')) {
+				const baseLetter = note[0];
+				const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[baseLetter];
+				return (basePC + 2) % 12;
+			}
+			if (note.includes('𝄫') || note.includes('♭♭')) {
+				const baseLetter = note[0];
+				const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[baseLetter];
+				return (basePC - 2 + 12) % 12;
+			}
 
-            // Handle single accidentals
-            const letter = note[0];
-            const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[letter];
-            
-            if (note.includes('♯')) return (basePC + 1) % 12;
-            if (note.includes('♭')) return (basePC - 1 + 12) % 12;
-            return basePC;
-        }
+			// Handle single accidentals
+			const letter = note[0];
+			const basePC = { 'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11 }[letter];
+	
+			if (note.includes('♯')) return (basePC + 1) % 12;
+			if (note.includes('♭')) return (basePC - 1 + 12) % 12;
+			return basePC;
+		}
         
         function transposeNote(root, cNote) {
 			if (root === 'C') return cNote;
 
+			const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+	
 			// Special handling for double-flat seventh
 			if (cNote.includes('𝄫')) {
-				const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 				const rootLetterIndex = letters.indexOf(root[0]);
-				// For diminished seventh, we want the seventh letter name
-				const targetLetterIndex = (rootLetterIndex + 6) % 7;  // +6 for seventh
+				// For diminished seventh, get the seventh scale degree
+				let targetLetterIndex = (rootLetterIndex + 6) % 7;  // Up six letters for seventh
 				const targetLetter = letters[targetLetterIndex];
-				return targetLetter + '♭';  // Always flat for diminished seventh
+		
+				// For o7M7 chords, we need a double flat
+				if (cNote === 'B𝄫' && root.includes('♭')) {
+					return targetLetter + '𝄫';
+				}
+				// For regular dim7 chords and non-flat-root o7M7 chords
+				return targetLetter + '♭';
 			}
 
 			const interval = getPC(cNote);
@@ -174,10 +181,11 @@
 			const targetPC = (interval + rootPC) % 12;
 
 			// Get letter name based on root letter
-			const letters = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 			const rootLetterIndex = letters.indexOf(root[0]);
 			const cNoteLetterIndex = letters.indexOf(cNote[0]);
-			const targetLetterIndex = (rootLetterIndex + cNoteLetterIndex) % 7;
+			// This needs to match the C-based interval structure
+			const letterOffset = (cNoteLetterIndex - letters.indexOf('C') + 7) % 7;
+			const targetLetterIndex = (rootLetterIndex + letterOffset) % 7;
 			const targetLetter = letters[targetLetterIndex];
 
 			// Calculate required accidentals
@@ -203,39 +211,39 @@
 					return targetLetter;
 			}
 		}
-
+        
 		function transposeChord(root, quality, chordData) {
-				if (!chordData[quality]) return null;
-				const chord = chordData[quality];
+			if (!chordData[quality]) return null;
+			const chord = chordData[quality];
 
-				// If root is C, use the exact notes from JSON
-				if (root === 'C') {
-					return {
-						...chord,
-						notes: chord.notes,
-						pcs: chord.pcs,
-						binary: chord.binary,
-						decimal: chord.decimal
-					};
-				}
-
-				// Otherwise transpose from C
-				const transposedNotes = chord.notes.map(cNote => transposeNote(root, cNote));
-				const pcs = transposedNotes.map(note => getPC(note));
-			
-				// Generate binary from PCs
-				const binary = Array(12).fill('0');
-				pcs.forEach(pc => binary[pc] = '1');
-				const binaryStr = binary.join('');
-			
+			// If root is C, use the exact notes from JSON
+			if (root === 'C') {
 				return {
 					...chord,
-					notes: transposedNotes,
-					pcs,
-					binary: binaryStr,
-					decimal: parseInt(binaryStr, 2)
+					notes: chord.notes,
+					pcs: chord.pcs,
+					binary: chord.binary,
+					decimal: chord.decimal
 				};
 			}
+
+			// Otherwise transpose from C
+			const transposedNotes = chord.notes.map(cNote => transposeNote(root, cNote, quality));
+			const pcs = transposedNotes.map(note => getPC(note));
+
+			// Generate binary from PCs
+			const binary = Array(12).fill('0');
+			pcs.forEach(pc => binary[pc] = '1');
+			const binaryStr = binary.join('');
+
+			return {
+				...chord,
+				notes: transposedNotes,
+				pcs,
+				binary: binaryStr,
+				decimal: parseInt(binaryStr, 2)
+			};
+		}
 
 		function updateChordDisplay() {
 			const root = rootSelect.value;
