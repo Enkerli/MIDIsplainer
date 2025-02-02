@@ -76,8 +76,13 @@
 
     <div id="result" class="card" style="display: none">
         <div class="title" id="chordTitle"></div>
-        <!-- Add this right after the title in the card -->
-		<div id="chordCircle" class="mb-4" style="width: 100%; max-width: 400px; margin: 0 auto;"></div>
+		<div class="controls mb-4">
+			<button id="toggleCircle" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300">
+				Toggle Circle View
+			</button>
+		</div>
+		<!-- Modify the chordCircle div to be hidden by default -->
+		<div id="chordCircle" class="mb-4" style="width: 100%; max-width: 400px; margin: 0 auto; display: none;"></div>
         <div class="content">
             <p id="fullName"></p>
             <p id="forteNumber"></p>
@@ -175,7 +180,7 @@
             '13':   { letters: 5, semitones: 9 }
         };
         
-		// Add this to the script section
+		// Add this in the script section, before any function that uses it
 		const intervalToPosition = {
 			'R': 0, 
 			'♭2': 1, '2': 2, '♯2': 3,
@@ -293,7 +298,7 @@
             })
             .catch(error => console.error('Error loading chord data:', error));
 
-		// Modify the updateChordDisplay function to include the chord circle
+		// Then modify the updateChordDisplay function
 		function updateChordDisplay() {
 			const root = rootSelect.value;
 			const quality = qualitySelect.value;
@@ -308,9 +313,9 @@
 
 			// Update chord circle
 			const chordCircleContainer = document.getElementById('chordCircle');
-			chordCircleContainer.innerHTML = createChordCircle(root, chord.intervals);
+			chordCircleContainer.innerHTML = createChordCircle(root, chord.intervals, chord);
 
-			// Update the rest of the display
+			// Rest of the display updates...
 			document.getElementById('chordTitle').textContent = `${root}${quality}`;
 			document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
 			document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
@@ -323,7 +328,6 @@
 
 			resultDiv.style.display = 'block';
 		}
-
 
 
 
@@ -499,13 +503,14 @@
 			document.body.removeChild(link);
 		}
 		
-		function createChordCircle(root, intervals) {
+		// Define createChordCircle before it's used
+		function createChordCircle(root, intervals, chord) {
 			const radius = 100;
 			const centerX = 150;
 			const centerY = 150;
 			const noteRadius = 12;
+			const chromaticNotes = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 	
-			// Helper function to get position on circle
 			// Get root's chromatic position (0-11)
 			function getRootPosition(note) {
 				const positions = {
@@ -527,7 +532,6 @@
 			// Root position in chromatic circle
 			const rootPos = getRootPosition(root);
 
-			// Calculate positions of interval nodes
 			// Calculate radius range for interval nodes
 			const minRadius = -70; // Inner limit, close to center
 			const maxRadius = -10; // Outer limit, close to chromatic circle
@@ -561,9 +565,30 @@
 				};
 			});
 
+			// Get the notes in the chord for highlighting
+			const chordNotes = new Set(chord.notes);
+
 			// Generate SVG content
 			let svg = `
 				<svg viewBox="0 0 300 300" style="width: 100%; max-width: 400px; margin: 0 auto;">
+					<!-- Reference lines for each note position -->
+					${chromaticNotes.map((note, i) => {
+						const angle = (i * 30 - 90) * (Math.PI / 180);
+						const x2 = centerX + radius * Math.cos(angle);
+						const y2 = centerY + radius * Math.sin(angle);
+						return `
+							<line
+								x1="${centerX}"
+								y1="${centerY}"
+								x2="${x2}"
+								y2="${y2}"
+								stroke="#eee"
+								stroke-width="1"
+								stroke-dasharray="2,2"
+							/>
+						`;
+					}).join('')}
+			
 					<!-- Main circle -->
 					<circle 
 						cx="${centerX}" 
@@ -576,7 +601,6 @@
 			`;
 
 			// Add chromatic note labels
-			const chromaticNotes = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
 			chromaticNotes.forEach((note, i) => {
 				const pos = getNotePosition(i);
 				const labelOffset = 20;
@@ -588,8 +612,8 @@
 						text-anchor="middle"
 						alignment-baseline="middle"
 						font-size="12"
-						fill="${note === root ? '#000' : '#666'}"
-						font-weight="${note === root ? 'bold' : 'normal'}"
+						fill="${chordNotes.has(note) ? '#000' : '#666'}"
+						font-weight="${chordNotes.has(note) ? 'bold' : 'normal'}"
 					>${note}</text>
 				`;
 			});
@@ -685,10 +709,25 @@
 		});
 
 
-		
+		document.getElementById('toggleCircle').addEventListener('click', function() {
+			const circleDiv = document.getElementById('chordCircle');
+			if (circleDiv.style.display === 'none') {
+				circleDiv.style.display = 'block';
+				// If circle is currently empty but chord is selected, update it
+				if (!circleDiv.innerHTML && qualitySelect.value) {
+					updateChordDisplay();
+				}
+			} else {
+				circleDiv.style.display = 'none';
+			}
+		});
+
+
 
 
 		
+
+
 
 
 				
