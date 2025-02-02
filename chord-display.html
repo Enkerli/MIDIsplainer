@@ -511,24 +511,43 @@
 		function createChordCircle(root, intervals, chord) {
 			// Circle of fifths order with gradual contrast that wraps around
 			const fifthsColors = {
-				'F':  '#4575B4', // Base blue
-				'C':  '#74ADD1', // Less contrasting blue
-				'G':  '#ABD9E9', // Light blue
-				'D':  '#E0F3F8', // Very light blue
-				'A':  '#FEE090', // Light orange
-				'E':  '#FDAE61', // Orange
-				'B':  '#F46D43', // Red-orange (maximum contrast)
-				'F♯': '#FDAE61', // Orange (mirror of E)
-				'C♯': '#FEE090', // Light orange (mirror of A)
-				'G♯': '#E0F3F8', // Very light blue (mirror of D)
-				'D♯': '#ABD9E9', // Light blue (mirror of G)
-				'A♯': '#74ADD1', // Less contrasting blue (mirror of C)
-				'B♭': '#74ADD1', // Same as A♯
-				'E♭': '#ABD9E9', // Same as D♯
-				'A♭': '#E0F3F8', // Same as G♯
-				'D♭': '#FEE090', // Same as C♯
-				'G♭': '#FDAE61'  // Same as F♯
+				'F':  '#00FF00', 
+				'C':  '#FFFF00', 
+				'G':  '#FFC000', 
+				'D':  '#FF8000', 
+				'A':  '#FF0000', 
+				'E':  '#FF00FF', 
+				'B':  '#8000FF', 
+				'F♯': '#0000FF', 
+				'C♯': '#0080FF', 
+				'G♯': '#00C0FF', 
+				'D♯': '#00FFFF', 
+				'A♯': '#40FFC0', 
+				'B♭': '#40FFC0', 
+				'E♭': '#00FFFF', 
+				'A♭': '#00C0FF', 
+				'D♭': '#0080FF', 
+				'G♭': '#0000FF'  
 			};
+// 			const fifthsColors = {
+// 				'F':  '#4575B4', // Base blue
+// 				'C':  '#74ADD1', // Less contrasting blue
+// 				'G':  '#ABD9E9', // Light blue
+// 				'D':  '#E0F3F8', // Very light blue
+// 				'A':  '#FEE090', // Light orange
+// 				'E':  '#FDAE61', // Orange
+// 				'B':  '#F46D43', // Red-orange (maximum contrast)
+// 				'F♯': '#FDAE61', // Orange (mirror of E)
+// 				'C♯': '#FEE090', // Light orange (mirror of A)
+// 				'G♯': '#E0F3F8', // Very light blue (mirror of D)
+// 				'D♯': '#ABD9E9', // Light blue (mirror of G)
+// 				'A♯': '#74ADD1', // Less contrasting blue (mirror of C)
+// 				'B♭': '#74ADD1', // Same as A♯
+// 				'E♭': '#ABD9E9', // Same as D♯
+// 				'A♭': '#E0F3F8', // Same as G♯
+// 				'D♭': '#FEE090', // Same as C♯
+// 				'G♭': '#FDAE61'  // Same as F♯
+// 			};
 
 			// Map for pitch class colors (including rare spellings and double accidentals)
 			const pitchClassColors = {
