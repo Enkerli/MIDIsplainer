@@ -131,7 +131,7 @@
     ],
     "forteNumber": "3-11A"
   },
-  "dim": {
+  "°": {
     "intervals": [
       "R",
       "♭3",
@@ -212,7 +212,7 @@
     ],
     "forteNumber": "4-28"
   },
-  "m7b5": {
+  "ø": {
     "intervals": [
       "R",
       "♭3",
@@ -221,8 +221,8 @@
     ],
     "fullName": "half-diminished seventh",
     "aliases": [
-      "m7b5",
       "ø",
+      "m7b5",
       "-7b5",
       "h7",
       "h",

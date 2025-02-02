@@ -80,14 +80,14 @@
 		<div style="display: flex; gap: 20px; align-items: start;">
 			<div class="content" style="flex: 1;">
 				<p id="fullName">Full name:</p>
-				<p id="forteNumber"></p>
+				<p id="aliases"></p>
 				<p id="intervals"></p>
 				<p id="notes"></p>
-				<p id="pcs"></p>
-				<p id="aliases"></p>
 				<p id="altSpellings"></p>
 				<p id="namedInversions"></p>
 				<div class="monospace">
+					<p id="pcs"></p>
+					<p id="forteNumber"></p>
 					<p id="binary"></p>
 					<p id="decimal"></p>
 				</div>
@@ -691,21 +691,21 @@
 			const rootPos = getRootPosition(root);
 
 			// Calculate radius range for interval nodes
-			const minRadius = -70; // Inner limit, close to center
+			const minRadius = -90; // Inner limit, close to center
 			const maxRadius = -10; // Outer limit, close to chromatic circle
 	
 			// Map interval types to relative radial positions (0-1)
 			const intervalRadialPosition = {
 				'R': 0,      // Root at innermost position
-				'2': 0.15, '♭2': 0.15, '♯2': 0.15,
-				'3': 0.3, '♭3': 0.3,
-				'4': 0.45, '♯4': 0.45,
-				'5': 0.6, '♭5': 0.6, '♯5': 0.6,
-				'6': 0.7, '♭6': 0.7,
-				'7': 0.8, '♭7': 0.8, '𝄫7': 0.8,
-				'9': 0.85, '♭9': 0.85, '♯9': 0.85,
-				'11': 0.9, '♯11': 0.9,
-				'13': 1.0, '♭13': 1.0
+				'2': 0.1, '♭2': 0.05, '♯2': 0.15,
+				'3': 0.2, '♭3': 0.15,
+				'4': 0.25, '♯4': 0.3,
+				'5': 0.35, '♭5': 0.3, '♯5': 0.4,
+				'6': 0.45, '♭6': 0.4,
+				'7': 0.55, '♭7': 0.5, '𝄫7': 0.45,
+				'9': 0.65, '♭9': 0.6, '♯9': 0.7,
+				'11': 0.8, '♯11': 0.85,
+				'13': 0.95, '♭13': 0.9
 			};
 
 			// Calculate interval node positions and mapping to actual notes
