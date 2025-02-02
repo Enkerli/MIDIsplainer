@@ -80,6 +80,9 @@
 			<button id="toggleCircle" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300">
 				Toggle Circle View
 			</button>
+			<button id="toggleNotesDisplay" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300">
+				Show All Notes
+			</button>
 		</div>
 		<!-- Modify the chordCircle div to be hidden by default -->
 		<div id="chordCircle" class="mb-4" style="width: 100%; max-width: 400px; margin: 0 auto; display: none;"></div>
@@ -506,26 +509,98 @@
 		
 		// Define createChordCircle before it's used
 		function createChordCircle(root, intervals, chord) {
-			// Circle of fifths order: F C G D A E B F# C# G# D# A#
+			// Circle of fifths order with gradual contrast that wraps around
 			const fifthsColors = {
-				'F':  '#2166AC', // Deep blue
-				'C':  '#4393C3', // Blue
-				'G':  '#92C5DE', // Light blue
-				'D':  '#D1E5F0', // Very light blue
-				'A':  '#F7F7F7', // White
-				'E':  '#FDDBC7', // Light orange
-				'B':  '#F4A582', // Orange
-				'F♯': '#D6604D', // Red-orange
-				'C♯': '#B2182B', // Red
-				'G♯': '#B2182B', // Red
-				'D♯': '#D6604D', // Red-orange
-				'A♯': '#F4A582'  // Orange
+				'F':  '#4575B4', // Base blue
+				'C':  '#74ADD1', // Less contrasting blue
+				'G':  '#ABD9E9', // Light blue
+				'D':  '#E0F3F8', // Very light blue
+				'A':  '#FEE090', // Light orange
+				'E':  '#FDAE61', // Orange
+				'B':  '#F46D43', // Red-orange (maximum contrast)
+				'F♯': '#FDAE61', // Orange (mirror of E)
+				'C♯': '#FEE090', // Light orange (mirror of A)
+				'G♯': '#E0F3F8', // Very light blue (mirror of D)
+				'D♯': '#ABD9E9', // Light blue (mirror of G)
+				'A♯': '#74ADD1', // Less contrasting blue (mirror of C)
+				'B♭': '#74ADD1', // Same as A♯
+				'E♭': '#ABD9E9', // Same as D♯
+				'A♭': '#E0F3F8', // Same as G♯
+				'D♭': '#FEE090', // Same as C♯
+				'G♭': '#FDAE61'  // Same as F♯
 			};
+
+			// Map for pitch class colors (including rare spellings and double accidentals)
+			const pitchClassColors = {
+				'B♯': fifthsColors['C'],   // PC 0
+				'E♯': fifthsColors['F'],   // PC 5
+				'F♭': fifthsColors['E'],   // PC 4
+				'C♭': fifthsColors['B'],   // PC 11
+				// Double accidentals
+				'C𝄪': fifthsColors['D'],   // PC 2
+				'F𝄪': fifthsColors['G'],   // PC 7
+				'G𝄪': fifthsColors['A'],   // PC 9
+				'D𝄪': fifthsColors['E'],   // PC 4
+				'A𝄪': fifthsColors['B'],   // PC 11
+				'E𝄪': fifthsColors['F♯'],  // PC 6
+				'B𝄪': fifthsColors['C♯'],  // PC 1
+				'C𝄫': fifthsColors['B♭'],  // PC 10
+				'F𝄫': fifthsColors['E♭'],  // PC 3
+				'G𝄫': fifthsColors['F'],   // PC 5
+				'D𝄫': fifthsColors['C'],   // PC 0
+				'A𝄫': fifthsColors['G'],   // PC 7
+				'E𝄫': fifthsColors['D'],   // PC 2
+				'B𝄫': fifthsColors['A']    // PC 9
+			};
+
 			const radius = 100;
 			const centerX = 150;
 			const centerY = 150;
 			const noteRadius = 12;
-			const chromaticNotes = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+
+			// Get the notes in the chord for highlighting early
+			const chordNotes = new Set(chord.notes);
+			console.log('Chord notes:', Array.from(chordNotes));
+
+			// All possible spellings at each chromatic position
+			const allSpellings = [
+				['C'],                // 0 (add B♯ only if in chord)
+				['C♯', 'D♭'],        // 1
+				['D'],                // 2
+				['D♯', 'E♭'],        // 3
+				['E'],                // 4 (add F♭ only if in chord)
+				['F'],                // 5 (add E♯ only if in chord)
+				['F♯', 'G♭'],        // 6
+				['G'],                // 7
+				['G♯', 'A♭'],        // 8
+				['A'],                // 9
+				['A♯', 'B♭'],        // 10
+				['B']                 // 11 (add C♭ only if in chord)
+			];
+
+			// Add rare spellings if they're in the chord (including double accidentals)
+			if (chordNotes.has('B♯')) allSpellings[0].push('B♯');
+			if (chordNotes.has('F♭')) allSpellings[4].push('F♭');
+			if (chordNotes.has('E♯')) allSpellings[5].push('E♯');
+			if (chordNotes.has('C♭')) allSpellings[11].push('C♭');
+	
+			// Double sharp spellings
+			if (chordNotes.has('C𝄪')) allSpellings[2].push('C𝄪');
+			if (chordNotes.has('F𝄪')) allSpellings[7].push('F𝄪');
+			if (chordNotes.has('G𝄪')) allSpellings[9].push('G𝄪');
+			if (chordNotes.has('D𝄪')) allSpellings[4].push('D𝄪');
+			if (chordNotes.has('A𝄪')) allSpellings[11].push('A𝄪');
+			if (chordNotes.has('E𝄪')) allSpellings[6].push('E𝄪');
+			if (chordNotes.has('B𝄪')) allSpellings[1].push('B𝄪');
+	
+			// Double flat spellings
+			if (chordNotes.has('C𝄫')) allSpellings[10].push('C𝄫');
+			if (chordNotes.has('F𝄫')) allSpellings[3].push('F𝄫');
+			if (chordNotes.has('G𝄫')) allSpellings[5].push('G𝄫');
+			if (chordNotes.has('D𝄫')) allSpellings[0].push('D𝄫');
+			if (chordNotes.has('A𝄫')) allSpellings[7].push('A𝄫');
+			if (chordNotes.has('E𝄫')) allSpellings[2].push('E𝄫');
+			if (chordNotes.has('B𝄫')) allSpellings[9].push('B𝄫');
 
 			// Helper function to determine if a color is dark (needs white text)
 			function isColorDark(hexcolor) {
@@ -537,26 +612,11 @@
 				return brightness < 128;
 			}
 
-			// Helper function to get color based on note
-			function getNoteColor(note) {
-				// Remove any flat signs and convert to corresponding sharp
-				const enharmonicMap = {
-					'D♭': 'C♯',
-					'E♭': 'D♯',
-					'G♭': 'F♯',
-					'A♭': 'G♯',
-					'B♭': 'A♯'
-				};
-		
-				const normalizedNote = enharmonicMap[note] || note;
-				return fifthsColors[normalizedNote] || '#666'; // Default gray if not found
-			}
-
 			function getRootPosition(note) {
 				const positions = {
 					'C': 0, 'C♯': 1, 'D♭': 1, 'D': 2, 'D♯': 3, 'E♭': 3,
 					'E': 4, 'F': 5, 'F♯': 6, 'G♭': 6, 'G': 7, 'G♯': 8,
-					'A♭': 8, 'A': 9, 'A♯': 10, 'B♭': 10, 'B': 11
+					'A♭': 8, 'A': 9, 'A♯': 10, 'B♭': 10, 'B': 11, 'C♭': 11
 				};
 				return positions[note] || 0;
 			}
@@ -571,7 +631,7 @@
 
 			// Root position in chromatic circle
 			const rootPos = getRootPosition(root);
-	
+
 			// Calculate radius range for interval nodes
 			const minRadius = -70; // Inner limit, close to center
 			const maxRadius = -10; // Outer limit, close to chromatic circle
@@ -590,8 +650,8 @@
 				'13': 1.0, '♭13': 1.0
 			};
 
-			// Calculate interval node positions
-			const intervalNodes = intervals.map((interval) => {
+			// Calculate interval node positions and mapping to actual notes
+			const intervalNodes = intervals.map((interval, index) => {
 				// Get chromatic position relative to root
 				let position = (intervalToPosition[interval] + rootPos) % 12;
 		
@@ -601,29 +661,27 @@
 		
 				return {
 					...getNotePosition(position, radiusOffset),
-					interval
+					interval,
+					note: chord.notes[index]  // Get the actual note for this interval
 				};
 			});
-
-			// Get the notes in the chord for highlighting
-			const chordNotes = new Set(chord.notes);
 
 			// Generate SVG content
 			let svg = `
 				<svg viewBox="0 0 300 300" style="width: 100%; max-width: 400px; margin: 0 auto;">
-					<!-- Reference lines for each note position -->
-					${chromaticNotes.map((note, i) => {
+					<!-- Reference lines -->
+					${allSpellings.map((_, i) => {
 						const angle = (i * 30 - 90) * (Math.PI / 180);
 						const x2 = centerX + radius * Math.cos(angle);
 						const y2 = centerY + radius * Math.sin(angle);
 						return `
-							<line
-								x1="${centerX}"
-								y1="${centerY}"
-								x2="${x2}"
+							<line 
+								x1="${centerX}" 
+								y1="${centerY}" 
+								x2="${x2}" 
 								y2="${y2}"
-								stroke="#eee"
-								stroke-width="1"
+								stroke="#eee" 
+								stroke-width="1" 
 								stroke-dasharray="2,2"
 							/>
 						`;
@@ -633,44 +691,58 @@
 					<circle 
 						cx="${centerX}" 
 						cy="${centerY}" 
-						r="${radius}" 
+						r="${radius}"
 						fill="none" 
 						stroke="#ddd" 
 						stroke-width="1"
 					/>
 			`;
 
-			// Add chromatic note circles and labels
-			chromaticNotes.forEach((note, i) => {
-				const pos = getNotePosition(i);
-				const labelOffset = 20;
-				const labelPos = getNotePosition(i, labelOffset);
-				const noteColor = chordNotes.has(note) ? '#000' : getNoteColor(note);
-				const isChordTone = chordNotes.has(note);
-				const textColor = isChordTone ? '#000' : (isColorDark(noteColor) ? '#fff' : '#000');
-		
-				svg += `
-					<g>
-						<circle
-							cx="${labelPos.x}"
-							cy="${labelPos.y}"
-							r="${noteRadius}"
-							fill="${noteColor}"
-							stroke="${isChordTone ? '#000' : 'none'}"
-							stroke-width="${isChordTone ? '2' : '0'}"
-							opacity="${isChordTone ? '1' : '0.8'}"
-						/>
-						<text
-							x="${labelPos.x}"
-							y="${labelPos.y}"
-							text-anchor="middle"
-							alignment-baseline="middle"
-							font-size="12"
-							fill="${textColor}"
-							font-weight="${isChordTone ? 'bold' : 'normal'}"
-						>${note}</text>
-					</g>
-				`;
+			// Add all possible note spellings
+			allSpellings.forEach((spellings, i) => {
+				spellings.forEach((note, spellIndex) => {
+					const isChordTone = chordNotes.has(note);
+					console.log(`Checking note: ${note}, is chord tone: ${isChordTone}`);
+			
+					// Skip if we're only showing chord tones and this isn't one
+					if (window.showOnlyChordTones && !isChordTone) {
+						return;
+					}
+
+					const labelOffset = 20;
+					// Offset position slightly if there are multiple spellings
+					const xOffset = spellings.length > 1 ? (spellIndex === 0 ? -8 : 8) : 0;
+					const basePos = getNotePosition(i, labelOffset);
+					const labelPos = {
+						x: basePos.x + xOffset,
+						y: basePos.y
+					};
+			
+					const noteColor = fifthsColors[note] || pitchClassColors[note] || '#666';
+					const textColor = isColorDark(noteColor) ? '#fff' : '#000';
+			
+					svg += `
+						<g>
+							<circle
+								cx="${labelPos.x}"
+								cy="${labelPos.y}"
+								r="${noteRadius}"
+								fill="${noteColor}"
+								stroke="${isChordTone ? '#000' : 'none'}"
+								stroke-width="${isChordTone ? '3' : '0'}"
+								opacity="0.8"
+							/>
+							<text
+								x="${labelPos.x}"
+								y="${labelPos.y}"
+								text-anchor="middle"
+								alignment-baseline="middle"
+								font-size="12"
+								fill="${textColor}"
+							>${note}</text>
+						</g>
+					`;
+				});
 			});
 
 			// Add lines connecting interval nodes
@@ -691,13 +763,16 @@
 
 			// Add interval nodes
 			intervalNodes.forEach((node, i) => {
+				const noteColor = fifthsColors[node.note] || pitchClassColors[node.note] || '#666';
+				const textColor = isColorDark(noteColor) ? '#fff' : '#000';
+		
 				svg += `
 					<g>
 						<circle
 							cx="${node.x}"
 							cy="${node.y}"
 							r="${noteRadius}"
-							fill="white"
+							fill="${noteColor}"
 							stroke="#333"
 							stroke-width="2"
 						/>
@@ -707,6 +782,7 @@
 							text-anchor="middle"
 							alignment-baseline="middle"
 							font-size="12"
+							fill="${textColor}"
 							font-weight="bold"
 						>${node.interval}</text>
 					</g>
@@ -716,11 +792,6 @@
 			svg += '</svg>';
 			return svg;
 		}
-
-
-		
-		
-		
 
 
 		document.getElementById('chordInput').addEventListener('keypress', function(e) {
@@ -779,14 +850,19 @@
 		});
 
 
+		// Add this global variable
+		window.showOnlyChordTones = false;
+
+		document.getElementById('toggleNotesDisplay').addEventListener('click', function() {
+			window.showOnlyChordTones = !window.showOnlyChordTones;
+			this.textContent = window.showOnlyChordTones ? 'Show All Notes' : 'Show Chord Tones Only';
+			// Update the display if the circle is visible
+			if (document.getElementById('chordCircle').style.display !== 'none') {
+				updateChordDisplay();
+			}
+		});
 
 
-		
-
-
-
-
-		
 
 
 
