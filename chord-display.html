@@ -306,16 +306,38 @@
             })
             .catch(error => console.error('Error loading chord data:', error));
 
-		// Then modify the updateChordDisplay function
+		// Then modify the updateChordDisplay function    
 		function updateChordDisplay() {
 			const root = rootSelect.value;
 			const quality = qualitySelect.value;
-
+	
+			// Always show the result div
+			resultDiv.style.display = 'block';
+	
 			if (!quality) {
-				resultDiv.style.display = 'none';
+				// Show empty state with circle
+				document.getElementById('chordTitle').textContent = 'Select a chord';
+				document.getElementById('fullName').textContent = 'Full Name: ';
+				document.getElementById('forteNumber').textContent = 'Forte Number: ';
+				document.getElementById('intervals').textContent = 'Intervals: ';
+				document.getElementById('notes').textContent = 'Notes: ';
+				document.getElementById('pcs').textContent = 'Pitch Classes: ';
+				document.getElementById('aliases').textContent = 'Aliases: ';
+				document.getElementById('altSpellings').style.display = 'none';
+				document.getElementById('namedInversions').style.display = 'none';
+				document.getElementById('binary').textContent = 'Binary: ';
+				document.getElementById('decimal').textContent = 'Decimal: ';
+		
+				// Create empty circle with just the notes
+				const chordCircleContainer = document.getElementById('chordCircle');
+				chordCircleContainer.innerHTML = createChordCircle(root, [], { notes: [] });
 				return;
 			}
 
+			// When a chord is selected, switch back to showing only chord tones
+			window.showOnlyChordTones = true;
+			document.getElementById('toggleNotesDisplay').textContent = 'Show All Notes';
+	
 			const chord = transposeChord(root, quality, chordData);
 			if (!chord) return;
 
@@ -851,27 +873,27 @@
 			return svg;
 		}
 
-
+		
 		document.getElementById('chordInput').addEventListener('keypress', function(e) {
 			if (e.key === 'Enter') {
 				const input = this.value.trim();
 				if (!input) return;
-		
-				// Parse chord symbol BEFORE normalizing accidentals
-				const match = input.match(/^([A-G][b#]?)(.*)$/);
+
+				// Parse chord symbol with expanded regex to accept both ASCII and Unicode accidentals
+				const match = input.match(/^([A-G][b#♭♯]?)(.*)$/);
 				if (!match) return;
-		
+
 				const [_, rootRaw, qualityRaw] = match;
-		
+
 				// Now normalize accidentals for the root only
 				const root = rootRaw.replace(/b/g, '♭').replace(/#/g, '♯');
-		
+
 				// Keep quality as is for dictionary lookup
 				const quality = qualityRaw;
-		
+
 				// Find the main quality - first check if it's a direct key
 				let mainQuality = quality;
-		
+
 				if (!chordData[mainQuality]) {
 					// If not a direct key, look through aliases
 					for (let key in chordData) {
@@ -882,7 +904,7 @@
 						}
 					}
 				}
-		
+
 				// Update select elements if values exist
 				if (rootSelect.querySelector(`option[value="${root}"]`) && 
 					qualitySelect.querySelector(`option[value="${mainQuality}"]`)) {
@@ -906,10 +928,18 @@
 				circleDiv.style.display = 'none';
 			}
 		});
+		
+		rootSelect.addEventListener('change', updateChordDisplay);
+		qualitySelect.addEventListener('change', updateChordDisplay);
+
+		// Initialize display when page loads
+		document.addEventListener('DOMContentLoaded', function() {
+			updateChordDisplay();
+		});
 
 
 		// Add this global variable
-		window.showOnlyChordTones = true;
+		window.showOnlyChordTones = false;
 
 		document.getElementById('toggleNotesDisplay').addEventListener('click', function() {
 			window.showOnlyChordTones = !window.showOnlyChordTones;
@@ -923,7 +953,9 @@
 
 
 
-		
+
+
+
 
 				
 
