@@ -525,63 +525,50 @@
 				const input = this.value.trim();
 				if (!input) return;
 		
-				// Normalize accidentals
-				const normalized = input
-					.replace(/b/g, '♭')
-					.replace(/#/g, '♯');
-			
-				// Parse chord symbol
-				const match = normalized.match(/^([A-G][♯♭]?)(.*)$/);
+				// Parse chord symbol BEFORE normalizing accidentals
+				const match = input.match(/^([A-G][b#]?)(.*)$/);
 				if (!match) return;
 		
-				const [_, root, quality] = match;
+				const [_, rootRaw, qualityRaw] = match;
 		
-				// Handle common aliases
-				const qualityMap = {
-					'-': 'min',
-					'-7': 'min7',
-					'm': 'min',
-					'm7': 'min7',
-					'M': 'maj',
-					'M7': 'maj7',
-					'Maj': 'maj',
-					'Maj7': 'maj7',
-					'+': 'aug',
-					'o': 'dim',
-					'°': 'dim',
-					'ø': 'm7b5',
-					'ø7': 'm7b5',
-					'': 'maj'
-				};
+				// Now normalize accidentals for the root only
+				const root = rootRaw.replace(/b/g, '♭').replace(/#/g, '♯');
 		
-				const normalizedQuality = qualityMap[quality] || quality;
+				// Keep quality as is for dictionary lookup
+				const quality = qualityRaw;
+		
+				// Find the main quality - first check if it's a direct key
+				let mainQuality = quality;
+		
+				if (!chordData[mainQuality]) {
+					// If not a direct key, look through aliases
+					for (let key in chordData) {
+						if (chordData[key].aliases && 
+							chordData[key].aliases.includes(quality)) {
+							mainQuality = key;
+							break;
+						}
+					}
+				}
 		
 				// Update select elements if values exist
 				if (rootSelect.querySelector(`option[value="${root}"]`) && 
-					qualitySelect.querySelector(`option[value="${normalizedQuality}"]`)) {
+					qualitySelect.querySelector(`option[value="${mainQuality}"]`)) {
 					rootSelect.value = root;
-					qualitySelect.value = normalizedQuality;
+					qualitySelect.value = mainQuality;
 					updateChordDisplay();
 				}
 			}
 		});
-	
-
-
-
-
-		
-
-
 
 
 
 
 				
 
-		document.getElementById('transpositions-checkbox').addEventListener('change', function() {
-			document.getElementById('transposition-options').style.display = this.checked ? 'block' : 'none';
-		});
+// 		document.getElementById('transpositions-checkbox').addEventListener('change', function() {
+// 			document.getElementById('transposition-options').style.display = this.checked ? 'block' : 'none';
+// 		});
 
 </script>
 
