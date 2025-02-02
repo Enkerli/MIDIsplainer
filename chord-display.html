@@ -76,6 +76,8 @@
 
     <div id="result" class="card" style="display: none">
         <div class="title" id="chordTitle"></div>
+        <!-- Add this right after the title in the card -->
+		<div id="chordCircle" class="mb-4" style="width: 100%; max-width: 400px; margin: 0 auto;"></div>
         <div class="content">
             <p id="fullName"></p>
             <p id="forteNumber"></p>
@@ -172,6 +174,22 @@
             '♭13':  { letters: 5, semitones: 8 },
             '13':   { letters: 5, semitones: 9 }
         };
+        
+		// Add this to the script section
+		const intervalToPosition = {
+			'R': 0, 
+			'♭2': 1, '2': 2, '♯2': 3,
+			'♭3': 3, '3': 4, 
+			'4': 5, '♯4': 6,
+			'♭5': 6, '5': 7, '♯5': 8,
+			'♭6': 8, '6': 9,
+			'𝄫7': 9, '♭7': 10, '7': 11,
+			'♭9': 1, '9': 2, '♯9': 3,
+			'11': 5, '♯11': 6,
+			'♭13': 8, '13': 9
+		};
+
+
 
         const qualitySelect = document.getElementById('qualitySelect');
         const rootSelect = document.getElementById('rootSelect');
@@ -275,11 +293,11 @@
             })
             .catch(error => console.error('Error loading chord data:', error));
 
-        // Update display function
+		// Modify the updateChordDisplay function to include the chord circle
 		function updateChordDisplay() {
 			const root = rootSelect.value;
 			const quality = qualitySelect.value;
-	
+
 			if (!quality) {
 				resultDiv.style.display = 'none';
 				return;
@@ -288,10 +306,11 @@
 			const chord = transposeChord(root, quality, chordData);
 			if (!chord) return;
 
-			const specificInversions = findSpecificInversions(root, quality, 
-				['C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯', 'A♭', 'A', 'A♯', 'B♭', 'B'],
-				chordData);
+			// Update chord circle
+			const chordCircleContainer = document.getElementById('chordCircle');
+			chordCircleContainer.innerHTML = createChordCircle(root, chord.intervals);
 
+			// Update the rest of the display
 			document.getElementById('chordTitle').textContent = `${root}${quality}`;
 			document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
 			document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
@@ -301,46 +320,11 @@
 			document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
 			document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
 			document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
-	
-			// Remove any existing inversions element
-			const existingInversions = document.getElementById('inversions');
-			if (existingInversions) {
-				existingInversions.remove();
-			}
-	
-			// Add new inversions if any exist
-			if (specificInversions.length > 0) {
-				// Separate alternative spellings (interval 0) from true inversions
-				const altSpellings = specificInversions.filter(inv => inv.interval === 0);
-				const trueInversions = specificInversions.filter(inv => inv.interval !== 0);
-		
-				// Create container for all inversion-related info
-				const inversionsContainer = document.createElement('div');
-				inversionsContainer.id = 'inversions';
-		
-				// Add alternative spellings if they exist
-				if (altSpellings.length > 0) {
-					const altElement = document.createElement('p');
-					const altLines = altSpellings.map(alt => 
-						`${alt.chord}, [${alt.notes.join(', ')}]`
-					);
-					altElement.innerHTML = `Alternative spellings:<br>${altLines.join('<br>')}`;
-					inversionsContainer.appendChild(altElement);
-				}
-		
-				// Add true inversions if they exist
-				if (trueInversions.length > 0) {
-					const invElement = document.createElement('p');
-					const inversionLines = trueInversions.map(formatInversion);
-					invElement.innerHTML = `Named Inversions:<br>${inversionLines.join('<br>')}`;
-					inversionsContainer.appendChild(invElement);
-				}
-		
-				document.getElementById('result').querySelector('.content').appendChild(inversionsContainer);
-			}
 
 			resultDiv.style.display = 'block';
 		}
+
+
 
 
         rootSelect.addEventListener('change', updateChordDisplay);
@@ -514,6 +498,145 @@
 			link.click();
 			document.body.removeChild(link);
 		}
+		
+		function createChordCircle(root, intervals) {
+			const radius = 100;
+			const centerX = 150;
+			const centerY = 150;
+			const noteRadius = 12;
+	
+			// Helper function to get position on circle
+			// Get root's chromatic position (0-11)
+			function getRootPosition(note) {
+				const positions = {
+					'C': 0, 'C♯': 1, 'D♭': 1, 'D': 2, 'D♯': 3, 'E♭': 3,
+					'E': 4, 'F': 5, 'F♯': 6, 'G♭': 6, 'G': 7, 'G♯': 8,
+					'A♭': 8, 'A': 9, 'A♯': 10, 'B♭': 10, 'B': 11
+				};
+				return positions[note] || 0;
+			}
+
+			function getNotePosition(hour, radiusOffset = 0) {
+				const angle = (hour * 30 - 90) * (Math.PI / 180); // Start at C (top)
+				return {
+					x: centerX + (radius + radiusOffset) * Math.cos(angle),
+					y: centerY + (radius + radiusOffset) * Math.sin(angle)
+				};
+			}
+
+			// Root position in chromatic circle
+			const rootPos = getRootPosition(root);
+
+			// Calculate positions of interval nodes
+			// Calculate radius range for interval nodes
+			const minRadius = -70; // Inner limit, close to center
+			const maxRadius = -10; // Outer limit, close to chromatic circle
+	
+			// Map interval types to relative radial positions (0-1)
+			const intervalRadialPosition = {
+				'R': 0,      // Root at innermost position
+				'2': 0.15, '♭2': 0.15, '♯2': 0.15,
+				'3': 0.3, '♭3': 0.3,
+				'4': 0.45, '♯4': 0.45,
+				'5': 0.6, '♭5': 0.6, '♯5': 0.6,
+				'6': 0.7, '♭6': 0.7,
+				'7': 0.8, '♭7': 0.8, '𝄫7': 0.8,
+				'9': 0.85, '♭9': 0.85, '♯9': 0.85,
+				'11': 0.9, '♯11': 0.9,
+				'13': 1.0, '♭13': 1.0
+			};
+
+			// Calculate interval node positions
+			const intervalNodes = intervals.map((interval) => {
+				// Get chromatic position relative to root
+				let position = (intervalToPosition[interval] + rootPos) % 12;
+		
+				// Calculate radius based on interval type
+				const radialPos = intervalRadialPosition[interval] || 0;
+				const radiusOffset = minRadius + (maxRadius - minRadius) * radialPos;
+		
+				return {
+					...getNotePosition(position, radiusOffset),
+					interval
+				};
+			});
+
+			// Generate SVG content
+			let svg = `
+				<svg viewBox="0 0 300 300" style="width: 100%; max-width: 400px; margin: 0 auto;">
+					<!-- Main circle -->
+					<circle 
+						cx="${centerX}" 
+						cy="${centerY}" 
+						r="${radius}" 
+						fill="none" 
+						stroke="#ddd" 
+						stroke-width="1"
+					/>
+			`;
+
+			// Add chromatic note labels
+			const chromaticNotes = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
+			chromaticNotes.forEach((note, i) => {
+				const pos = getNotePosition(i);
+				const labelOffset = 20;
+				const labelPos = getNotePosition(i, labelOffset);
+				svg += `
+					<text
+						x="${labelPos.x}"
+						y="${labelPos.y}"
+						text-anchor="middle"
+						alignment-baseline="middle"
+						font-size="12"
+						fill="${note === root ? '#000' : '#666'}"
+						font-weight="${note === root ? 'bold' : 'normal'}"
+					>${note}</text>
+				`;
+			});
+
+			// Add lines connecting interval nodes
+			for (let i = 0; i < intervalNodes.length - 1; i++) {
+				const current = intervalNodes[i];
+				const next = intervalNodes[i + 1];
+				svg += `
+					<line
+						x1="${current.x}"
+						y1="${current.y}"
+						x2="${next.x}"
+						y2="${next.y}"
+						stroke="#666"
+						stroke-width="2"
+					/>
+				`;
+			}
+
+			// Add interval nodes
+			intervalNodes.forEach((node, i) => {
+				svg += `
+					<g>
+						<circle
+							cx="${node.x}"
+							cy="${node.y}"
+							r="${noteRadius}"
+							fill="white"
+							stroke="#333"
+							stroke-width="2"
+						/>
+						<text
+							x="${node.x}"
+							y="${node.y}"
+							text-anchor="middle"
+							alignment-baseline="middle"
+							font-size="12"
+							font-weight="bold"
+						>${node.interval}</text>
+					</g>
+				`;
+			});
+
+			svg += '</svg>';
+			return svg;
+		}
 
 		
 		
@@ -562,6 +685,10 @@
 		});
 
 
+		
+
+
+		
 
 
 				
