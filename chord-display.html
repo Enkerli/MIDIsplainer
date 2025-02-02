@@ -328,7 +328,7 @@
 			const inversions = findSpecificInversions(root, quality, roots, chordData);
 	
 			// Basic chord info
-			document.getElementById('chordTitle').textContent = `${root}${quality}`;
+			document.getElementById('chordTitle').textContent = `${root}${chordData[quality].displayName || quality}`;
 			document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
 			document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
 			document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
@@ -355,9 +355,9 @@
 				}
 
 				if (trueInversions.length > 0) {
-					document.getElementById('namedInversions').textContent = 
-						`Named Inversions: ${trueInversions.join('; ')}`;
-					document.getElementById('namedInversions').style.display = 'block';
+					const invElement = document.getElementById('namedInversions');
+					invElement.innerHTML = `Named Inversions:<br>${trueInversions.join('<br>')}`;
+					invElement.style.display = 'block';
 				} else {
 					document.getElementById('namedInversions').style.display = 'none';
 				}
