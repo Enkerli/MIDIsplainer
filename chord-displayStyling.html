@@ -77,16 +77,40 @@
     <!-- Change the result div to use flexbox -->
 	<div id="result" class="card" style="display: none">
 		<div class="title" id="chordTitle"></div>
-		<div style="display: flex; gap: 20px; align-items: start;">
+		<div style="display: flex; gap: 40px; align-items: start;">
 			<div class="content" style="flex: 1;">
-				<p id="fullName">Full name:</p>
-				<p id="forteNumber"></p>
-				<p id="intervals"></p>
-				<p id="notes"></p>
-				<p id="pcs"></p>
-				<p id="aliases"></p>
-				<p id="altSpellings"></p>
-				<p id="namedInversions"></p>
+				<div class="info-group">
+					<label>Full Name:</label>
+					<p id="fullName"></p>
+				</div>
+				<div class="info-group">
+					<label>Forte Number:</label>
+					<p id="forteNumber"></p>
+				</div>
+				<div class="info-group">
+					<label>Intervals:</label>
+					<p id="intervals"></p>
+				</div>
+				<div class="info-group">
+					<label>Notes:</label>
+					<p id="notes"></p>
+				</div>
+				<div class="info-group">
+					<label>Pitch Classes:</label>
+					<p id="pcs"></p>
+				</div>
+				<div class="info-group">
+					<label>Aliases:</label>
+					<p id="aliases"></p>
+				</div>
+				<div class="info-group">
+					<label>Alternative Spellings:</label>
+					<p id="altSpellings"></p>
+				</div>
+				<div class="info-group">
+					<label>Named Inversions:</label>
+					<p id="namedInversions"></p>
+				</div>
 				<div class="monospace">
 					<p id="binary"></p>
 					<p id="decimal"></p>
@@ -103,6 +127,7 @@
 			</button>
 		</div>
 	</div>
+
 
 
 
@@ -157,6 +182,18 @@
 		h4 {
 			width: 100%;
 			margin: 5px 0;
+		}
+		.info-group {
+			margin-bottom: 1rem;
+		}
+		.info-group label {
+			display: block;
+			font-weight: bold;
+			color: #666;
+			margin-bottom: 0.25rem;
+		}
+		.info-group p {
+			margin: 0;
 		}
 	</style>
 
@@ -354,9 +391,17 @@
 					document.getElementById('altSpellings').style.display = 'none';
 				}
 
+				// Inside updateChordDisplay, update the trueInversions handling:
 				if (trueInversions.length > 0) {
-					document.getElementById('namedInversions').textContent = 
-						`Named Inversions: ${trueInversions.join('; ')}`;
+					document.getElementById('namedInversions').innerHTML = 
+						trueInversions.map(inv => {
+							console.log('Inversion:', inv);  // Debug log
+							if (!inv || !inv.notes) {
+								console.warn('Invalid inversion object:', inv);
+								return '';
+							}
+							return `${inv.chord} [${inv.notes.join(', ')}]`;
+						}).filter(s => s).join('<br>');
 					document.getElementById('namedInversions').style.display = 'block';
 				} else {
 					document.getElementById('namedInversions').style.display = 'none';
