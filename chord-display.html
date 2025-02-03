@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chord Dictionary</title>
     <style>
-        body {
+		body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
@@ -38,27 +38,6 @@
         .content p {
             margin: 8px 0;
         }
-		.controls-section {
-			background: #f5f5f5;
-			padding: 15px;
-			border-radius: 8px;
-			margin-bottom: 20px;
-		}
-		.checkbox-container {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 10px;
-			margin-top: 5px;
-		}
-		.checkbox-container label {
-			display: flex;
-			align-items: center;
-			gap: 5px;
-		}
-		h4 {
-			width: 100%;
-			margin: 5px 0;
-		}
         .monospace {
             font-family: monospace;
             background-color: #f5f5f5;
@@ -66,13 +45,14 @@
             border-radius: 4px;
             margin-top: 16px;
         }
-        .visualizations {
-            display: flex;
-            gap: 20px;
+        .visualization-container {
             margin-top: 20px;
         }
-        .circle-viz, .grid-viz {
-            flex: 1;
+        .circle-viz {
+            display: none;  /* Hidden by default */
+        }
+        .grid-viz {
+            display: block; /* Shown by default */
         }
         .chromatic-grid {
             display: grid;
@@ -89,30 +69,48 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            font-size: 14px;
+            justify-content: space-between;
+            font-size: 16px;
             position: relative;
             background: white;
-            padding: 8px;
-            min-height: 60px;
+            padding: 4px;
+            min-height: 80px;
             border-radius: 4px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            text-align: center;
         }
         .grid-cell.active {
             border-width: 2px;
             font-weight: bold;
         }
-        .grid-cell span {
+        .grid-cell span.cell-number {
             position: absolute;
             bottom: 2px;
             right: 4px;
             font-size: 10px;
             color: #666;
         }
+        .note-display {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            width: 100%;
+            gap: 4px;
+        }
+        .note-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .interval-name {
+            font-size: 14px;
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body>
-    <div class="controls">
+     <div class="controls">
         <input type="text" id="chordInput" placeholder="Type a chord (e.g., Bb7, F#m7)" style="padding: 8px; font-size: 16px; border: 1px solid #ccc; border-radius: 4px;">
         <select id="rootSelect">
             <option value="C">C</option>
@@ -138,39 +136,39 @@
         </select>
     </div>
 
-    <!-- Change the result div to use flexbox -->
-	<div id="result" class="card" style="display: none">
-		<div class="title" id="chordTitle"></div>
-		<div style="display: flex; gap: 20px; align-items: start;">
-			<div class="content" style="flex: 1;">
-				<p id="fullName">Full name:</p>
-				<p id="aliases"></p>
-				<p id="intervals"></p>
-				<p id="notes"></p>
-				<p id="altSpellings"></p>
-				<p id="namedInversions"></p>
-				<div class="monospace">
-					<p id="pcs"></p>
-					<p id="forteNumber"></p>
-					<p id="binary"></p>
-					<p id="decimal"></p>
-				</div>
-				<div class="controls">
-					<button id="toggleCircle" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300">
-						Toggle Circle View
-					</button>
-					<button id="toggleNotesDisplay" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300">
-						Show All Notes
-					</button>
-				</div>
-			</div>
-		 <div class="visualizations">
-            <div class="circle-viz" id="chordCircle"></div>
+	<div id="result" class="card">
+        <div class="title" id="chordTitle">Type or select a chord</div>
+        <div style="display: flex; gap: 20px; align-items: start;">
+            <div class="content" style="flex: 1;">
+                <p id="fullName">Full name:</p>
+                <p id="aliases">Aliases:</p>
+                <p id="intervals">Intervals:</p>
+                <p id="notes">Notes:</p>
+                <p id="altSpellings"></p>
+                <p id="namedInversions"></p>
+                <div class="monospace">
+                    <p id="pcs">Pitch Classes:</p>
+                    <p id="forteNumber">Forte Number:</p>
+                    <p id="binary">Binary:</p>
+                    <p id="decimal">Decimal:</p>
+                </div>
+                <div class="controls">
+                    <button id="toggleView" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300">
+                        Switch to Circle View
+                    </button>
+                    <button id="toggleNotesDisplay" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300">
+                        Show All Notes
+                    </button>
+                </div>
+            </div>
+            <div class="visualization-container" style="flex: 1;">
+                <div class="circle-viz" id="chordCircle" style="display: none;"></div>
+                <div class="grid-viz">
+                    <div class="chromatic-grid" id="chromaticGrid"></div>
+                </div>
+            </div>
         </div>
-		<div class="grid-viz">
-			<div class="chromatic-grid" id="chromaticGrid"></div>
-		</div>
-	</div>
+    </div>
 
 
 
@@ -277,7 +275,7 @@
                     // Add cell number in bottom right
                     const numLabel = document.createElement('span');
                     numLabel.textContent = cellNum;
-                    numLabel.style.opacity = '0.5';
+                    numLabel.className = 'cell-number';
                     cell.appendChild(numLabel);
 
                     // Find if this position contains a chord tone
@@ -287,11 +285,23 @@
                         cell.style.backgroundColor = fifthsColors[chordTone.note[0]] || '#666';
                         cell.style.color = isColorDark(fifthsColors[chordTone.note[0]] || '#666') ? '#fff' : '#000';
                         
-                        // Add interval marker and note name
-                        const noteText = document.createElement('div');
-                        noteText.textContent = `${chordTone.note} (${chordTone.interval})`;
-                        noteText.style.fontSize = '12px';
-                        cell.insertBefore(noteText, numLabel);
+                        // Create container for note and interval display
+                        const noteDisplay = document.createElement('div');
+                        noteDisplay.className = 'note-display';
+
+                        // Add note name
+                        const noteName = document.createElement('div');
+                        noteName.className = 'note-name';
+                        noteName.textContent = chordTone.note;
+                        noteDisplay.appendChild(noteName);
+
+                        // Add interval name
+                        const intervalName = document.createElement('div');
+                        intervalName.className = 'interval-name';
+                        intervalName.textContent = `(${chordTone.interval})`;
+                        noteDisplay.appendChild(intervalName);
+
+                        cell.insertBefore(noteDisplay, numLabel);
                     }
 
                     gridContainer.appendChild(cell);
@@ -412,91 +422,100 @@
 
 		
 		function updateChordDisplay() {
-			const root = rootSelect.value;
-			const quality = qualitySelect.value;
+            const root = rootSelect.value;
+            const quality = qualitySelect.value;
 
-			// Always show the result div
-			resultDiv.style.display = 'block';
+            if (!quality) {
+                // Create empty grid
+                createEmptyGrid();
+                // Clear all text fields
+                document.getElementById('chordTitle').textContent = 'Select a chord';
+                document.getElementById('fullName').textContent = 'Full name:';
+                document.getElementById('aliases').textContent = 'Aliases:';
+                document.getElementById('intervals').textContent = 'Intervals:';
+                document.getElementById('notes').textContent = 'Notes:';
+                document.getElementById('pcs').textContent = 'Pitch Classes:';
+                document.getElementById('forteNumber').textContent = 'Forte Number:';
+                document.getElementById('binary').textContent = 'Binary:';
+                document.getElementById('decimal').textContent = 'Decimal:';
+                document.getElementById('altSpellings').style.display = 'none';
+                document.getElementById('namedInversions').style.display = 'none';
+                return;
+            }
 
-			if (!quality) {
-				// Show empty state with circle
-				document.getElementById('chordTitle').textContent = 'Select a chord';
-				document.getElementById('fullName').textContent = 'Full Name: ';
-				document.getElementById('forteNumber').textContent = 'Forte Number: ';
-				document.getElementById('intervals').textContent = 'Intervals: ';
-				document.getElementById('notes').textContent = 'Notes: ';
-				document.getElementById('pcs').textContent = 'Pitch Classes: ';
-				document.getElementById('aliases').textContent = 'Aliases: ';
-				document.getElementById('altSpellings').style.display = 'none';
-				document.getElementById('namedInversions').style.display = 'none';
-				document.getElementById('binary').textContent = 'Binary: ';
-				document.getElementById('decimal').textContent = 'Decimal: ';
+            const chord = transposeChord(root, quality, chordData);
+            if (!chord) return;
 
-				// Create empty circle with all notes showing
-				window.showOnlyChordTones = false;
-				document.getElementById('toggleNotesDisplay').textContent = 'Show Chord Tones Only';
-		
-				// Create empty circle with just the notes
-				const chordCircleContainer = document.getElementById('chordCircle');
-				chordCircleContainer.innerHTML = createChordCircle(root, [], { notes: [] });
-				return;
-			}
-
-			const chord = transposeChord(root, quality, chordData);
-			if (!chord) return;
-
-			// Update chord circle			
-			document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
+            // Update visualizations
+            document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
             createChromaticGrid(root, chord);
 
-			// Get inversions and alternative spellings
-			const roots = ['C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯', 'A♭', 'A', 'A♯', 'B♭', 'B'];
-			const inversions = findSpecificInversions(root, quality, roots, chordData);
+            // Update text fields
+            document.getElementById('chordTitle').textContent = `${root}${chordData[quality].displayName || quality}`;
+            document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
+            document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
+            document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
+            document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
+            document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
+            document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
+            document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
+            document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
 
-			// Basic chord info
-			document.getElementById('chordTitle').textContent = `${root}${chordData[quality].displayName || quality}`;
-			document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
-			document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
-			document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
-			document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
-			document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
-			document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
+            // Get inversions and alternative spellings
+            const roots = ['C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯', 'A♭', 'A', 'A♯', 'B♭', 'B'];
+            const inversions = findSpecificInversions(root, quality, roots, chordData);
 
-			// Alternative spellings and inversions
-			if (inversions.length > 0) {
-				const altSpellings = inversions
-					.filter(inv => inv.interval === 0)
-					.map(spelling => `${spelling.chord} [${spelling.notes.join(', ')}]`);
+            if (inversions.length > 0) {
+                const altSpellings = inversions
+                    .filter(inv => inv.interval === 0)
+                    .map(spelling => `${spelling.chord} [${spelling.notes.join(', ')}]`);
 
-				const trueInversions = inversions
-					.filter(inv => inv.interval !== 0)
-					.map(inv => `${inv.chord} [${inv.notes.join(', ')}]`);
+                const trueInversions = inversions
+                    .filter(inv => inv.interval !== 0)
+                    .map(inv => `${inv.chord} [${inv.notes.join(', ')}]`);
 
-				if (altSpellings.length > 0) {
-					document.getElementById('altSpellings').textContent = 
-						`Alternative Spellings: ${altSpellings.join('; ')}`;
-					document.getElementById('altSpellings').style.display = 'block';
-				} else {
-					document.getElementById('altSpellings').style.display = 'none';
-				}
+                if (altSpellings.length > 0) {
+                    document.getElementById('altSpellings').textContent = 
+                        `Alternative Spellings: ${altSpellings.join('; ')}`;
+                    document.getElementById('altSpellings').style.display = 'block';
+                } else {
+                    document.getElementById('altSpellings').style.display = 'none';
+                }
 
-				if (trueInversions.length > 0) {
-					const invElement = document.getElementById('namedInversions');
-					invElement.innerHTML = `Named Inversions:<br>${trueInversions.join('<br>')}`;
-					invElement.style.display = 'block';
-				} else {
-					document.getElementById('namedInversions').style.display = 'none';
-				}
-			} else {
-				document.getElementById('altSpellings').style.display = 'none';
-				document.getElementById('namedInversions').style.display = 'none';
-			}
+                if (trueInversions.length > 0) {
+                    const invElement = document.getElementById('namedInversions');
+                    invElement.innerHTML = `Named Inversions:<br>${trueInversions.join('<br>')}`;
+                    invElement.style.display = 'block';
+                } else {
+                    document.getElementById('namedInversions').style.display = 'none';
+                }
+            } else {
+                document.getElementById('altSpellings').style.display = 'none';
+                document.getElementById('namedInversions').style.display = 'none';
+            }
+        }
+        
+        function createEmptyGrid() {
+            const gridContainer = document.getElementById('chromaticGrid');
+            gridContainer.innerHTML = '';
 
-			document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
-			document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
-
-			resultDiv.style.display = 'block';
-		}
+            // Create 5x5 grid with just numbers
+            for (let row = 4; row >= 0; row--) {
+                for (let col = 0; col < 5; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    
+                    const cellNum = row * 5 + col;
+                    
+                    const numLabel = document.createElement('span');
+                    numLabel.className = 'cell-number';
+                    numLabel.textContent = cellNum;
+                    cell.appendChild(numLabel);
+                    
+                    gridContainer.appendChild(cell);
+                }
+            }
+        }
 
 
 
@@ -1053,39 +1072,63 @@
 		});
 
 
-		document.getElementById('toggleCircle').addEventListener('click', function() {
-			const circleDiv = document.getElementById('chordCircle');
-			if (circleDiv.style.display === 'none') {
-				circleDiv.style.display = 'block';
-				// If circle is currently empty but chord is selected, update it
-				if (!circleDiv.innerHTML && qualitySelect.value) {
-					updateChordDisplay();
-				}
-			} else {
-				circleDiv.style.display = 'none';
-			}
-		});
+// 		document.getElementById('toggleCircle').addEventListener('click', function() {
+// 			const circleDiv = document.getElementById('chordCircle');
+// 			if (circleDiv.style.display === 'none') {
+// 				circleDiv.style.display = 'block';
+// 				// If circle is currently empty but chord is selected, update it
+// 				if (!circleDiv.innerHTML && qualitySelect.value) {
+// 					updateChordDisplay();
+// 				}
+// 			} else {
+// 				circleDiv.style.display = 'none';
+// 			}
+// 		});
 		
 		rootSelect.addEventListener('change', updateChordDisplay);
 		qualitySelect.addEventListener('change', updateChordDisplay);
 
 		// Initialize display when page loads
-		document.addEventListener('DOMContentLoaded', function() {
-			updateChordDisplay();
-		});
-
-
-		// Add this global variable
-		window.showOnlyChordTones = false;
-
+        document.addEventListener('DOMContentLoaded', function() {
+            createEmptyGrid();
+        });
+        
+        // Add/update the event listener
 		document.getElementById('toggleNotesDisplay').addEventListener('click', function() {
 			window.showOnlyChordTones = !window.showOnlyChordTones;
 			this.textContent = window.showOnlyChordTones ? 'Show All Notes' : 'Show Chord Tones Only';
-			// Update the display if the circle is visible
-			if (document.getElementById('chordCircle').style.display !== 'none') {
-				updateChordDisplay();
+	
+			// Re-render current visualization
+			if (qualitySelect.value) {
+				const root = rootSelect.value;
+				const quality = qualitySelect.value;
+				const chord = transposeChord(root, quality, chordData);
+		
+				// Update both visualizations
+				document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
+				createChromaticGrid(root, chord);
 			}
 		});
+
+        // Update toggle view functionality
+        document.getElementById('toggleView').addEventListener('click', function() {
+			const circleDiv = document.getElementById('chordCircle');
+			const gridDiv = document.querySelector('.grid-viz');
+	
+			if (circleDiv.style.display === 'none') {
+				gridDiv.style.display = 'none';
+				circleDiv.style.display = 'block';
+				this.textContent = 'Switch to Grid View';
+			} else {
+				gridDiv.style.display = 'block';
+				circleDiv.style.display = 'none';
+				this.textContent = 'Switch to Circle View';
+			}
+		});
+
+		// Add this global variable
+// 		window.showOnlyChordTones = false;
+
 
 
 
