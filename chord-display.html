@@ -157,8 +157,8 @@
                         Switch to Circle View
                     </button>
                     <button id="toggleNotesDisplay" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300">
-                        Show All Notes
-                    </button>
+						Toggle note visibility
+					</button>
                 </div>
             </div>
             <div class="visualization-container" style="flex: 1;">
@@ -1093,10 +1093,9 @@
             createEmptyGrid();
         });
         
-        // Add/update the event listener
-		document.getElementById('toggleNotesDisplay').addEventListener('click', function() {
+        document.getElementById('toggleNotesDisplay').addEventListener('click', function() {
 			window.showOnlyChordTones = !window.showOnlyChordTones;
-			this.textContent = window.showOnlyChordTones ? 'Show All Notes' : 'Show Chord Tones Only';
+			this.textContent = 'Toggle note visibility';
 	
 			// Re-render current visualization
 			if (qualitySelect.value) {
@@ -1109,7 +1108,6 @@
 				createChromaticGrid(root, chord);
 			}
 		});
-
         // Update toggle view functionality
         document.getElementById('toggleView').addEventListener('click', function() {
 			const circleDiv = document.getElementById('chordCircle');
@@ -1126,10 +1124,8 @@
 			}
 		});
 
-		// Add this global variable
-// 		window.showOnlyChordTones = false;
-
-
+		// Set default state
+		window.showOnlyChordTones = true;  // Circle defaults to chord tones only
 
 
 
