@@ -142,78 +142,97 @@ fetch('chord_dictionary.json')
 	.catch(error => console.error('Error loading chord data:', error));
 
 
+// Update the chord display function to include clickable links
 function updateChordDisplay() {
-	const root = rootSelect.value;
-	const quality = qualitySelect.value;
+    const root = rootSelect.value;
+    const quality = qualitySelect.value;
 
-	if (!quality) {
-		// Create empty grid
-		createEmptyGrid();
-		// Clear all text fields
-		document.getElementById('chordTitle').textContent = 'Select a chord';
-		document.getElementById('fullName').textContent = 'Full name:';
-		document.getElementById('aliases').textContent = 'Aliases:';
-		document.getElementById('intervals').textContent = 'Intervals:';
-		document.getElementById('notes').textContent = 'Notes:';
-		document.getElementById('pcs').textContent = 'Pitch Classes:';
-		document.getElementById('forteNumber').textContent = 'Forte Number:';
-		document.getElementById('binary').textContent = 'Binary:';
-		document.getElementById('decimal').textContent = 'Decimal:';
-		document.getElementById('altSpellings').style.display = 'none';
-		document.getElementById('namedInversions').style.display = 'none';
-		return;
-	}
+    if (!quality) {
+        // Create empty grid
+        createEmptyGrid();
+        // Clear all text fields
+        document.getElementById('chordTitle').textContent = 'Select a chord';
+        document.getElementById('fullName').textContent = 'Full name:';
+        document.getElementById('aliases').textContent = 'Aliases:';
+        document.getElementById('intervals').textContent = 'Intervals:';
+        document.getElementById('notes').textContent = 'Notes:';
+        document.getElementById('pcs').textContent = 'Pitch Classes:';
+        document.getElementById('forteNumber').textContent = 'Forte Number:';
+        document.getElementById('binary').textContent = 'Binary:';
+        document.getElementById('decimal').textContent = 'Decimal:';
+        document.getElementById('altSpellings').style.display = 'none';
+        document.getElementById('namedInversions').style.display = 'none';
+        return;
+    }
 
-	const chord = transposeChord(root, quality, chordData);
-	if (!chord) return;
+    const chord = transposeChord(root, quality, chordData);
+    if (!chord) return;
 
-	// Update visualizations
-	document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
+    // Update visualizations
+    document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
     createChromaticGrid(root, chord, window.useSecondPosition);
 
-	// Update text fields
-	document.getElementById('chordTitle').textContent = `${root}${chordData[quality].displayName || quality}`;
-	document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
-	document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
-	document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
-	document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
-	document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
-	document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
-	document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
-	document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
+    // Update text fields
+    document.getElementById('chordTitle').textContent = `${root}${chordData[quality].displayName || quality}`;
+    document.getElementById('fullName').textContent = `Full Name: ${chord.fullName}`;
+    document.getElementById('aliases').textContent = `Aliases: [${chord.aliases.join(', ')}]`;
+    document.getElementById('intervals').textContent = `Intervals: [${chord.intervals.join(', ')}]`;
+    document.getElementById('notes').textContent = `Notes: [${chord.notes.join(', ')}]`;
+    document.getElementById('pcs').textContent = `Pitch Classes: [${chord.pcs.join(', ')}]`;
+    document.getElementById('forteNumber').textContent = `Forte Number: ${chord.forteNumber}`;
+    document.getElementById('binary').textContent = `Binary: ${chord.binary}`;
+    document.getElementById('decimal').textContent = `Decimal: ${chord.decimal}`;
 
-	// Get inversions and alternative spellings
-	const roots = ['C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯', 'A♭', 'A', 'A♯', 'B♭', 'B'];
-	const inversions = findSpecificInversions(root, quality, roots, chordData);
+    // Get inversions and alternative spellings
+    const roots = ['C', 'C♯', 'D♭', 'D', 'D♯', 'E♭', 'E', 'F', 'F♯', 'G♭', 'G', 'G♯', 'A♭', 'A', 'A♯', 'B♭', 'B'];
+    const inversions = findSpecificInversions(root, quality, roots, chordData);
 
-	if (inversions.length > 0) {
-		const altSpellings = inversions
-			.filter(inv => inv.interval === 0)
-			.map(spelling => `${spelling.chord} [${spelling.notes.join(', ')}]`);
+    if (inversions.length > 0) {
+        const altSpellings = inversions
+            .filter(inv => inv.interval === 0)
+            .map(spelling => {
+                const chordParam = encodeURIComponent(spelling.chord);
+                return `<a href="?chord=${chordParam}" class="chord-link">${spelling.chord}</a> [${spelling.notes.join(', ')}]`;
+            });
 
-		const trueInversions = inversions
-			.filter(inv => inv.interval !== 0)
-			.map(inv => `${inv.chord} [${inv.notes.join(', ')}]`);
+        const trueInversions = inversions
+            .filter(inv => inv.interval !== 0)
+            .map(inv => {
+                const chordParam = encodeURIComponent(inv.chord);
+                return `<a href="?chord=${chordParam}" class="chord-link">${inv.chord}</a> [${inv.notes.join(', ')}]`;
+            });
 
-		if (altSpellings.length > 0) {
-			document.getElementById('altSpellings').textContent = 
-				`Alternative Spellings: ${altSpellings.join('; ')}`;
-			document.getElementById('altSpellings').style.display = 'block';
-		} else {
-			document.getElementById('altSpellings').style.display = 'none';
-		}
+        if (altSpellings.length > 0) {
+            document.getElementById('altSpellings').innerHTML = 
+                `Alternative Spellings: ${altSpellings.join('; ')}`;
+            document.getElementById('altSpellings').style.display = 'block';
+        } else {
+            document.getElementById('altSpellings').style.display = 'none';
+        }
 
-		if (trueInversions.length > 0) {
-			const invElement = document.getElementById('namedInversions');
-			invElement.innerHTML = `Named Inversions:<br>${trueInversions.join('<br>')}`;
-			invElement.style.display = 'block';
-		} else {
-			document.getElementById('namedInversions').style.display = 'none';
-		}
-	} else {
-		document.getElementById('altSpellings').style.display = 'none';
-		document.getElementById('namedInversions').style.display = 'none';
-	}
+        if (trueInversions.length > 0) {
+            const invElement = document.getElementById('namedInversions');
+            invElement.innerHTML = `Named Inversions:<br>${trueInversions.join('<br>')}`;
+            invElement.style.display = 'block';
+        } else {
+            document.getElementById('namedInversions').style.display = 'none';
+        }
+    } else {
+        document.getElementById('altSpellings').style.display = 'none';
+        document.getElementById('namedInversions').style.display = 'none';
+    }
+
+    // Add click handlers for chord links
+    document.querySelectorAll('.chord-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const chordParam = new URLSearchParams(new URL(this.href).search).get('chord');
+            if (chordParam) {
+                window.history.pushState({}, '', `?chord=${chordParam}`);
+                handleChordInput(chordParam);
+            }
+        });
+    });
 }
 
 
