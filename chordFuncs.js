@@ -390,44 +390,47 @@ function exportChordDictionary() {
 }
 
 document.getElementById('chordInput').addEventListener('keypress', function(e) {
-	if (e.key === 'Enter') {
-		const input = this.value.trim();
-		if (!input) return;
+    if (e.key === 'Enter') {
+        const input = this.value.trim();
+        if (!input) return;
 
-		// Parse chord symbol with expanded regex to accept both ASCII and Unicode accidentals
-		const match = input.match(/^([A-G][b#♭♯]?)(.*)$/);
-		if (!match) return;
+        // Check if input starts with a root note
+        const match = input.match(/^([A-G][b#♭♯]?)(.*)$/);
+        
+        let root, quality;
+        if (match) {
+            // If there's a root note, parse as before
+            [_, rootRaw, qualityRaw] = match;
+            root = rootRaw.replace(/b/g, '♭').replace(/#/g, '♯');
+            quality = qualityRaw;
+        } else {
+            // No root note - use C as default
+            root = 'C';
+            quality = input;
+        }
 
-		const [_, rootRaw, qualityRaw] = match;
+        // Find the main quality - first check if it's a direct key
+        let mainQuality = quality;
 
-		// Now normalize accidentals for the root only
-		const root = rootRaw.replace(/b/g, '♭').replace(/#/g, '♯');
+        if (!chordData[mainQuality]) {
+            // If not a direct key, look through aliases
+            for (let key in chordData) {
+                if (chordData[key].aliases && 
+                    chordData[key].aliases.includes(quality)) {
+                    mainQuality = key;
+                    break;
+                }
+            }
+        }
 
-		// Keep quality as is for dictionary lookup
-		const quality = qualityRaw;
-
-		// Find the main quality - first check if it's a direct key
-		let mainQuality = quality;
-
-		if (!chordData[mainQuality]) {
-			// If not a direct key, look through aliases
-			for (let key in chordData) {
-				if (chordData[key].aliases && 
-					chordData[key].aliases.includes(quality)) {
-					mainQuality = key;
-					break;
-				}
-			}
-		}
-
-		// Update select elements if values exist
-		if (rootSelect.querySelector(`option[value="${root}"]`) && 
-			qualitySelect.querySelector(`option[value="${mainQuality}"]`)) {
-			rootSelect.value = root;
-			qualitySelect.value = mainQuality;
-			updateChordDisplay();
-		}
-	}
+        // Update select elements if values exist
+        if (rootSelect.querySelector(`option[value="${root}"]`) && 
+            qualitySelect.querySelector(`option[value="${mainQuality}"]`)) {
+            rootSelect.value = root;
+            qualitySelect.value = mainQuality;
+            updateChordDisplay();
+        }
+    }
 });
 
 
