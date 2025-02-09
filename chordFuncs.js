@@ -434,6 +434,7 @@ document.getElementById('chordInput').addEventListener('keypress', function(e) {
 });
 
 
+
 rootSelect.addEventListener('change', updateChordDisplay);
 qualitySelect.addEventListener('change', updateChordDisplay);
 
@@ -514,6 +515,70 @@ document.getElementById('togglePosition').addEventListener('click', function() {
     }
 });
 		
+
+// Function to parse URL parameters
+function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return Object.fromEntries(params);
+}
+
+// Function to handle chord from URL parameter
+function handleChordParam(chordParam) {
+    if (!chordParam) return;
+    
+    // Check if input starts with a root note
+    const match = chordParam.match(/^([A-G][b#♭♯]?)(.*)$/);
+    
+    let root, quality;
+    if (match) {
+        // If there's a root note, parse as before
+        [_, rootRaw, qualityRaw] = match;
+        root = rootRaw.replace(/b/g, '♭').replace(/#/g, '♯');
+        quality = qualityRaw;
+    } else {
+        // No root note - use C as default
+        root = 'C';
+        quality = chordParam;
+    }
+
+    // Find the main quality - first check if it's a direct key
+    let mainQuality = quality;
+
+    if (!chordData[mainQuality]) {
+        // If not a direct key, look through aliases
+        for (let key in chordData) {
+            if (chordData[key].aliases && 
+                chordData[key].aliases.includes(quality)) {
+                mainQuality = key;
+                break;
+            }
+        }
+    }
+
+    // Update select elements if values exist
+    if (rootSelect.querySelector(`option[value="${root}"]`) && 
+        qualitySelect.querySelector(`option[value="${mainQuality}"]`)) {
+        rootSelect.value = root;
+        qualitySelect.value = mainQuality;
+        updateChordDisplay();
+    }
+}
+
+// Add event listener for page load
+document.addEventListener('DOMContentLoaded', function() {
+    const params = getUrlParams();
+    if (params.chord) {
+        // Wait for chord data to load before processing URL parameter
+        const checkDataLoaded = setInterval(() => {
+            if (Object.keys(chordData).length > 0) {
+                clearInterval(checkDataLoaded);
+                handleChordParam(params.chord);
+            }
+        }, 100);
+    } else {
+        createEmptyGrid();
+    }
+});
 
 // 		document.getElementById('transpositions-checkbox').addEventListener('change', function() {
 // 			document.getElementById('transposition-options').style.display = this.checked ? 'block' : 'none';
