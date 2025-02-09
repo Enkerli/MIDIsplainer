@@ -169,7 +169,7 @@ function updateChordDisplay() {
 
 	// Update visualizations
 	document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
-	createChromaticGrid(root, chord);
+    createChromaticGrid(root, chord, window.useSecondPosition);
 
 	// Update text fields
 	document.getElementById('chordTitle').textContent = `${root}${chordData[quality].displayName || quality}`;
@@ -431,19 +431,6 @@ document.getElementById('chordInput').addEventListener('keypress', function(e) {
 });
 
 
-// 		document.getElementById('toggleCircle').addEventListener('click', function() {
-// 			const circleDiv = document.getElementById('chordCircle');
-// 			if (circleDiv.style.display === 'none') {
-// 				circleDiv.style.display = 'block';
-// 				// If circle is currently empty but chord is selected, update it
-// 				if (!circleDiv.innerHTML && qualitySelect.value) {
-// 					updateChordDisplay();
-// 				}
-// 			} else {
-// 				circleDiv.style.display = 'none';
-// 			}
-// 		});
-
 rootSelect.addEventListener('change', updateChordDisplay);
 qualitySelect.addEventListener('change', updateChordDisplay);
 
@@ -458,35 +445,32 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('toggleNotesDisplay').style.display = 'none';
 });
 
-// Update toggle view functionality to manage both views and button visibility
+// Update toggle position visibility with view toggle
 document.getElementById('toggleView').addEventListener('click', function() {
     const circleDiv = document.getElementById('chordCircle');
     const gridDiv = document.querySelector('.grid-viz');
     const toggleNotesBtn = document.getElementById('toggleNotesDisplay');
+    const togglePositionBtn = document.getElementById('togglePosition');
 
     if (circleDiv.style.display === 'none') {
         // Switching to circle view
         gridDiv.style.display = 'none';
         circleDiv.style.display = 'block';
         toggleNotesBtn.style.display = 'block';
+        togglePositionBtn.style.display = 'none';
         this.textContent = 'Switch to Grid View';
     } else {
         // Switching to grid view
         gridDiv.style.display = 'block';
         circleDiv.style.display = 'none';
         toggleNotesBtn.style.display = 'none';
+        togglePositionBtn.style.display = 'block';
         this.textContent = 'Switch to Circle View';
     }
 
     // Re-render current visualization if a chord is selected
     if (qualitySelect.value) {
-        const root = rootSelect.value;
-        const quality = qualitySelect.value;
-        const chord = transposeChord(root, quality, chordData);
-        
-        // Update both visualizations
-        document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
-        createChromaticGrid(root, chord);
+        updateChordDisplay();
     }
 });
 
@@ -506,26 +490,26 @@ document.getElementById('toggleNotesDisplay').addEventListener('click', function
 	}
 });
 
-// // Update toggle view functionality
-// document.getElementById('toggleView').addEventListener('click', function() {
-// 	const circleDiv = document.getElementById('chordCircle');
-// 	const gridDiv = document.querySelector('.grid-viz');
-// 
-// 	if (circleDiv.style.display === 'none') {
-// 		gridDiv.style.display = 'none';
-// 		circleDiv.style.display = 'block';
-// 		this.textContent = 'Switch to Grid View';
-// 	} else {
-// 		gridDiv.style.display = 'block';
-// 		circleDiv.style.display = 'none';
-// 		this.textContent = 'Switch to Circle View';
-// 	}
-// });
-// 
-// // Set default state
+// Set default state
 window.showOnlyChordTones = true;  // Circle defaults to chord tones only
-// 
+window.useSecondPosition = false;
 
+
+// Handle position toggle
+document.getElementById('togglePosition').addEventListener('click', function() {
+    window.useSecondPosition = !window.useSecondPosition;
+    this.textContent = window.useSecondPosition ? 
+        'Switch to First Position' : 
+        'Switch to Second Position';
+
+    // Update grid if chord is selected
+    if (qualitySelect.value) {
+        const root = rootSelect.value;
+        const quality = qualitySelect.value;
+        const chord = transposeChord(root, quality, chordData);
+        createChromaticGrid(root, chord, window.useSecondPosition);
+    }
+});
 		
 
 // 		document.getElementById('transpositions-checkbox').addEventListener('change', function() {

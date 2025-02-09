@@ -64,81 +64,87 @@ function createEmptyGrid() {
 }
 
 // Create chromatic grid visualization
-function createChromaticGrid(root, chord) {
-	const gridContainer = document.getElementById('chromaticGrid');
-	gridContainer.innerHTML = '';
+function createChromaticGrid(root, chord, useSecondPosition = false) {
+  const gridContainer = document.getElementById('chromaticGrid');
+  gridContainer.innerHTML = '';
 
-	// Get the root's pitch class to use as reference point
-	const rootPC = getPC(root);
-	
-	// Create mapping of semitone distances to chord information
-	const intervalMapping = chord.notes.map((note, index) => {
-		const pc = getPC(note);
-		// Calculate semitones from root, ensuring positive value
-		const semitones = (pc - rootPC + 12) % 12;
-		return {
-			semitones,
-			note,
-			interval: chord.intervals[index]
-		};
-	});
+  // Get the root's pitch class to use as reference point
+  const rootPC = getPC(root);
+  
+  // Create mapping of semitone distances to chord information
+  const intervalMapping = chord.notes.map((note, index) => {
+    const pc = getPC(note);
+    // Calculate semitones from root, ensuring positive value
+    const semitones = (pc - rootPC + 12) % 12;
+    return {
+      semitones,
+      note,
+      interval: chord.intervals[index]
+    };
+  });
 
-	// Create 5x5 grid
-	for (let row = 4; row >= 0; row--) {  // Start from bottom row
-		for (let col = 0; col < 5; col++) {
-			const cell = document.createElement('div');
-			cell.className = 'grid-cell';
-			
-			// Calculate cell number (0-24)
-			const cellNum = row * 5 + col;
-			
-			// Calculate semitones from root position (0)
-			const semitones = cellNum % 12;
-			
-			// Add cell number in bottom right
-			const numLabel = document.createElement('span');
-			numLabel.textContent = cellNum;
-			numLabel.className = 'cell-number';
-			cell.appendChild(numLabel);
+  // Position offset when using second position
+  const positionOffset = useSecondPosition ? 2 : 0;
 
-			// Find if this position contains a chord tone
-			const chordTone = intervalMapping.find(interval => interval.semitones === semitones);
-			if (chordTone) {
-				cell.className += ' active';
-	
-				// Determine if this is an extension (9, 11, 13)
-				const isExtension = ['9', '♭9', '♯9', '11', '♯11', '13', '♭13'].includes(chordTone.interval);
-	
-				// Determine if this position should be greyed out
-				const shouldGreyOut = (isExtension && cellNum < 12) || (!isExtension && cellNum >= 12);
-	
-				const noteColor = fifthsColors[chordTone.note[0]] || '#666';
-				cell.style.backgroundColor = shouldGreyOut ? '#f4f0ec' : noteColor;
-				// Only check contrast for non-greyed out cells
-				cell.style.color = shouldGreyOut ? '#000' : (isColorDark(noteColor) ? '#fff' : '#000');
-	
-				// Create container for note and interval display
-				const noteDisplay = document.createElement('div');
-				noteDisplay.className = 'note-display';
+  // Create 5x5 grid
+  for (let row = 4; row >= 0; row--) {  // Start from bottom row
+    for (let col = 0; col < 5; col++) {
+      const cell = document.createElement('div');
+      cell.className = 'grid-cell';
+      
+      // Calculate cell number (0-24)
+      const cellNum = row * 5 + col;
+      
+      // Calculate semitones from root position (0 or 2)
+      const semitones = ((cellNum - positionOffset + 24) % 12);
+      
+      // Add cell number in bottom right
+      const numLabel = document.createElement('span');
+      numLabel.textContent = cellNum;
+      numLabel.className = 'cell-number';
+      cell.appendChild(numLabel);
 
-				// Add note name
-				const noteName = document.createElement('div');
-				noteName.className = 'note-name';
-				noteName.textContent = chordTone.note;
-				noteDisplay.appendChild(noteName);
+      // Find if this position contains a chord tone
+      const chordTone = intervalMapping.find(interval => interval.semitones === semitones);
+      if (chordTone) {
+        cell.className += ' active';
 
-				// Add interval name
-				const intervalName = document.createElement('div');
-				intervalName.className = 'interval-name';
-				intervalName.textContent = `(${chordTone.interval})`;
-				noteDisplay.appendChild(intervalName);
+        // Determine if this is an extension (9, 11, 13)
+        const isExtension = ['9', '♭9', '♯9', '11', '♯11', '13', '♭13'].includes(chordTone.interval);
 
-				cell.insertBefore(noteDisplay, numLabel);
-			}
+        // Always grey out cells 0-1 in second position, plus usual octave break logic
+        const octaveBreak = useSecondPosition ? 14 : 12;
+        const beforeRoot = useSecondPosition && cellNum < 2;
+        const shouldGreyOut = beforeRoot || 
+                            (isExtension && cellNum < octaveBreak) || 
+                            (!isExtension && cellNum >= octaveBreak);
 
-			gridContainer.appendChild(cell);
-		}
-	}
+        const noteColor = fifthsColors[chordTone.note[0]] || '#666';
+        cell.style.backgroundColor = shouldGreyOut ? '#f4f0ec' : noteColor;
+        cell.style.color = shouldGreyOut ? '#000' : (isColorDark(noteColor) ? '#fff' : '#000');
+
+        // Create container for note and interval display
+        const noteDisplay = document.createElement('div');
+        noteDisplay.className = 'note-display';
+
+        // Add note name
+        const noteName = document.createElement('div');
+        noteName.className = 'note-name';
+        noteName.textContent = chordTone.note;
+        noteDisplay.appendChild(noteName);
+
+        // Add interval name
+        const intervalName = document.createElement('div');
+        intervalName.className = 'interval-name';
+        intervalName.textContent = `(${chordTone.interval})`;
+        noteDisplay.appendChild(intervalName);
+
+        cell.insertBefore(noteDisplay, numLabel);
+      }
+
+      gridContainer.appendChild(cell);
+    }
+  }
 }
 
 // Define createChordCircle before it's used
