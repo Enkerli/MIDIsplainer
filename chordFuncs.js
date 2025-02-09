@@ -523,7 +523,7 @@ document.getElementById('toggleNotesDisplay').addEventListener('click', function
 // });
 // 
 // // Set default state
-// window.showOnlyChordTones = true;  // Circle defaults to chord tones only
+window.showOnlyChordTones = true;  // Circle defaults to chord tones only
 // 
 
 		
