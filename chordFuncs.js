@@ -434,20 +434,9 @@ document.getElementById('chordInput').addEventListener('keypress', function(e) {
 });
 
 
-
 rootSelect.addEventListener('change', updateChordDisplay);
 qualitySelect.addEventListener('change', updateChordDisplay);
 
-// Initialize display when page loads
-document.addEventListener('DOMContentLoaded', function() {
-	createEmptyGrid();
-});
-
-// Add initial state setup to hide toggle notes button
-document.addEventListener('DOMContentLoaded', function() {
-    createEmptyGrid();
-    document.getElementById('toggleNotesDisplay').style.display = 'none';
-});
 
 // Update toggle position visibility with view toggle
 document.getElementById('toggleView').addEventListener('click', function() {
@@ -493,12 +482,6 @@ document.getElementById('toggleNotesDisplay').addEventListener('click', function
 		createChromaticGrid(root, chord);
 	}
 });
-
-// Set default state
-window.showOnlyChordTones = true;  // Circle defaults to chord tones only
-window.useSecondPosition = false;
-
-
 // Handle position toggle
 document.getElementById('togglePosition').addEventListener('click', function() {
     window.useSecondPosition = !window.useSecondPosition;
@@ -514,12 +497,132 @@ document.getElementById('togglePosition').addEventListener('click', function() {
         createChromaticGrid(root, chord, window.useSecondPosition);
     }
 });
+
+// Set default state
+window.showOnlyChordTones = true;  // Circle defaults to chord tones only
+window.useSecondPosition = false;
 		
 
-// Function to parse URL parameters
-function getUrlParams() {
+// Consolidated initialization function
+function initializeChordDisplay() {
+    // Initial UI state
+    window.showOnlyChordTones = true;
+    window.useSecondPosition = false;
+    createEmptyGrid();
+    document.getElementById('toggleNotesDisplay').style.display = 'none';
+
+    // Event Listeners
+    rootSelect.addEventListener('change', updateChordDisplay);
+    qualitySelect.addEventListener('change', updateChordDisplay);
+
+    // Input handler
+    document.getElementById('chordInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            handleChordInput(this.value.trim());
+        }
+    });
+
+    // View toggle handler
+    document.getElementById('toggleView').addEventListener('click', function() {
+        const circleDiv = document.getElementById('chordCircle');
+        const gridDiv = document.querySelector('.grid-viz');
+        const toggleNotesBtn = document.getElementById('toggleNotesDisplay');
+        const togglePositionBtn = document.getElementById('togglePosition');
+
+        if (circleDiv.style.display === 'none') {
+            gridDiv.style.display = 'none';
+            circleDiv.style.display = 'block';
+            toggleNotesBtn.style.display = 'block';
+            togglePositionBtn.style.display = 'none';
+            this.textContent = 'Switch to Grid View';
+        } else {
+            gridDiv.style.display = 'block';
+            circleDiv.style.display = 'none';
+            toggleNotesBtn.style.display = 'none';
+            togglePositionBtn.style.display = 'block';
+            this.textContent = 'Switch to Circle View';
+        }
+
+        if (qualitySelect.value) {
+            updateChordDisplay();
+        }
+    });
+
+    // Notes visibility toggle
+    document.getElementById('toggleNotesDisplay').addEventListener('click', function() {
+        window.showOnlyChordTones = !window.showOnlyChordTones;
+        this.textContent = 'Toggle note visibility';
+
+        if (qualitySelect.value) {
+            const root = rootSelect.value;
+            const quality = qualitySelect.value;
+            const chord = transposeChord(root, quality, chordData);
+            document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
+            createChromaticGrid(root, chord);
+        }
+    });
+
+    // Position toggle
+    document.getElementById('togglePosition').addEventListener('click', function() {
+        window.useSecondPosition = !window.useSecondPosition;
+        this.textContent = window.useSecondPosition ? 
+            'Switch to First Position' : 
+            'Switch to Second Position';
+
+        if (qualitySelect.value) {
+            const root = rootSelect.value;
+            const quality = qualitySelect.value;
+            const chord = transposeChord(root, quality, chordData);
+            createChromaticGrid(root, chord, window.useSecondPosition);
+        }
+    });
+
+    // Handle URL parameters on load
     const params = new URLSearchParams(window.location.search);
-    return Object.fromEntries(params);
+    const chordParam = params.get('chord');
+    if (chordParam) {
+        const checkDataLoaded = setInterval(() => {
+            if (Object.keys(chordData).length > 0) {
+                clearInterval(checkDataLoaded);
+                handleChordInput(chordParam);
+            }
+        }, 100);
+    }
+}
+
+// Consolidated chord input handling
+function handleChordInput(input) {
+    if (!input) return;
+
+    const match = input.match(/^([A-G][b#♭♯]?)(.*)$/);
+    
+    let root, quality;
+    if (match) {
+        [_, rootRaw, qualityRaw] = match;
+        root = rootRaw.replace(/b/g, '♭').replace(/#/g, '♯');
+        quality = qualityRaw;
+    } else {
+        root = 'C';
+        quality = input;
+    }
+
+    let mainQuality = quality;
+    if (!chordData[mainQuality]) {
+        for (let key in chordData) {
+            if (chordData[key].aliases && 
+                chordData[key].aliases.includes(quality)) {
+                mainQuality = key;
+                break;
+            }
+        }
+    }
+
+    if (rootSelect.querySelector(`option[value="${root}"]`) && 
+        qualitySelect.querySelector(`option[value="${mainQuality}"]`)) {
+        rootSelect.value = root;
+        qualitySelect.value = mainQuality;
+        updateChordDisplay();
+    }
 }
 
 // Function to handle chord from URL parameter
@@ -564,21 +667,17 @@ function handleChordParam(chordParam) {
     }
 }
 
-// Add event listener for page load
-document.addEventListener('DOMContentLoaded', function() {
-    const params = getUrlParams();
-    if (params.chord) {
-        // Wait for chord data to load before processing URL parameter
-        const checkDataLoaded = setInterval(() => {
-            if (Object.keys(chordData).length > 0) {
-                clearInterval(checkDataLoaded);
-                handleChordParam(params.chord);
-            }
-        }, 100);
-    } else {
-        createEmptyGrid();
-    }
-});
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', initializeChordDisplay);
+
+
+// Function to parse URL parameters
+function getUrlParams() {
+    const params = new URLSearchParams(window.location.search);
+    return Object.fromEntries(params);
+}
+
+
 
 // 		document.getElementById('transpositions-checkbox').addEventListener('change', function() {
 // 			document.getElementById('transposition-options').style.display = this.checked ? 'block' : 'none';
