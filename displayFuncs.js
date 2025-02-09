@@ -105,9 +105,18 @@ function createChromaticGrid(root, chord) {
 			const chordTone = intervalMapping.find(interval => interval.semitones === semitones);
 			if (chordTone) {
 				cell.className += ' active';
-				cell.style.backgroundColor = fifthsColors[chordTone.note[0]] || '#666';
-				cell.style.color = isColorDark(fifthsColors[chordTone.note[0]] || '#666') ? '#fff' : '#000';
-				
+	
+				// Determine if this is an extension (9, 11, 13)
+				const isExtension = ['9', '♭9', '♯9', '11', '♯11', '13', '♭13'].includes(chordTone.interval);
+	
+				// Determine if this position should be greyed out
+				const shouldGreyOut = (isExtension && cellNum < 12) || (!isExtension && cellNum >= 12);
+	
+				const noteColor = fifthsColors[chordTone.note[0]] || '#666';
+				cell.style.backgroundColor = shouldGreyOut ? '#f4f0ec' : noteColor;
+				// Only check contrast for non-greyed out cells
+				cell.style.color = shouldGreyOut ? '#000' : (isColorDark(noteColor) ? '#fff' : '#000');
+	
 				// Create container for note and interval display
 				const noteDisplay = document.createElement('div');
 				noteDisplay.className = 'note-display';

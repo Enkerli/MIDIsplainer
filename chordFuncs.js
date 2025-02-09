@@ -452,6 +452,44 @@ document.addEventListener('DOMContentLoaded', function() {
 	createEmptyGrid();
 });
 
+// Add initial state setup to hide toggle notes button
+document.addEventListener('DOMContentLoaded', function() {
+    createEmptyGrid();
+    document.getElementById('toggleNotesDisplay').style.display = 'none';
+});
+
+// Update toggle view functionality to manage both views and button visibility
+document.getElementById('toggleView').addEventListener('click', function() {
+    const circleDiv = document.getElementById('chordCircle');
+    const gridDiv = document.querySelector('.grid-viz');
+    const toggleNotesBtn = document.getElementById('toggleNotesDisplay');
+
+    if (circleDiv.style.display === 'none') {
+        // Switching to circle view
+        gridDiv.style.display = 'none';
+        circleDiv.style.display = 'block';
+        toggleNotesBtn.style.display = 'block';
+        this.textContent = 'Switch to Grid View';
+    } else {
+        // Switching to grid view
+        gridDiv.style.display = 'block';
+        circleDiv.style.display = 'none';
+        toggleNotesBtn.style.display = 'none';
+        this.textContent = 'Switch to Circle View';
+    }
+
+    // Re-render current visualization if a chord is selected
+    if (qualitySelect.value) {
+        const root = rootSelect.value;
+        const quality = qualitySelect.value;
+        const chord = transposeChord(root, quality, chordData);
+        
+        // Update both visualizations
+        document.getElementById('chordCircle').innerHTML = createChordCircle(root, chord.intervals, chord);
+        createChromaticGrid(root, chord);
+    }
+});
+
 document.getElementById('toggleNotesDisplay').addEventListener('click', function() {
 	window.showOnlyChordTones = !window.showOnlyChordTones;
 	this.textContent = 'Toggle note visibility';
@@ -467,25 +505,26 @@ document.getElementById('toggleNotesDisplay').addEventListener('click', function
 		createChromaticGrid(root, chord);
 	}
 });
-// Update toggle view functionality
-document.getElementById('toggleView').addEventListener('click', function() {
-	const circleDiv = document.getElementById('chordCircle');
-	const gridDiv = document.querySelector('.grid-viz');
 
-	if (circleDiv.style.display === 'none') {
-		gridDiv.style.display = 'none';
-		circleDiv.style.display = 'block';
-		this.textContent = 'Switch to Grid View';
-	} else {
-		gridDiv.style.display = 'block';
-		circleDiv.style.display = 'none';
-		this.textContent = 'Switch to Circle View';
-	}
-});
-
-// Set default state
-window.showOnlyChordTones = true;  // Circle defaults to chord tones only
-
+// // Update toggle view functionality
+// document.getElementById('toggleView').addEventListener('click', function() {
+// 	const circleDiv = document.getElementById('chordCircle');
+// 	const gridDiv = document.querySelector('.grid-viz');
+// 
+// 	if (circleDiv.style.display === 'none') {
+// 		gridDiv.style.display = 'none';
+// 		circleDiv.style.display = 'block';
+// 		this.textContent = 'Switch to Grid View';
+// 	} else {
+// 		gridDiv.style.display = 'block';
+// 		circleDiv.style.display = 'none';
+// 		this.textContent = 'Switch to Circle View';
+// 	}
+// });
+// 
+// // Set default state
+// window.showOnlyChordTones = true;  // Circle defaults to chord tones only
+// 
 
 		
 
